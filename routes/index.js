@@ -1,4 +1,4 @@
-//여기서 확인!!! token 
+//여기서 확인!!!
 var express = require('express');
 var router = express.Router();
 var goal = require('../connectors/goal.js');

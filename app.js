@@ -8,20 +8,24 @@ var bodyParser = require('body-parser');
 var stringify = require('node-stringify');
 
 var index = require('./routes/index');
-var	sign = require('./routes/sign');
-var verify = require('./models/verify');
+var	user = require('./routes/user/');
+//KYULI VERIFY
+//var verify = require('./models/verify');
+var secret = 'secretkey';
 
-// parse application/x-www-form-urlencoded (disabled)
+// parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json 
 app.use(bodyParser.json());
 
 //KYULI.YEO ROUTER
-app.use('/', index);
-app.use('/', verify);
+//app.use('/api', verify);
+//app.use('/', expressJWT({secret : 'secret' }).unless({path :['/user']}));
+app.use('/index', index);
 
 //Jeon ROUTER
-app.use('/sign', sign);
+app.use('/user', user);
+
 
 server.listen(3300, function(){
 	console.log('start server ' + server.address().port);

@@ -1,14 +1,11 @@
 var mysql = require('mysql');
+var jwt = require('jsonwebtoken');
+var secretKey = require('./jwtKey');
+var conn = require('../db-jeon');
 
-var conn = mysql.createConnection({
-	host : 'localhost',  // node.js와 mysql이 실행되는 host가 같으니까 localgost
-	port : 3306,
-	user : 'coinpet',
-	password : 'dbaudghks',
-	database : 'coinpet'
-});
+console.log('./connectors/sign/parents.js is loaded');
 
-conn.connect(function(err){
+conn.getConnection(function(err){
 	if(err){
 	    console.error('MySQL connection err');
 		throw err;
@@ -16,20 +13,39 @@ conn.connect(function(err){
 });
 
 exports.up = function(req, res){
-	console.log("sign.up() is called.");
+	console.log("./connectors/sign/parents.up() is called.");
 	var user = {
 		'email' : req.body.email,
 		'password' : req.body.passwd
 	};
 
 	var Query =  conn.query('insert into user_parents set ?', user,  function(err, result){
-//		console.log(conn.query());
 		if(err){
-			console.log("err in sign.up()");
-			console.log(user);
-		    throw err;
-	    }
-		res.json(result);
+			var errArray = err.toString().split(':');
+			console.log("err in sign/parents.up()");
+
+			switch(errArray[1])
+			{
+				case " ER_DUP_ENTRY":
+				console.log("Duplicated Entry");
+				res.json({ 'error': 'Duplicated email' });
+				break;
+
+				case " ":
+				break;
+			
+				default:
+		    	throw err;
+			}
+	    }else{
+			var payload = {
+				'email' : req.body.email,
+				'id' : result.insertId
+			};
+
+		    var token = { 'jwt': jwt.sign(payload, secretKey)};
+			res.json(token);
+		}
 	});
 }
 

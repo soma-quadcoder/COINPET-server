@@ -10,22 +10,19 @@
 
 var express = require('express');
 var router = express.Router();
-var sign = require('../connectors/sign.js');
+var parents = require('../../connectors/user/parents.js');
 
 // create
-router.post('/', sign.up);
+router.post('/parents', parents.up);
 
 // read
-router.get('/', sign.in);
+router.get('/parents', parents.in);
 
 // update
-router.put('/', sign.modify);
+router.put('/parents', parents.modify);
 
 // remove
-router.delete('/', sign.remove);
+router.delete('/parents', parents.remove);
 
-function signin(req, res) {
-
-};
 
 module.exports = router;
