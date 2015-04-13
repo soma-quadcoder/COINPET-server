@@ -3,7 +3,7 @@ var jwt = require('jsonwebtoken');
 var secretKey = require('./jwtKey');
 var conn = require('../db-jeon');
 
-console.log('./connectors/sign/parents.js is loaded');
+console.log('./connectors/user/parents.js is loaded');
 
 conn.getConnection(function(err){
 	if(err){
@@ -12,8 +12,8 @@ conn.getConnection(function(err){
 	}
 });
 
-exports.up = function(req, res){
-	console.log("./connectors/sign/parents.up() is called.");
+exports.post = function(req, res){
+	console.log("./connectors/user/parents.post() is called.");
 	var user = {
 		'email' : req.body.email,
 		'password' : req.body.passwd
@@ -22,7 +22,7 @@ exports.up = function(req, res){
 	var Query =  conn.query('insert into user_parents set ?', user,  function(err, result){
 		if(err){
 			var errArray = err.toString().split(':');
-			console.log("err in sign/parents.up()");
+			console.log("Error");
 
 			switch(errArray[1])
 			{
@@ -43,14 +43,14 @@ exports.up = function(req, res){
 				'id' : result.insertId
 			};
 
-		    var token = { 'jwt': jwt.sign(payload, secretKey)};
+		    var token = { 'Authorization': jwt.sign(payload, secretKey)};
 			res.json(token);
 		}
 	});
 }
 
-exports.in = function(req, res){
-	console.log("sign.in() is called.");
+exports.get = function(req, res){
+	console.log("sign.get() is called.");
 
 	var user = {
 		'email': req.body.email,
@@ -64,11 +64,11 @@ exports.in = function(req, res){
 	console.log(Query);
 }
 
-exports.modify = function(req, res){
-	console.log("sign.modify() is called");
+exports.put = function(req, res){
+	console.log("sign.put() is called");
 }
 
-exports.remove = function(req, res){
-	console.log("sign.remove() is called");
+exports.delete = function(req, res){
+	console.log("sign.delete() is called");
 
 }

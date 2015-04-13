@@ -9,22 +9,27 @@
 
 
 var express = require('express');
+var jwt = require('express-jwt');
 var router = express.Router();
 var kids = require('../../connectors/user/kids.js');
+var secretKey = "secretKey";
 
+console.log("./router/user/kids.js is loaded");
 
-console.log("router/user/kids.js is loaded");
+router.get('/', function() {
+	console.log("get /user/kids is called");
+	});
 
 // create
 router.post('/', kids.post);
 
 // update
-router.put('/', kids.put);
+router.put('/', jwt({secret: secretKey}), kids.put);
 
 // remove
-router.delete('/', kids.delete);
+router.delete('/', jwt({secret: secretKey}), kids.delete);
 
 // patch
-router.patch('/', kids.patch);
+router.patch('/', jwt({secret: secretKey}), kids.patch);
 
 module.exports = router;

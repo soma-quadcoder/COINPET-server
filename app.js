@@ -30,4 +30,3 @@ app.use('/user', user);
 server.listen(3300, function(){
 	console.log('start server ' + server.address().port);
 });
-
