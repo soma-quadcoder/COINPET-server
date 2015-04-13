@@ -12,17 +12,20 @@ var express = require('express');
 var router = express.Router();
 var parents = require('../../connectors/user/parents.js');
 
+
+console.log("./router/user/parents.js is loaded");
+
 // create
-router.post('/parents', parents.up);
+router.post('/', parents.post);
 
 // read
-router.get('/parents', parents.in);
+router.get('/', parents.get);
 
 // update
-router.put('/parents', parents.modify);
+router.put('/', parents.put);
 
 // remove
-router.delete('/parents', parents.remove);
+router.delete('/', parents.delete);
 
 
 module.exports = router;
