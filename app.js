@@ -16,8 +16,13 @@ var secretKey = require('./connectors/user/jwtKey');
 app.use(bodyParser.urlencoded({extended : true }));
 // parse application/json
 app.use(bodyParser.json());
+<<<<<<< HEAD
 //for parsing multipart/form-data
 app.use(multer());
+=======
+
+
+>>>>>>> eda011d1505ffd79801ce44cb54c7a618dc866e4
 //KYULI.YEO ROUTER
 // intercept all calls to API and validae the token
 app.use('/',expressJwt({secret : secretKey}).unless({path:'/user'}));
@@ -55,4 +60,3 @@ app.use(function(err, req, res, next){
 server.listen(3300, function(){
 		console.log('start server ' + server.address().port);
 });
-
