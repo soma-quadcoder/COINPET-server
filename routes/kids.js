@@ -127,10 +127,15 @@ function patch (req, res){
 	console.log("PATCH /user/kids is called");
 
 	var pn = req.body.pn;
-	var condition = "product_num ="+pn;
+	var condition = "product_num ="+pn+" AND used=1 AND fp_kids="+fk_kids;
 
 	conn.query("SELECT * FROM product_num WHERE "+condition, function (err, result) {
-
+		if (err) {
+			console.log("Error : Cannot execute query");
+			console.log(err);
+			console.log(this.sql);
+			res.status(500)
+		}
 	});
 
 }
