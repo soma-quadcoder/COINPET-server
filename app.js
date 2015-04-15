@@ -18,6 +18,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json 
 app.use(bodyParser.json());
 
+
 //KYULI.YEO ROUTER
 //app.use('/api', verify);
 //app.use('/', expressJWT({secret : 'secret' }).unless({path :['/user']}));
