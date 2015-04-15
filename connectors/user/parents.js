@@ -38,13 +38,15 @@ exports.up = function(req, res){
 		    	throw err;
 			}
 	    }else{
-			var payload = {
+			var payload = 
+			{
 				'email' : req.body.email,
 				'id' : result.insertId
 			};
 
 		    var token = { 'jwt': jwt.sign(payload, secretKey)};
 			res.json(token);
+			
 		}
 	});
 }

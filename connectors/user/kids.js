@@ -19,7 +19,7 @@ exports.post = function(req, res){
 		'gender' : req.body.gender,
 		'age' : req.body.age
 	};
-
+	console.log(req);
 	var Query =  conn.query('insert into user_device set ?', user,  function(err, result){
 		if(err){
 			console.log(">Error: " + err);

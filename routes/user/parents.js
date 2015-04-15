@@ -13,16 +13,16 @@ var router = express.Router();
 var parents = require('../../connectors/user/parents.js');
 
 // create
-router.post('/parents', parents.up);
+router.post('/', parents.up);
 
 // read
-router.get('/parents', parents.in);
+router.get('/', parents.in);
 
 // update
-router.put('/parents', parents.modify);
+router.put('/', parents.modify);
 
 // remove
-router.delete('/parents', parents.remove);
+router.delete('/', parents.remove);
 
 
 module.exports = router;

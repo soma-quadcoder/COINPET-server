@@ -1,41 +1,26 @@
 var webJwt = require('jsonwebtoken');
 var express = require('express');
-//var app = express();
 var jwt = require('express-jwt');
-var secretkey = 'secretkey';
-/*
-app.use(jwt({
-	secret : secretkey,
-	credentialsRequired : false,
-	getToken : function formHeaderOrQuerystring(req){
-	if(req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer'){
-		return req.headers.authorization.split(' ')[1];
+var secretKey = require('../connectors/user/jwtKey');
+
+var json = require('express-json');
+var db = require('../connectors/db-jeon');
+
+console.log('./models/verfiy');
+
+exports.read = function(req,res,next){
+	console.log('models verify get()');
+	res.send('verify get!!');
+
+	//getToken
+	if(req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer'){	
+		console.log(req.headers.authorization.split(' ')[1]);
+		var token = req.headers.authorization.split(' ')[1];
+		//return req.headers.authorization.split(' ')[1];
+		return next();
 	}
-	else if(req.query && req.query.token){
-		return req.query.token;
-	}
-	console.log('verify!!!');
-	console.log(req.headers.quthorization + req.query);
+	else
+		return res.send('error');
 	return null;
-	}
-}));
 
-
-
-/*
-app.post('/', function(req,res){
-		console.log(JSON.stringify(req.body));
-
-/*
-//	var token = req.token;
-module.exports =  function(req, res){
-	var token = jwt.sign(req.token, "secreykey", {expiresInMuinuites : 30});
-	
-	jwt.verify(token, 'scretkey', function(err, decoded){
-	if(err){
-		consol.elog("Error ! " + err);
-	}
-	console.log(decoded.id);
-	});
-}
-*/
+};
