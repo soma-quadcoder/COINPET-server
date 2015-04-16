@@ -1,3 +1,3 @@
-var jwtKey = "secretKey";
+var jwtKey = "secretKey"
 
 module.exports = jwtKey;

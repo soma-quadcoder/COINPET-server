@@ -8,21 +8,20 @@ exports.create = function(req, res){
 			throw err;
 		}
 		var nowDate = new Date();
+		console.log('pk kids is ' + req.user.pk_kids);
 		var goalInfo = {
 			'method' : req.body.method,
 			'content' : req.body.content,
 			'goal_cost' : req.body.goal_cost,
 			'goal_date' : req.body.goal_date,
 			'date' : nowDate,
-			'now_cost' : req.body.now_cost,
-			'kids_PK_kids' : req.body.kids_pk
+			'now_cost' : req.body.now_cost
 		};
 		console.log(goalInfo);
 		var Query =  conn.query('insert into goal set ?', goalInfo,  function(err, result){
 			if(err){
 				connection.release();
 				console.log("err is " + err);
-				throw err;
 			}
 			console.log('result ' + result);
 			res.json('message : success');
@@ -46,7 +45,6 @@ exports.read = function(req, res){
 			var Query = conn.query('select * from goal where pk_goal = ?',pk_goal, function(err, rows){
 				if(err){
 					connection.release();
-					throw err;
 				}
 			console.log(rows);
 			res.status(200).send(rows);
@@ -59,7 +57,6 @@ exports.read = function(req, res){
 			var Query = conn.query('select * from goal', function(err, rows){
 				if(err){
 					connection.release();
-					throw err;
 				}
 			console.log(rows);
 			res.status(200).send(rows);
@@ -82,7 +79,6 @@ exports.update = function(req, res){
 		if(err){
 			connection.release();
 			console.log(err);
-			throw err;
 		}
 		connection.release();
 		console.log('result ' + result);
@@ -100,7 +96,6 @@ exports.remove = function(req, res){
 	conn.getConnection(function(err,connection){
 	if(err){
 		console.error('MySQl connection err');
-		throw err;
 	}
 	var Query = conn.query('delete from NowGoal where pk_goal = ?',[req.body.pk_goal], function(err,rows){
 		if(err){

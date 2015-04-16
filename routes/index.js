@@ -1,22 +1,35 @@
 /* 
- * 2015.4.2
- * Created by jeon
+ * 2015.4.16
+ * Create by kyuli
  * user router module
- * rainsy02@gmail.com
+ * kyuli.yeo@gmail.com
  *
  *
  */
-
 var express = require('express');
 var router = express.Router();
-var kids = require('./kids.js');
-var parents = require('./parents.js');
-//var admin = require('./admin.setup.js');
+var goal = require('../connectors/goal.js');
+var pocket = require('../connectors/pocket.js');
+var coin = require('../connectors/coin.js');
+var jwt = require('express-jwt');
+var secretKey = require('./user/jwtKey');
 
-console.log("./router/index.setup.js is loaded.");
+// goal!
+router.post('/goal', goal.create);
+router.get('/goal', goal.read);
+router.get('/goal/:pk_goal', goal.read);
+router.patch('/goal', goal.update);
+router.delete('/goal', goal.remove);
+//pocket!
+router.post('/pocket', pocket.create);
+router.get('/pocket',pocket.read);
+router.patch('/pocket', pocket.update);
+router.delete('/pocket', pocket.remove);
 
-router.use('/kids', kids);
-router.use('/parents', parents);
-//router.use('/admin', admin);
+//coin - test
+router.post('/coin', coin.create);
+router.get('/coin', coin.read);
+router.put('/coin', coin.update);
+router.delete('/coin', coin.remove);
 
 module.exports = router;

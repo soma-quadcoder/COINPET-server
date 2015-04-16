@@ -113,7 +113,7 @@ function remove (req, res){
     console.log("DELETE /user/parents is called");
 
 }
-// create
+
 router.post('/', post);
 
 // read
