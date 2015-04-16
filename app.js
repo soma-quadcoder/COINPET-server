@@ -9,7 +9,6 @@ server = http.createServer(app);
 var bodyParser = require('body-parser');
 var stringify = require('node-stringify');
 var index = require('./routes/index');
-var	user = require('./routes/user/');
 var secretKey = require('./jwtKey');
 
 // parse aapplication/x-www-form-urlencoded
@@ -21,12 +20,12 @@ app.use(multer());
 
 //KYULI.YEO ROUTER
 // intercept all calls to API and validae the token
-app.use('/',expressJwt({secret : secretKey}).unless({path:'/user'}));
+//app.use('/',expressJwt({secret : secretKey}).unless({path:'/user/*'}));
 app.use('/', index);
 //Jeon ROUTER
-app.use('/user',user);
+//app.use('/user',user);
 
-
+/*
 //error handler
 //catch 404 and forwading to error handler
 app.use(function (req, res, next) {
@@ -52,6 +51,7 @@ app.use(function(err, req, res, next){
 		error: {}
 	});
 });
+*/
 
 server.listen(3300, function(){
 		console.log('start server ' + server.address().port);

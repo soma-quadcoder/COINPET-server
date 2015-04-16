@@ -8,8 +8,9 @@ db = mysql.createPool({
 	port : 3306,
 	user : 'kyuli.yeo',
 	password : '1234',
-	database : 'COINPET_kyuli',
+	database : 'coinpet',
 	connectionLimit : 20,
+	multipleStatements : true,
 	waitForConnections:false
 });
 

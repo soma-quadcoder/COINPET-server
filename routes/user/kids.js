@@ -194,6 +194,8 @@ function setPN(fk_kids, pn, success, fail) {
 			return;
 		}else if(result.changedRows == 0){
 			console.log("Error : Cannot set PN");
+			console.log(this.sql);
+			console.log(result);
 			console.log("Non registerd PN");
 			fail("Used_pn");
 			return;

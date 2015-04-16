@@ -31,7 +31,7 @@ function post (req, res){
 
     var user = {
         'email' : req.body.email,
-	'passwd' : req.body.passwd
+		'passwd' : req.body.passwd
     }
 
     if (user.email == null || user.passwd == null) {
