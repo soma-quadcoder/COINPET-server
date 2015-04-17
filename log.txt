@@ -2,62 +2,12 @@
 ./router/user/parents.js is loaded
 ./router/index.setup.js is loaded.
 start server 3300
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-POST /user/kids/login is called
-Error : No fk_kids
-POST /user/kids/login is called
-Error : No fk_kids
+create() is called.
+{ method: '1',
+  content: '돈을 모으자',
+  goal_cost: '2000',
+  goal_date: Thu Dec 31 2015 09:00:00 GMT+0900 (KST),
+  date: Sat Apr 18 2015 03:31:27 GMT+0900 (KST),
+  now_cost: '0',
+  fk_kids: 1 }
+err is Error: ER_NO_REFERENCED_ROW_2: Cannot add or update a child row: a foreign key constraint fails (`coinpet`.`goal`, CONSTRAINT `fk_goal_kids1` FOREIGN KEY (`fk_kids`) REFERENCES `kids` (`pk_kids`) ON DELETE NO ACTION ON UPDATE NO ACTION)

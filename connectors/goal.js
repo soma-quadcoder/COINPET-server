@@ -21,6 +21,7 @@ exports.create = function(req, res){
 		console.log(goalInfo);
 		var Query =  conn.query('insert into goal set ?', goalInfo  ,function(err, result){
 			if(err){
+			    console.log(this.sql);
 				connection.release();
 				console.log("err is " + err);
 			}
@@ -28,12 +29,13 @@ exports.create = function(req, res){
 			console.log('result ' + result);
 			var Query = conn.query('update kids set current_goal = ? where pk_kids = ? ', [result.insertId, req.user.fk_kids],  function(err, result){
 				if(err){
+				    console.log(this.sql);
 					connection.release();
 					console.log("err is " + err);
 				}
 				console.log(result);
 			});
-			res.status(200).json('message : success [insert goal, change current_goal number]');
+			res.status(200).json('message : success');
 			connection.release();
 		});
 	});
