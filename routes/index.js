@@ -4,7 +4,6 @@
  * user router module
  * kyuli.yeo@gmail.com
  *
- *
  */
 var express = require('express');
 var router = express.Router();
@@ -12,9 +11,8 @@ var jwt = require('express-jwt');
 var secretKey = require('../jwtKey');
 //including js file
 var goal = require('../connectors/goal.js');
-var pocket = require('../connectors/pocket.js');
 var saving = require('../connectors/saving.js');
-
+var account = require('../connectors/account.js');
 var user = require('./user');
 // goal!
 router.post('/goal', jwt({secret:secretKey}), goal.create);
@@ -66,12 +64,26 @@ router.put('/goal', jwt({secret:secretKey}), goal.update);
 router.delete('/goal/:pk_goal', jwt({secret:secretKey}), goal.remove);
 //saving_list
 router.get('/saving', jwt({secret:secretKey}), saving.read);
-//pocket!
-router.post('/pocket', jwt({secret:secretKey}), pocket.create);
-router.get('/pocket', jwt({secret:secretKey}), pocket.read);
-router.patch('/pocket', jwt({secret:secretKey}), pocket.update);
-router.delete('/pocket', jwt({secret:secretKey}), pocket.remove);
-
+//account book
+router.get('/account', jwt({ secret : secretKey }), function(req,res){
+	if(req.user.fk_kids){
+		account.allAccount(req, res);
+		return ;
+	}
+	if(req.user.fk_parents)
+		res.status(500).json('error : url');
+});
+router.get('/account/:fk_kids', jwt({ secret : secretKey }), function(req, res){
+	if(req.user.fk_kids){
+		acccount.allAccount(req,res);
+		return;
+	}
+	if(req.user.fk_parents){
+		console.log('router parents!!');
+		account.allAccountParents(req,res);
+		return;
+	}
+});
 //jeon's router
 router.use('/user', user);
 
