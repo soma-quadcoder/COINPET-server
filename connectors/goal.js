@@ -8,11 +8,12 @@ exports.create = function(req, res){
 			throw err;
 		}
 		var nowDate = new Date();
+		var date = new Date(req.body.goal_date);
 		var goalInfo = {
 			'method' : req.body.method,
 			'content' : req.body.content,
 			'goal_cost' : req.body.goal_cost,
-			'goal_date' : req.body.goal_date,
+			'goal_date' : date,
 			'date' : nowDate,
 			'now_cost' : req.body.now_cost,
 			'fk_kids' : req.user.fk_kids
