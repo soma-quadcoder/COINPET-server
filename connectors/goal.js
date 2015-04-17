@@ -56,7 +56,7 @@ exports.allGoal = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.status(200);
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
@@ -77,7 +77,7 @@ exports.allGoalParents = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.status(200);
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
@@ -98,7 +98,7 @@ exports.currentGoal = function(req, res){
 				connection.release();
 			}
 				console.log(rows);
-				res.status(200);
+				res.status(200).json(rows);
 				connection.release();
 		});
 	});
@@ -121,7 +121,7 @@ exports.currentGoalParents = function(req, res){
 			}
 				console.log(rows);
 				//res.json(rows[0]);
-				res.status(200);
+				res.status(200).json(rows);
 				connection.release();
 		});
 	});
