@@ -33,7 +33,7 @@ exports.create = function(req, res){
 				}
 				console.log(result);
 			});
-			res.json('message : success [insert goal, change current_goal number]');
+			res.status(200).json('message : success [insert goal, change current_goal number]');
 			connection.release();
 		});
 	});
@@ -55,7 +55,7 @@ exports.allGoal = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.json(rows);
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
