@@ -40,88 +40,86 @@ exports.create = function(req, res){
 //READ GET /goal
 exports.allGoal = function(req, res){
 	console.log("allGoal GET is called");
+	console.log(req);
+	//if(req.user.fk_parents)
+	//	return;
 
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.log('err' + err);
 			console.error('MySQl connection err');
 		}
-
-		var condition = "fk_kids = " + req.user.fk_kids;
-		var Query = conn.query("SELECT * FROM goal WHERE "+condition, function(err, rows){
-			if(err){
-				console.log('err is ' + err);
-				connection.release();
+		var fk_kids = req.user.fk_kids;
+		var fk_parents = req.user.fk_parents;
+		console.log(fk_kids);
+		//pk_kids will be change fk_kids
+		if(fk_parents != null){
+			//부모가 /goal/:fk_kids로 자식의 정보를 요청하는 경우
+			if(fk_kids != null){
+				console.log('call!!!!');
+				console.log(fk_parents + fk_kids);
+				var Query = conn.query('SELECT g.* FROM goal g, parents_has_kids p WHERE p.fk_parents = ? AND p.fk_kids = ? AND g.fk_kids = ?', [req.user.fk_parents, fk_kids ,fk_kids], function(err, rows){
+					if(err){
+						console.log('err is ' + err);
+						connection.release();
+					}
+					console.log(rows);
+					res.send(rows);
+					connection.release();
+				});
 			}
-			console.log(rows);
-			res.json(rows);
-			connection.release();
-		});
-	});
-}
-exports.allGoalParents = function(req, res){
-	conn.getConnection(function(err, connection){
-		if(err){
-			console.log('MySQL connection err');
-			console.log('err is ' + err);
 		}
-		console.log(req.params.fk_kids);
-		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
-						"p.fk_kids = " + req.params.fk_kids + " AND " +
-						"g.fk_kids = " + req.params.fk_kids;
-		var Query = conn.query("SELECT g.* FROM goal g, parents_has_kids p WHERE "+condition, function(err, rows){
-			if(err){
-				console.log('err is ' + err);
+		else{
+			//자식의 자신의 정보를 요청하는 경우
+			console.log('not null');
+			var Query = conn.query('SELECT * FROM goal WHERE fk_kids = ?',req.user.fk_kids, function(err, rows){
+				if(err){
+					console.log('err' + err);
+					connection.release();
+				}
+				console.log(rows[0]);
+				res.status(200).send(rows);
 				connection.release();
-			}
-			console.log(rows);
-			res.send(rows);
-			connection.release();
-		});
+			});
+		}
 	});
 }
-// current goal info get /goal/current - require kids
+
+// current goal info get /goal/current
 exports.currentGoal = function(req, res){
 	console.log('Current Goal called');
+	console.log(req);
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.log('err' + err);
 			console.error('MySQL connection err in cuurentGoal');
 		}
-		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
-						"g.fk_kids = " + req.user.fk_kids;
-		var Query = conn.query("SELECT g.* FROM goal g, kids k WHERE "+condition, function(err, rows){
-			if(err){
-				console.log('err is ' + err);
-				connection.release();
-			}
+		var param_fk_kids = req.query.fk_kids;
+		var fk_parents = req.user.fk_parents;
+		if(fk_parents){
+			if( param_fk_kids != null){
+				var Query = conn.query('SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE p.fk_parents = ? AND p.fk_kids = ? AND k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal And g.fk_kids = ?', [req.user.fk_parents,param_fk_kids,param_fk_kids], function(err, rows){
+				if(err){
+					console.log('err is' + err);
+					connection.release();
+				}
 				console.log(rows);
-				res.status(200).json(rows);
+				res.json(rows);
 				connection.release();
-		});
-	});
-}
-// /goal/current/:fk_kids it all always use parents
-exports.currentGoalParents = function(req, res){
-	console.log('currentGoal Parents');
-	conn.getConnection(function(err,connection){
-		if(err){
-			console.log('err' + err);
-			console.error('MySQL connection err in cuurentGoal');
+				});
+			}
 		}
-		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
-						"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
-						"g.fk_kids = " + req.params.fk_kids;
-		var Query = conn.query("SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE "+condition, function(err, rows){
-			if(err){
-				console.log('err is ' + err);
-				connection.release();
-			}
+		else{
+			var Query = conn.query('SELECT g.* FROM goal g, kids k WHERE k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND g.fk_kids = ?',req.user.fk_kids, function(err, rows){
+				if(err){
+					console.log('err is ' + err);
+					connection.release();
+				}
 				console.log(rows);
-				//res.json(rows[0]);
-				res.status(200).json(rows[0]);
+				res.json(rows);
 				connection.release();
-		});
+			});
+		}
 	});
 }
 //UPDATE PUT

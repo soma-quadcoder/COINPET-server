@@ -16,17 +16,52 @@ var pocket = require('../connectors/pocket.js');
 var saving = require('../connectors/saving.js');
 
 var user = require('./user');
-
-
-//router.use('/', jwt({secret:secretKey}).unless('/user'));
-
-
 // goal!
 router.post('/goal', jwt({secret:secretKey}), goal.create);
-//router.get('/goal', goal.read);
-router.get('/goal/:fk_kids', jwt({secret:secretKey}), goal.allGoal);//부모가 보낼때는 fk_kids를 부치고 보낸다.
-router.get('/goal/current/:fk_kids', jwt({secret:secretKey}), goal.currentGoal);
-//router.get('/goal/:fk_kids', goal.requireParents); // 부모가 자식의 
+router.get('/goal', jwt({secret : secretKey }), function(req, res){
+	//자식의 자신 정보를 요청하는 경우
+	if(req.user.fk_kids){
+		console.log(req.user.fk_kids);
+		goal.allGoal(req,res);
+		return;
+	}
+	//부모가 잘못 요청한 경우
+	if(req.user.fk_parents)
+		res.status(500).json({"error" : "url"} ) ;
+});
+router.get('/goal/current', jwt({secret:secretKey}), function(req, res){
+	//자식이 현재 진행중인 목표를 요청하는 경우
+	if(req.user.fk_kids){
+		goal.currentGoal(req, res);
+		return;
+	}
+	if(req.user.fk_parents)
+		res.status(500).json('error : url');
+});
+router.get('/goal/:fk_kids', jwt({secret : secretKey}), function(req, res){
+	if(req.user.fk_kids){
+		goal.allGoal(req, res);
+		return;
+	}
+	//부모가 자식의 목표들을 요청하는 경우
+	if(req.user.fk_parents){
+		goal.allGoalParents(req, res);
+		return;
+	}
+});
+//router.get('/goal/current/:fk_kids', jwt({secret:secretKey}), goal.currentGoal);
+router.get('/goal/current/:fk_kids', jwt({secret:secretKey}), function(req, res){
+	if(req.user.fk_kids){
+		goal.currentGoal(req, res);
+		return;
+	}
+	//부모가 자식의 현재 수행하는 목표를 요청하느 ㄴ경우
+	if(req.user.fk_parents){
+		goal.currentGoalParents(req,res);
+		return;
+	}
+});
+
 router.patch('/goal', jwt({secret:secretKey}), goal.update);
 router.delete('/goal/:pk_goal', jwt({secret:secretKey}), goal.remove);
 //saving_list
