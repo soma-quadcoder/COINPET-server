@@ -241,6 +241,6 @@ router.put('/', ejwt({secret: secretKey}), put);
 router.delete('/', ejwt({secret: secretKey}), remove);
 
 // patch
-router.post('/login', post);
+router.post('/login', login);
 
 module.exports = router;
