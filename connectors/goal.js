@@ -34,7 +34,7 @@ exports.create = function(req, res){
 				}
 				console.log(result);
 			});
-			res.status(200);
+			res.status(200).send();
 			connection.release();
 		});
 	});
@@ -121,7 +121,7 @@ exports.currentGoalParents = function(req, res){
 			}
 				console.log(rows);
 				//res.json(rows[0]);
-				res.status(200).json(rows);
+				res.status(200).json(rows[0]);
 				connection.release();
 		});
 	});
@@ -145,7 +145,7 @@ exports.update = function(req, res){
 			console.log('err is ' + err);
 			connection.release();
 		}
-		res.status(200);
+		res.status(200).send();
 		connection.release();
 		});
 	});

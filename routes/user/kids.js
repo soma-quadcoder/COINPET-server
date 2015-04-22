@@ -123,15 +123,15 @@ function patch (req, res){
 	////
 	//clearPN(fk_kids);
 	//setPN(req.user.fk_kids, req.body.pn);
-    //
-	//console.log("PATCH /user/kids is called");
-    //
-	//var pn = req.body.pn;
-	//var condition = "product_num ="+pn;
-    //
-	//conn.query("SELECT * FROM product_num WHERE "+condition, function (err, result) {
-    //
-	//});
+
+	console.log("PATCH /user/kids is called");
+
+	var pn = req.body.pn;
+	var condition = "product_num ="+pn;
+
+	conn.query("SELECT * FROM product_num WHERE "+condition, function (err, result) {
+
+	});
 
 }
 
@@ -194,36 +194,11 @@ function setPN(fk_kids, pn, success, fail) {
 			return;
 		}else if(result.changedRows == 0){
 			console.log("Error : Cannot set PN");
-			console.log(this.sql);
-			console.log(result);
 			console.log("Non registerd PN");
 			fail("Used_pn");
 			return;
 		}
 		success();
-	});
-}
-
-function login (req, res) {
-	console.log("POST /user/kids/login is called");
-
-	var pn = req.body.pn;
-	var condition = "product_num="+pn+" AND "+
-					"used=1";
-
-	conn.query("SELECT fk_kids FROM product_num WHERE "+condition, function(err, result) {
-		if (err) {
-			console.log("Error : Cannot execute query");
-			console.log(err);
-			console.log(this.sql);
-			res.status(500).json({"error":"Fail_query"});
-		}else if (result.length == 0){
-			console.log("Error : No fk_kids");
-			res.status(500).json({"error":"no user"});
-		}else {
-			var fk_kids = result[0].fk_kids;
-			res.json({'Authorization': jwt.sign({"fk_kids":fk_kids}, secretKey)});
-		}
 	});
 }
 
@@ -242,6 +217,6 @@ router.put('/', ejwt({secret: secretKey}), put);
 router.delete('/', ejwt({secret: secretKey}), remove);
 
 // patch
-router.post('/login', login);
+router.patch('/', patch);
 
 module.exports = router;

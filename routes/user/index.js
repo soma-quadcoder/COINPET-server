@@ -13,7 +13,7 @@ var kids = require('./kids.js');
 var parents = require('./parents.js');
 //var admin = require('./admin.setup.js');
 
-console.log("./router/index.setup.js is loaded.");
+console.log("./router/user/index.js is loaded.");
 
 router.use('/kids', kids);
 router.use('/parents', parents);
