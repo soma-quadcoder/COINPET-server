@@ -12,8 +12,13 @@ var secretKey = require('../jwtKey');
 //including js file
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
+<<<<<<< HEAD
 var account = require('../connectors/account.js');
 var user = require('./user');
+=======
+
+var user = require('./user/index');
+>>>>>>> f882f5d67fc5c5f2f789ee5977ef6d5fe802d0ae
 // goal!
 router.post('/goal', jwt({secret:secretKey}), goal.create);
 router.get('/goal', jwt({secret : secretKey }), function(req, res){

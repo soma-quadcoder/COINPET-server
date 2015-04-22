@@ -6,6 +6,8 @@ var express = require('express');
 var router = express.Router();
 var conn = require('../db-jeon');
 
+console.log("/user/parents/child is loaded");
+
 function post (req, res) {
     console.log("POST /user/parents/child is called");
 
@@ -19,7 +21,7 @@ function post (req, res) {
             console.log(this.sql);
             res.status(500).json({"error":"Fail_query"});
         }else if(result.length == 0) {
-            res.json({"error": "Invaild_pn"});
+            res.status(500).json({"error": "Invaild_pn"});
         }else{
             var fk_kids = result[0].fk_kids;
             var fk_parents = req.user.fk_parents;
@@ -44,20 +46,21 @@ function post (req, res) {
                             console.log(err);
                             console.log(this.sql);
                             res.status(500).json({"error":"Fail_query"});
-                        }
-                        name = result[0].name;
-                        value.name = name;
-                    });
-                    conn.query("INSERT INTO parents_has_kids SET ?", value, function(err, result) {
-                        if(err) {
-                            console.log("Error : Cannot execute query");
-                            console.log(err);
-                            console.log(this.sql);
-                            res.status(500).json({"error":"Fail_query"});
                         }else{
-                            res.status(200).send();
-                        }
-                    });
+                            value.name = result[0].name;
+			    conn.query("INSERT INTO parents_has_kids SET ?", value, function(err, result) {
+                        	if(err) {
+	                            console.log("Error : Cannot execute query");
+        	                    console.log(err);
+                	            console.log(this.sql);
+                        	    res.status(500).json({"error":"Fail_query"});
+                    	    }else{
+				    console.log(this.sql);
+	                            res.status(200).send(value);
+        	            }
+                   	    });
+		        }
+		    });
                 }
             });
         }
@@ -78,6 +81,7 @@ function get (req, res) {
            console.log(this.sql);
            res.status(500).json({"error":"Fail_query"});
        } else {
+/*
            value.child = new Array(value.length);
            for(var i=0 ; i<result.length ; i++)
            {
@@ -85,7 +89,10 @@ function get (req, res) {
                value.child[i].fk_kids = result[i].fk_kids;
                value.child[i].name = result[i].name;
            }
+
            res.status(200).json(value);
+*/
+	   res.status(200).json(result);
        }
     });
 }
