@@ -21,7 +21,7 @@ exports.create = function(req, res){
 				connection.release();
 				console.log("err is " + err);
 			}
-			res.status(200).json('message : success ');
+			res.status(200).json();
 			connection.release();
 		});
 	});
@@ -43,7 +43,7 @@ exports.allAccount = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.status(200).json(rows);
+			res.status(200).json();
 			connection.release();
 		});
 	});
@@ -65,7 +65,7 @@ exports.allAccountParents = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.status(200).send(rows);
+			res.status(200).send();
 			connection.release();
 		});
 	});
@@ -90,7 +90,7 @@ exports.update = function(req, res){
 			console.log('err is ' + err);
 			connection.release();
 		}
-		res.send(result);
+		res.status(200).send();
 		connection.release();
 		});
 	});
@@ -111,7 +111,7 @@ exports.remove = function(req, res){
 			throw err;
 		}
 		console.log(rows);
-		res.status(200).send(rows);
+		res.status(200).send();
 		connection.release();
 		});
 	});
