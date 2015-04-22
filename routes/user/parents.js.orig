@@ -135,6 +135,7 @@ var login = function (req, res) {
             console.log("passwd : "+passwd);
 <<<<<<< HEAD
             console.log(this.sql);
+            console.log(this.sql);
 =======
 >>>>>>> kyuli
             console.log(result);
