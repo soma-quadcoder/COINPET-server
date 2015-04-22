@@ -133,10 +133,8 @@ var login = function (req, res) {
             console.log("Error : Cannot log-in");
             console.log("email : "+email);
             console.log("passwd : "+passwd);
-<<<<<<< HEAD
             console.log(this.sql);
-=======
->>>>>>> kyuli
+            console.log(this.sql);
             console.log(result);
             res.status(500).json({"error":"Fail_login"});
         } else {

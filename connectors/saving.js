@@ -13,7 +13,7 @@ exports.read = function(req, res){
 			connection.release();
 		}
 		console.log(rows);
-		res.status(200).send(rows);
+		res.status(200).send();
 		connection.release();
 	});
 	});
