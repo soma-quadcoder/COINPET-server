@@ -13,8 +13,13 @@ var secretKey = require('../jwtKey');
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 <<<<<<< HEAD
+<<<<<<< HEAD
 var account = require('../connectors/account.js');
 var user = require('./user');
+=======
+
+var user = require('./user/index');
+>>>>>>> f882f5d67fc5c5f2f789ee5977ef6d5fe802d0ae
 =======
 
 var user = require('./user/index');
