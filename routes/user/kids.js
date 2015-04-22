@@ -206,7 +206,8 @@ function login (req, res) {
 	console.log("POST /user/kids/login is called");
 	
 	var pn = req.body.pn;
-	var condition = "product_num="+pn;
+	var condition = "product_num="+pn+
+					" AND used=1";
 	
 	conn.query("SELECT fk_kids FROM product_num WHERE "+condition, function(err, result) {
 		if (err) {
@@ -218,6 +219,9 @@ function login (req, res) {
 			console.log("Error : No fk_kids");
 			res.status(500).json({"error":"no user"});
 		}else {
+			console.log("Success to login");
+			console.log(result);
+			console.log(this.sql);
 			var fk_kids = result[0].fk_kids;
 			res.json({'Authorization': jwt.sign({"fk_kids":fk_kids}, secretKey)});
 		}
