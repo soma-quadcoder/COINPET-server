@@ -202,6 +202,28 @@ function setPN(fk_kids, pn, success, fail) {
 	});
 }
 
+function login (req, res) {
+	console.log("POST /user/kids/login is called");
+	
+	var pn = req.body.pn;
+	var condition = "product_num="+pn;
+	
+	conn.query("SELECT fk_kids FROM product_num WHERE "+condition, function(err, result) {
+		if (err) {
+			console.log("Error : Cannot execute query");
+			console.log(err);
+			console.log(this.sql);
+			res.status(500).json({"error":"Fail_query"});
+		}else if (result.length == 0){
+			console.log("Error : No fk_kids");
+			res.status(500).json({"error":"no user"});
+		}else {
+			var fk_kids = result[0].fk_kids;
+			res.json({'Authorization': jwt.sign({"fk_kids":fk_kids}, secretKey)});
+		}
+	});
+}
+
 
 router.get('/', function() {
 	console.log("GET /user/kids is called");
@@ -216,7 +238,7 @@ router.put('/', ejwt({secret: secretKey}), put);
 // remove
 router.delete('/', ejwt({secret: secretKey}), remove);
 
-// patch
-router.patch('/', patch);
+// login
+router.post('/login', login);
 
 module.exports = router;

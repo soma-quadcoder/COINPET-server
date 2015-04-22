@@ -132,6 +132,8 @@ var login = function (req, res) {
         } else if (result.length ==0 ) {
             console.log("Error : Cannot log-in");
             console.log("email : "+email);
+            console.log("passwd : "+passwd);
+            console.log(result);
             res.status(500).json({"error":"Fail_login"});
         } else {
             var fk_parents = result[0].pk_parents;
