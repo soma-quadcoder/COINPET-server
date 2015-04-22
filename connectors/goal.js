@@ -5,7 +5,6 @@ exports.create = function(req, res){
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.error('MySQl connection err');
-			throw err;
 		}
 		var nowDate = new Date();
 		var date = new Date(req.body.goal_date);
@@ -21,6 +20,7 @@ exports.create = function(req, res){
 		console.log(goalInfo);
 		var Query =  conn.query('insert into goal set ?', goalInfo  ,function(err, result){
 			if(err){
+			    console.log(this.sql);
 				connection.release();
 				console.log("err is " + err);
 			}
@@ -28,12 +28,13 @@ exports.create = function(req, res){
 			console.log('result ' + result);
 			var Query = conn.query('update kids set current_goal = ? where pk_kids = ? ', [result.insertId, req.user.fk_kids],  function(err, result){
 				if(err){
+				    console.log(this.sql);
 					connection.release();
 					console.log("err is " + err);
 				}
 				console.log(result);
 			});
-			res.json('message : success [insert goal, change current_goal number]');
+			res.status(200).send();
 			connection.release();
 		});
 	});
@@ -55,7 +56,7 @@ exports.allGoal = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.json(rows);
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
@@ -76,7 +77,7 @@ exports.allGoalParents = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.send(rows);
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
@@ -144,7 +145,7 @@ exports.update = function(req, res){
 			console.log('err is ' + err);
 			connection.release();
 		}
-		res.send(result);
+		res.status(200).send();
 		connection.release();
 		});
 	});
@@ -162,10 +163,9 @@ exports.remove = function(req, res){
 		if(err){
 			connection.release();
 			console.log(err);
-			throw err;
 		}
 		console.log(rows);
-		res.status(200).send(rows);
+		res.status(200);
 		connection.release();
 		});
 	});
