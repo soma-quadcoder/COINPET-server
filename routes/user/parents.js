@@ -136,10 +136,11 @@ var login = function (req, res) {
             console.log(this.sql);
             console.log(this.sql);
             console.log(result);
-            res.status(500).json();
+            res.status(500).json({"error":"Fail_login"});
         } else {
             var fk_parents = result[0].pk_parents;
-            res.json();
+            res.json( {'Authorization' : jwt.sign({'email':email, 'fk_parents':fk_parents}, secretKey) } );
+            res.status(500).json();
         }
     });
 }
