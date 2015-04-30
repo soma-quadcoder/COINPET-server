@@ -6,7 +6,7 @@ var express = require('express');
 var router = express.Router();
 var conn = require('../db-jeon');
 
-console.log("/user/parents/child is loaded");
+console.log("./router/user/child.js is loaded");
 
 function post (req, res) {
     console.log("POST /user/parents/child is called");
