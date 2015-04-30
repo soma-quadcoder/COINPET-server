@@ -21,7 +21,7 @@ exports.create = function(req, res){
 				connection.release();
 				console.log("err is " + err);
 			}
-			res.status(200).json();
+			res.status(200).json('message : success ');
 			connection.release();
 		});
 	});
@@ -43,7 +43,7 @@ exports.allAccount = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.status(200).json();
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});

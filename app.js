@@ -20,10 +20,7 @@ app.use(multer());
 
 //KYULI.YEO ROUTER
 // intercept all calls to API and validae the token
-//app.use('/',expressJwt({secret : secretKey}).unless({path:'/user/*'}));
 app.use('/', index);
-//Jeon ROUTER
-//app.use('/user',user);
 
 /*
 //error handler

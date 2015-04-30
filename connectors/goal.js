@@ -54,7 +54,7 @@ exports.allGoal = function(req, res){
 				console.log('err is ' + err);
 				connection.release();
 			}
-			res.status(200).json();
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
@@ -74,7 +74,7 @@ exports.allGoalParents = function(req, res){
 				console.log('err is ' + err);
 				connection.release();
 			}
-			res.status(200).json();
+			res.status(200).json(rows);
 			connection.release();
 		});
 	});
@@ -94,7 +94,7 @@ exports.currentGoal = function(req, res){
 				console.log('err is ' + err);
 				connection.release();
 			}
-				res.status(200).json();
+				res.status(200).json(rows);
 				connection.release();
 		});
 	});
@@ -115,7 +115,7 @@ exports.currentGoalParents = function(req, res){
 				console.log('err is ' + err);
 				connection.release();
 			}
-				res.status(200).json();
+				res.status(200).json(rows);
 				connection.release();
 		});
 	});
