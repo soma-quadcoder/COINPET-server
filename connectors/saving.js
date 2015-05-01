@@ -2,7 +2,7 @@ var conn = require('./db.js');
 
 //READ GET
 exports.read = function(req, res){
-	console.log("saving list call");
+	console.log("GET /saving is called");
 	conn.getConnection(function(err,connection){
 	if(err){
 		console.error('MySQl connection err');

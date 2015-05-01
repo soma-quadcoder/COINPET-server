@@ -1,7 +1,7 @@
 var conn = require('./db.js');
 //CREATE CREATE post /goal
 exports.create = function(req, res){
-	console.log("create() is called.");
+	console.log("POST /goal is called");
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.error('MySQl connection err');
@@ -40,8 +40,7 @@ exports.create = function(req, res){
 }
 //READ GET /goal
 exports.allGoal = function(req, res){
-	console.log("allGoal GET is called");
-
+	console.log("GET /goal is called by kids");
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.log('err' + err);
@@ -60,6 +59,7 @@ exports.allGoal = function(req, res){
 	});
 }
 exports.allGoalParents = function(req, res){
+	console.log("GEt /goal:/fk_kids is called by parents");
 	conn.getConnection(function(err, connection){
 		if(err){
 			console.log('MySQL connection err');
@@ -81,7 +81,7 @@ exports.allGoalParents = function(req, res){
 }
 // current goal info get /goal/current - require kids
 exports.currentGoal = function(req, res){
-	console.log('Current Goal called');
+	console.log('GET /goal/current is called by kids');
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.log('err' + err);
@@ -101,7 +101,7 @@ exports.currentGoal = function(req, res){
 }
 // /goal/current/:fk_kids it all always use parents
 exports.currentGoalParents = function(req, res){
-	console.log('currentGoal Parents');
+	console.log('GET /goal/currents/:fk_kids is called by parents');
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.log('err' + err);
@@ -122,7 +122,7 @@ exports.currentGoalParents = function(req, res){
 }
 //UPDATE PUT
 exports.update = function(req, res){
-	console.log("PUT is called");
+	console.log("PUT /goal is called");
 	conn.getConnection(function(err,connection){
 	if(err){
 		console.error('MySQl connection err');
@@ -146,7 +146,7 @@ exports.update = function(req, res){
 
 //DELETE REMOVE
 exports.remove = function(req, res){
-	console.log("DELETE is called");
+	console.log("DELETE /goal is called");
 	conn.getConnection(function(err,connection){
 	if(err){
 		console.error('MySQl connection err');

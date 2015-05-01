@@ -13,11 +13,16 @@ var secretKey = require('../jwtKey');
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
+var push = require('../connectors/push.js');
 var user = require('./user');
 var user = require('./user/index');
 
+//PUSH SERVER
+//router.post('/regist', jwt({secret:secretKey}), push.regist);
+router.post('/regist', push.regist);
 
-// goal!
+
+// GOAL
 router.post('/goal', jwt({secret:secretKey}), goal.create);
 router.get('/goal', jwt({secret : secretKey }), function(req, res){
 	//자식의 자신 정보를 요청하는 경우
@@ -65,9 +70,10 @@ router.get('/goal/current/:fk_kids', jwt({secret:secretKey}), function(req, res)
 
 router.put('/goal', jwt({secret:secretKey}), goal.update);
 router.delete('/goal/:pk_goal', jwt({secret:secretKey}), goal.remove);
-//saving_list
+//SAVING_LIST
 router.get('/saving', jwt({secret:secretKey}), saving.read);
-//account book
+
+//ACCOUNT BOOK
 router.get('/account', jwt({ secret : secretKey }), function(req,res){
 	if(req.user.fk_kids){
 		account.allAccount(req, res);

@@ -1,7 +1,7 @@
 var conn = require('./db.js');
 //CREATE CREATE post /goal
 exports.create = function(req, res){
-	console.log("create() is called.");
+	console.log("POST /account is called");
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.error('MySQl connection err');
@@ -28,8 +28,7 @@ exports.create = function(req, res){
 }
 //READ GET /goal
 exports.allAccount = function(req, res){
-	console.log("allAccount GET is called");
-
+	console.log("GET /account is called by kids");
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.log('err' + err);
@@ -49,7 +48,7 @@ exports.allAccount = function(req, res){
 	});
 }
 exports.allAccountParents = function(req, res){
-	console.log('allAcountParents');
+	console.log("GET /account/:fk_kids is calledi by parents");
 	conn.getConnection(function(err, connection){
 		if(err){
 			console.log('MySQL connection err');
@@ -65,7 +64,7 @@ exports.allAccountParents = function(req, res){
 				connection.release();
 			}
 			console.log(rows);
-			res.status(200).send();
+			res.status(200).send(rows);
 			connection.release();
 		});
 	});
