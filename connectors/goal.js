@@ -5,6 +5,7 @@ exports.create = function(req, res){
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.error('MySQl connection err');
+			console.log(err);
 		}
 		var nowDate = new Date();
 		var date = new Date(req.body.goal_date);

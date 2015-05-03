@@ -4,9 +4,10 @@ var conn = require('./db.js');
 exports.regist = function(req, res){
 	console.log('POST /regist is called');
 	conn.getConnection(function(err,connection){
-		if(err)
-			console.error('MySQL connection err');
-		
+		if(err) {
+            console.error('MySQL connection err');
+            console.log('push server');
+        }
 		//or with object values
 		var message = new gcm.Message({
 		collapseKey : 'demo',
@@ -22,7 +23,7 @@ exports.regist = function(req, res){
 		var server_access_key = server_internal_key;
 		var sender = new gcm.Sender(server_access_key);
 
-		var registrationIds = [];
+		var registrationIds = [];mysq
 
 		var registration_id = req.body.regist_id;
 		var user_id = req.body.user_id;
