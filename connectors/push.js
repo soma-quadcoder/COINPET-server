@@ -40,5 +40,6 @@ exports.regist = function(req, res){
 		});
 		console.log('hello kyuli');
         console.log('kkkk');
+        console.log('what!!!')
 	});
 };
