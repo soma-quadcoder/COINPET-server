@@ -14,7 +14,7 @@ exports.regist = function(req, res){
 		timeToLive : 3,
 		data : {
 			key1 : 'hello',
-			key2 : '안녕',
+			key2 : '안녕'
 		}
 		});
 		var server_internal_key = 'AIzaSyAV1bgmNN7BQMwGmUXHWH14jWnRm8TNZ1w';
@@ -38,5 +38,7 @@ exports.regist = function(req, res){
 			console.log('sender');
 			console.log(result);
 		});
+		console.log('hello kyuli');
+        console.log('kkkk');
 	});
-} 
+};
