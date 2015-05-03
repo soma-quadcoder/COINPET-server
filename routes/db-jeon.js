@@ -11,6 +11,7 @@ db = mysql.createPool({
 	password : 'dbaudghks',
 	database : 'coinpet',
 	connectionLimit : 20,
+	multipleStatements : true,
 	waitForConnections:false
 });
 
