@@ -19,7 +19,7 @@ exports.regist = function(req, res){
 		});
 		var server_internal_key = 'AIzaSyAV1bgmNN7BQMwGmUXHWH14jWnRm8TNZ1w';
 		var server_external_key = 'AIzaSyDCdIuUDaYm6TiUn7RwPY4Z0MQQjV3o_EQ';
-		var server_access_key = server_internal_key;
+		var server_access_key = server_external_key;
 		var sender = new gcm.Sender(server_access_key);
 
 		var registrationIds = [];

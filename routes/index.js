@@ -19,7 +19,10 @@ var user = require('./user/index');
 
 //PUSH SERVER
 //router.post('/regist', jwt({secret:secretKey}), push.regist);
-router.post('/regist', push.regist);
+router.post('/regist', function(req,res){
+	console.log('call push server');
+	push.regist(req, res);
+});
 
 
 // GOAL
