@@ -39,4 +39,4 @@ node_modules
 
 # db-jeon.js 매번 수정하기 힘들다
 ./routes/db-jeon.js
-./connectros/db.js
+./connectros/db.jsgi
