@@ -6,11 +6,11 @@ var db = express.Router();
 db = mysql.createPool({
 	host : 'localhost',
 	port : 3306,
-	user : 'kyuli.yeo',
+	user : 'Yeo Kyu Li',
 	password : '1234',
-	database : 'coinpet',
+	database : 'test',
 	connectionLimit : 20,
-	multipleStatements : true,
+//	multipleStatements : true,
 	waitForConnections:false
 });
 

@@ -4,15 +4,15 @@ var db = express.Router();
 
 
 db = mysql.createPool({
-//	host : '172.16.101.196',
 	host : 'localhost',
 	port : 3306,
-	user : 'coinpet',
-	password : 'dbaudghks',
-	database : 'coinpet',
+	user : 'Yeo Kyu Li',
+	password : '1234',
+	database : 'test',
 	connectionLimit : 20,
-	multipleStatements : true,
+//	multipleStatements : true,
 	waitForConnections:false
 });
 
 module.exports = db;
+
