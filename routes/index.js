@@ -75,7 +75,8 @@ router.put('/goal', jwt({secret:secretKey}), goal.update);
 router.delete('/goal/:pk_goal', jwt({secret:secretKey}), goal.remove);
 //SAVING_LIST
 router.get('/saving', jwt({secret:secretKey}), saving.read);
-
+router.get('/saving/:fk_kids', jwt({secret : secretKey }), saving.readParents);
+/*
 //ACCOUNT BOOK
 router.get('/account', jwt({ secret : secretKey }), function(req,res){
 	if(req.user.fk_kids){
@@ -96,6 +97,7 @@ router.get('/account/:fk_kids', jwt({ secret : secretKey }), function(req, res){
 		return;
 	}
 });
+*/
 //jeon's router
 router.use('/user', user);
 

@@ -66,7 +66,6 @@ exports.allGoalParents = function(req, res){
 			console.log('MySQL connection err');
 			console.log('err is ' + err);
 		}
-		console.log(req.params.fk_kids);
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 						"p.fk_kids = " + req.params.fk_kids + " AND " +
 						"g.fk_kids = " + req.params.fk_kids;
