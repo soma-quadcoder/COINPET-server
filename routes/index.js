@@ -14,9 +14,13 @@ var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
 var push = require('../connectors/push.js');
+var quest = require('../connectors/quest.js');
+
+
 var user = require('./user');
 var user = require('./user/index');
-
+//QUEST
+router.post('/quest/:fk_kids', jwt({secret:secretKey}), quest.create);
 //PUSH SERVER
 //router.post('/regist', jwt({secret:secretKey}), push.regist);
 router.post('/regist', function(req,res){

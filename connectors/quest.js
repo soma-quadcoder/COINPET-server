@@ -1,38 +1,54 @@
 var conn = require('./db.js');
-//CREATE CREATE post /goal
+var server_key = require('./gcm.js');
+//CREATE CREATE post /quest
 exports.create = function(req, res){
-	console.log("POST /goal is called");
+	console.log("POST /quest is called");
 	conn.getConnection(function(err,connection){
 		if(err){
 			console.error('MySQl connection err');
 			console.log(err);
 		}
-		var nowDate = new Date();
-		var date = new Date(req.body.goal_date);
-		var goalInfo = {
-			'method' : req.body.method,
+		var questInfo = {
 			'content' : req.body.content,
-			'goal_cost' : req.body.goal_cost,
-			'goal_date' : date,
-			'date' : nowDate,
-			'now_cost' : req.body.now_cost,
-			'fk_kids' : req.user.fk_kids
+			'point' : req.body.point,
+			'fk_kids' : req.params.fk_kids
 		};
-		var Query =  conn.query('insert into goal set ?', goalInfo  ,function(err, result){
+		var condition = "fk_kids = "+ req.params.fk_kids;
+		var Query =  conn.query('INSERT INTO parents_quest set ?', questInfo  ,function(err, result){
 			if(err){
-			    console.log(this.sql);
 				connection.release();
 				console.log("err is " + err);
 			}
-			console.log(result.insertId);
-			console.log('result ' + result);
-			var Query = conn.query('update kids set current_goal = ? where pk_kids = ? ', [result.insertId, req.user.fk_kids],  function(err, result){
+			var Query = conn.query("SELECT * FROM push WHERE "+condition ,  function(err, rows){
 				if(err){
-				    console.log(this.sql);
 					connection.release();
 					console.log("err is " + err);
 				}
-				console.log(result);
+				//GCM
+				var message = new gcm.Message({
+					collapseKey : 'demo',
+					delayWhileId : true,
+					timeToLive :3,
+					data : {
+						key1 :'hello',
+						key2 : 'kyuli'
+					}
+				});
+	
+				var sender = new gcm.Sender(server_key);
+
+				var registrationIds = [];
+
+				var registration_id = rows;
+				//At least one required
+				registrationIds.push(registration_id);
+				/**
+		 		 * Params : message-literal, registrationIds-array, No. of retries, callback-function
+		 		 **/
+				sender.send(message, registrationIds, 4, function(err, result){
+					if(err) console.error('error is' +err);
+					else console.log(result);
+				});
 			});
 			res.status(200).send();
 			connection.release();
