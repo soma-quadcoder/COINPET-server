@@ -11,6 +11,7 @@ var stringify = require('node-stringify');
 var index = require('./routes/index');
 var secretKey = require('./jwtKey');
 
+
 // parse aapplication/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended : true }));
 // parse application/json
@@ -21,7 +22,6 @@ app.use(multer());
 //KYULI.YEO ROUTER
 // intercept all calls to API and validae the token
 app.use('/', index);
-
 /*
 //error handler
 //catch 404 and forwading to error handler

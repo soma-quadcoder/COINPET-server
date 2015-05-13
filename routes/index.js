@@ -14,9 +14,13 @@ var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
 var push = require('../connectors/push.js');
+var quest = require('../connectors/quest.js');
+
 var user = require('./user');
 var user = require('./user/index');
 
+//QUEST
+router.post('/quest/:fk_kids', jwt({secret:secretKey}), quest.create);
 //PUSH SERVER
 //router.post('/regist', jwt({secret:secretKey}), push.regist);
 router.post('/regist', function(req,res){
@@ -75,7 +79,8 @@ router.put('/goal', jwt({secret:secretKey}), goal.update);
 router.delete('/goal/:pk_goal', jwt({secret:secretKey}), goal.remove);
 //SAVING_LIST
 router.get('/saving', jwt({secret:secretKey}), saving.read);
-
+router.get('/saving/:fk_kids', jwt({secret : secretKey }), saving.readParents);
+/*
 //ACCOUNT BOOK
 router.get('/account', jwt({ secret : secretKey }), function(req,res){
 	if(req.user.fk_kids){
@@ -96,6 +101,7 @@ router.get('/account/:fk_kids', jwt({ secret : secretKey }), function(req, res){
 		return;
 	}
 });
+*/
 //jeon's router
 router.use('/user', user);
 
