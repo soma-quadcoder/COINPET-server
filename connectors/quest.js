@@ -22,7 +22,7 @@ exports.create = function(req, res){
 				connection.release();
 				console.log("err is " + err);
 			}
-			var Query = conn.query("SELECT * FROM push WHERE "+condition ,  function(err, rows){
+			var Query = conn.query("SELECT regist_id  FROM push WHERE "+condition ,  function(err, rows){
 				if(err){
 					connection.release();
 					console.log("err is " + err);
@@ -41,9 +41,9 @@ exports.create = function(req, res){
                 var sender = new gcm.Sender(server_key);
                 console.log(server_key);
                 var registrationIds = [];
-
-                var registration_id = rows;
-                console.log('rows is ' + rows);
+                var str = rows[0];
+                var registration_id =str.split(':')[1];  
+                console.log(registration_id );
                 //At least one required
                 registrationIds.push(registration_id);
                 /**
