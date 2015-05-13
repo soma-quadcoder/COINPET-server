@@ -21,7 +21,8 @@ console.log("./router/user/parents.js is loaded");
 
 conn.getConnection(function(err){
     if(err){
-        console.error('MySQL connection err');
+        console.error('parents MySQL connection err');
+        console.log(err);
     }
 });
 

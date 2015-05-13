@@ -20,7 +20,8 @@ console.log("./router/user/kids.js is loaded");
 
 conn.getConnection(function(err){
 	if(err){
-		console.error('MySQL connection err');
+		console.error('kids MySQL connection err');
+		console.log(err);
 	}
 });
 
