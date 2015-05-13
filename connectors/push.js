@@ -10,7 +10,7 @@ exports.regist = function(req, res){
 		var registration_id = req.body.regist_id;
 		var user_id = req.body.user_id;
 		console.log(registration_id + '\r\n'+ user_id);
-		var my_fk_kids = 144;
+		var my_fk_kids = 145;
 		var pushInfo = {
 			'regist_id' : req.body.regist_id,
 			'fk_kids' : my_fk_kids
@@ -20,6 +20,7 @@ exports.regist = function(req, res){
 				console.log('err is' + err);
 				connection.release();
 			}
+			console.log(result);
 			res.status(200).json();
 			connection.release();
 		});

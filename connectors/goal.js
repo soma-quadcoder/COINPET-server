@@ -18,12 +18,14 @@ exports.create = function(req, res){
 			'now_cost' : req.body.now_cost,
 			'fk_kids' : req.user.fk_kids
 		};
+		console.log('fk_kids is' + req.user.fk_kids + '\r\n\r\n\r\n');
 		var Query =  conn.query('insert into goal set ?', goalInfo  ,function(err, result){
 			if(err){
 			    console.log(this.sql);
 				connection.release();
 				console.log("err is " + err);
 			}
+			console.log("result inserId");
 			console.log(result.insertId);
 			console.log('result ' + result);
 			var Query = conn.query('update kids set current_goal = ? where pk_kids = ? ', [result.insertId, req.user.fk_kids],  function(err, result){

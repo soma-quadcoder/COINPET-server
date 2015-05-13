@@ -21,7 +21,6 @@ app.use(multer());
 //KYULI.YEO ROUTER
 // intercept all calls to API and validae the token
 app.use('/', index);
-
 /*
 //error handler
 //catch 404 and forwading to error handler

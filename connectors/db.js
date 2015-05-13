@@ -7,8 +7,6 @@ db = mysql.createPool({
 	host : 'localhost',
 	port : 3306,
 	user : 'kyuli.yeo',
-	password : '1234',
-	database : 'coinpet',
 	connectionLimit : 20,
 	multipleStatements : true,
 	waitForConnections:false
