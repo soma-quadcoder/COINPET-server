@@ -1,6 +1,8 @@
 var conn = require('./db.js');
 var server_key = require('./gcm.js');
 var gcm = require('node-gcm');
+var split = require('split');
+var stringify = require('node-stringify');
 //CREATE CREATE post /quest
 exports.create = function(req, res){
 	console.log("POST /quest is called");
@@ -33,17 +35,20 @@ exports.create = function(req, res){
                     delayWhileId : true,
                     timeToLive : 3,
                     data : {
-                        key1 : 'hello',
-                        key2 : '안녕'
+                        key1 : req.body.content,
+            			key1 : req.body.point
                     }
                 });
 
                 var sender = new gcm.Sender(server_key);
                 console.log(server_key);
                 var registrationIds = [];
-                var str = rows[0];
-                var registration_id =str.split(':')[1];  
-                console.log(registration_id );
+				//regist_id 추출하는 부분.
+               	var str = rows[0]; var strString = JSON.stringify(str);
+                var strSplit = strString.split(':"')[1];
+                var strSplit2 = strSplit.split('"')[0];
+                var registration_id = strSplit2;
+               	//console.log(registration_id[0] );
                 //At least one required
                 registrationIds.push(registration_id);
                 /**
