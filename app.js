@@ -11,6 +11,7 @@ var stringify = require('node-stringify');
 var index = require('./routes/index');
 var secretKey = require('./jwtKey');
 
+
 // parse aapplication/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended : true }));
 // parse application/json
