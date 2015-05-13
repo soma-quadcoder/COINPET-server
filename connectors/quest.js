@@ -1,5 +1,6 @@
 var conn = require('./db.js');
 var server_key = require('./gcm.js');
+var gcm = require('node-gcm');
 //CREATE CREATE post /quest
 exports.create = function(req, res){
 	console.log("POST /quest is called");
@@ -11,7 +12,7 @@ exports.create = function(req, res){
 		var questInfo = {
 			'content' : req.body.content,
 			'point' : req.body.point,
-			'fk_kids' : req.params.fk_kids
+			'fk_parents' : req.user.fk_parents
 		};
 		console.log(req.params.fk_kids);
 		var condition = "fk_kids = "+ req.params.fk_kids;
@@ -25,9 +26,7 @@ exports.create = function(req, res){
 					connection.release();
 					console.log("err is " + err);
 				}
-				console.log(rows);
 				//GCM
-				/*
 				var message = new gcm.Message({
 					collapseKey : 'demo',
 					delayWhileId : true,
@@ -48,12 +47,10 @@ exports.create = function(req, res){
 				/**
 		 		 * Params : message-literal, registrationIds-array, No. of retries, callback-function
 		 		 **/
-/*
 				sender.send(message, registrationIds, 4, function(err, result){
 					if(err) console.error('error is' +err);
 					else console.log(result);
 				});
-*/
 			});
 			res.status(200).send();
 			connection.release();
