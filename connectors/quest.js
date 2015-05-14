@@ -79,17 +79,17 @@ exports.updateStdQuest = function(req, res){
 exports.updateParentsQuest = function(req, res){
     console.log("PUT /goal is called by parents");
     conn.getConnection(function(err,connection){
+    if(err){
+    console.error('MySQl connection err');
+    }
+    var pk_parents_quest = req.params.pk_parents_quest;
+    var Query = conn.query("UPDATE std_que SET point = ?, content =? WHERE pk_std_que = ?",[req.body.point, req.body.content,pk_parents_quest], function(err, result){
         if(err){
-            console.error('MySQl connection err');
-        }
-
-        var Query = conn.query( function(err, result){
-            if(err){
-                console.log('err is ' + err);
-                connection.release();
-            }
-            res.status(200).send();
+           console.log('err is ' + err);
             connection.release();
+        }
+        res.status(200).send();
+        connection.release();
         });
     });
 }
@@ -99,31 +99,32 @@ exports.updateParentsQuest = function(req, res){
 exports.removeStdQuest = function(req, res){
 	console.log("DELETE /goal is called by admin");
 	conn.getConnection(function(err,connection){
-	if(err){
-		console.error('MySQl connection err');
-	}
-	console.log(req.param('pk_goal'));
-	var Query = conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
-		if(err){
-			connection.release();
-			console.log(err);
-		}
-		console.log(rows);
-		res.status(200);
-		connection.release();
+    	if(err){
+	    	console.error('MySQl connection err');
+	    }
+        var pk_std_que = req.params.pk_std_que;
+
+        var Query = conn.query("DELETE FROM std_que WHERE pk_std_que =? ", pk_std_que, function(err,rows){
+		    if(err){
+			    connection.release();
+			    console.log(err);
+		    }
+		    console.log(rows);
+		    res.status(200);
+		    connection.release();
 		});
 	});
 }
 
 //DELETE REMOVE
 exports.removeParentsQuest = function(req, res){
-    console.log("DELETE /goal is called by parents");
+    console.log("DELETE /goal is called by admin");
     conn.getConnection(function(err,connection){
         if(err){
             console.error('MySQl connection err');
         }
-        console.log(req.param('pk_goal'));
-        var Query = conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
+        var pk_parents_quest = req.params.pk_parents_quest;
+        var Query = conn.query("DELETE FROM std_que WHERE parents_quest =? ",pk_parents_quest, function(err,rows){
             if(err){
                 connection.release();
                 console.log(err);
