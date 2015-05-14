@@ -22,7 +22,8 @@ var user = require('./user/index');
 //QUEST
 router.post('/quest/:fk_kids', jwt({secret:secretKey}), quest.createParents);
 router.post('/quest', quest.createAdmin);
-router.put('/quest/:pk_std_que', function(req, res){//admin
+
+/*router.put('/quest/:pk_std_que', function(req, res){//admin
     if(req.user.fk_parents){
         quest.updateStdQuest(req, res);
         return;
@@ -30,15 +31,18 @@ router.put('/quest/:pk_std_que', function(req, res){//admin
     else
         quest.updateStdQuest(req, res);
 });
+*/
+router.put('/quest/:pk_std_que', quest.updateStdQuest);
 router.put('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.updateParentsQuest); //parents
-router.delete('/quest/:pk_std_que', function(req, res){//admin
+/*router.delete('/quest/:pk_std_que', function(req, res){//admin
     if(req.user.fk_parents){
         quest.removeStdQuest(req, res);
         return;
     }
     else
         quest.removeParentsQuest(req, res);
-});
+});*/
+router.delete('/quest/:pk_std_que',quest.removeStdQuest);
 router.delete('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.removeParentsQuest); //parents
 
 
