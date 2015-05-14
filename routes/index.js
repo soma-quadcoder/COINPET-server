@@ -23,10 +23,10 @@ var user = require('./user/index');
 router.post('/quest/:fk_kids', jwt({secret:secretKey}), quest.createParents);
 router.post('/quest', quest.createAdmin);
 
-router.put('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.updateParentsQuest); //parents
+router.put('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), quest.updateParentsQuest); //parents
 router.put('/quest/admin/:pk_std_que', quest.updateStdQuest);
 
-router.delete('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.removeParentsQuest); //parents
+router.delete('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), quest.removeParentsQuest); //parents
 router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 
 //PUSH SERVER

@@ -71,8 +71,6 @@ exports.updateStdQuest = function(req, res){
 		connection.release();
 		});
 	});
-
-
 }
 
 //UPDATE PUT
