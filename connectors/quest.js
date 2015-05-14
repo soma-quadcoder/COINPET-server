@@ -13,8 +13,7 @@ exports.createParents = function(req, res){
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
-            'startTime': req.body.startTime,
-            'fk_parents': req.user.fk_parents
+            'startTime': req.body.startTime
         };
 
         console.log(req.params.fk_kids);
