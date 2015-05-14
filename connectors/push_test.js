@@ -39,3 +39,62 @@ exports.regist = function(req, res){
 			else console.log(result);
 	});
 };
+
+
+exports.createParents = function(req, res){
+    console.log("POST /quest is called");
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+            console.log(err);
+        }
+        var questInfo = {
+            'content' : req.body.content,
+            'point' : req.body.point,
+            'fk_parents' : req.user.fk_parents
+        };
+
+        console.log(req.params.fk_kids);
+        var condition = "fk_kids = "+ req.params.fk_kids;
+        var Query =  conn.query('INSERT INTO parents_quest SET ?', questInfo  ,function(err, result){
+            if(err){
+                connection.release();
+                console.log("err is " + err);
+            }
+            var Query = conn.query("SELECT * FROM push WHERE "+condition ,  function(err, rows){
+                if(err){
+                    connection.release();
+                    console.log("err is " + err);
+                }
+                //GCM
+                var message = new gcm.Message({
+                    //collapseKey : 'demo',
+                    delayWhileIdle : false,
+                    timeToLive : 1800,
+                    data : {
+                        key1 : 'hello',
+                        key2 : '안녕'
+                    }
+                });
+
+                var sender = new gcm.Sender(server_key);
+                console.log(server_key);
+                var registrationIds = [];
+
+                var registration_id = rows;
+                console.log('rows is ' + rows);
+                //At least one required
+                registrationIds.push(registration_id);
+                /**
+                 * Params : message-literal, registrationIds-array, No. of retries, callback-function
+                 **/
+                sender.send(message, registrationIds, 4, function(err, result){
+                    if(err) console.error('error is' +err);
+                    else console.log(result);
+                });
+            });
+            res.status(200).send();
+            connection.release();
+        });
+    });
+}
