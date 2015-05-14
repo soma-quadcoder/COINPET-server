@@ -27,7 +27,6 @@ router.put('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.updatePa
 router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 router.delete('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.removeParentsQuest); //parents
 
-
 //PUSH SERVER
 //router.post('/regist', jwt({secret:secretKey}), push.regist);
 router.post('/regist', function(req,res){
