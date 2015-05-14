@@ -109,8 +109,7 @@ exports.removeStdQuest = function(req, res){
 			    connection.release();
 			    console.log(err);
 		    }
-		    console.log(rows);
-		    res.status(200);
+		    res.status(200).send();
 		    connection.release();
 		});
 	});
@@ -129,8 +128,8 @@ exports.removeParentsQuest = function(req, res){
                 connection.release();
                 console.log(err);
             }
-            console.log(rows);
-            res.status(200);
+            console.log();
+            res.status(200).send;
             connection.release();
         });
     });
