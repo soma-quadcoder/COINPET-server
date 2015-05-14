@@ -31,7 +31,7 @@ router.put('/quest/:pk_std_que', function(req, res){//admin
         quest.updateStdQuest(req, res);
 });
 router.put('/quest/:pk_parents_quest', jwt({secret : secretKey}), quest.updateParentsQuest); //parents
-router.delete('/quest/:pkf_std_que', function(req, res){//admin
+router.delete('/quest/:pk_std_que', function(req, res){//admin
     if(req.user.fk_parents){
         quest.removeStdQuest(req, res);
         return;
