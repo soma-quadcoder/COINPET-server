@@ -83,7 +83,7 @@ exports.updateParentsQuest = function(req, res){
     console.error('MySQl connection err');
     }
     var pk_parents_quest = req.params.pk_parents_quest;
-    var Query = conn.query("UPDATE std_que SET point = ?, content =? WHERE pk_std_que = ?",[req.body.point, req.body.content,pk_parents_quest], function(err, result){
+    var Query = conn.query("UPDATE std_que SET point = ?, content =? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,pk_parents_quest], function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
