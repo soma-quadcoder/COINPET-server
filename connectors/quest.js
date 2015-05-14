@@ -81,7 +81,7 @@ exports.updateParentsQuest = function(req, res){
     console.error('MySQl connection err');
     }
     var pk_parents_quest = req.params.pk_parents_quest;
-    var Query = conn.query("UPDATE std_que SET point = ?, content =? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,pk_parents_quest], function(err, result){
+    var Query = conn.query("UPDATE parents_quest SET point = ?, content =?, startTime = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,req.body.startTime,pk_parents_quest], function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
@@ -121,7 +121,7 @@ exports.removeParentsQuest = function(req, res){
             console.error('MySQl connection err');
         }
         var pk_parents_quest = req.params.pk_parents_quest;
-        var Query = conn.query("DELETE FROM std_que WHERE pk_parents_quest =? ",pk_parents_quest, function(err,rows){
+        var Query = conn.query("DELETE parents_quest FROM std_que WHERE pk_parents_quest = ? ",pk_parents_quest, function(err,rows){
             if(err){
                 connection.release();
                 console.log(err);
