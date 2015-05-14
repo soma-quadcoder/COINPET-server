@@ -58,16 +58,11 @@ exports.createAdmin = function(req, res){
 exports.updateStdQuest = function(req, res){
 	console.log("PUT /goal is called by admin");
 	conn.getConnection(function(err,connection){
-	if(err){
-		console.error('MySQl connection err');
-	}
-
-    var updateInfo = {
-        'point' : req.body.point,
-        'content' : req.body.content
-    };
+	if(err) {
+        console.error('MySQl connection err');
+    }
     var pk_std_que = req.params.pk_std_que;
-	var Query = conn.query("UPDATE std_que SET ? WHERE pk_std_que = ?",updateInfo+pk_std_que, function(err, result){
+	var Query = conn.query("UPDATE std_que SET point = ?, content =? WHERE pk_std_que = ?",[req.body.point, req.body.content,pk_std_que], function(err, result){
 		if(err){
 			console.log('err is ' + err);
 			connection.release();
