@@ -61,18 +61,23 @@ exports.updateStdQuest = function(req, res){
 	if(err){
 		console.error('MySQl connection err');
 	}
-	var nowDate = new Date();
 
-	var Query = conn.query('update goal g inner join kids k on g.pk_goal = k.current_goal and g.fk_kids = k.pk_kids set now_cost =(now_cost+?); insert into saving_list (now_cost, date, fk_kids) values(?,?,?) ', [req.body.now_cost,req.body.now_cost,nowDate,req.user.fk_kids], function(err, result){
+    var updateInfo = {
+        'point' : req.body.point,
+        'content' : req.body.content
+    };
+    var pk_std_que = req.params.pk_std_que;
+	var Query = conn.query("UPDATE std_que SET ? WHERE pk_std_que = ?",updateInfo+pk_std_que, function(err, result){
 		if(err){
 			console.log('err is ' + err);
 			connection.release();
 		}
-		console.log(req.body.now_cost);
 		res.status(200).send();
 		connection.release();
 		});
 	});
+
+
 }
 
 //UPDATE PUT
@@ -82,18 +87,12 @@ exports.updateParentsQuest = function(req, res){
         if(err){
             console.error('MySQl connection err');
         }
-        //update the current cost of saving_list table
-        var nowDate = new Date();
-        //update the current cost of goal table
-        // kids table and goal table의 current_goal and pk_goal, fk_kids and pk_kids를 비교해서 지금 같은 값을 가진 레코드의 goal 테이블에 now_cost를 업데이트 시킨다.
-        // 그리고 saving_list에 값을 추가한다.
-        //IT will be change nowDate --> device time
-        var Query = conn.query('update goal g inner join kids k on g.pk_goal = k.current_goal and g.fk_kids = k.pk_kids set now_cost =(now_cost+?); insert into saving_list (now_cost, date, fk_kids) values(?,?,?) ', [req.body.now_cost,req.body.now_cost,nowDate,req.user.fk_kids], function(err, result){
+
+        var Query = conn.query( function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
             }
-            console.log(req.body.now_cost);
             res.status(200).send();
             connection.release();
         });
