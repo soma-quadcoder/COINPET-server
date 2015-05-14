@@ -15,13 +15,21 @@ var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
 var push = require('../connectors/push.js');
 var quest = require('../connectors/quest.js');
-
+var quiz = require('../connectors/quiz.js');
 var user = require('./user');
 var user = require('./user/index');
 
+//QUIZ
+router.post('/quiz', jwt({secret:secretKey}), quiz.createQuiz);
+router.post('/quiz/admin', jwt({secret:secretKey}), quiz.createStdQuiz);
+router.put('/quiz/admin/:pk_std_quiz',jwt({secret:secretKey}), quiz.updateQuiz);
+router.delete('/quiz/admin/:pk_std_quiz', jwt({secret:secretKey}), quiz.removeStdQuiz);
+
+
 //QUEST
-router.post('/quest/:fk_kids', jwt({secret:secretKey}), quest.createParents);
-router.post('/quest', quest.createAdmin);
+router.post('/quest',jwt({secret:secretKey}), quest.createNowQuest);
+router.post('/quest/parents/:fk_kids', jwt({secret:secretKey}), quest.createParents);
+router.post('/quest/admin', quest.createAdmin);
 
 router.put('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), quest.updateParentsQuest); //parents
 router.put('/quest/admin/:pk_std_que', quest.updateStdQuest);
