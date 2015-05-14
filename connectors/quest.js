@@ -123,7 +123,7 @@ exports.removeParentsQuest = function(req, res){
             console.error('MySQl connection err');
         }
         var pk_parents_quest = req.params.pk_parents_quest;
-        var Query = conn.query("DELETE FROM std_que WHERE parents_quest =? ",pk_parents_quest, function(err,rows){
+        var Query = conn.query("DELETE FROM std_que WHERE pk_parents_quest =? ",pk_parents_quest, function(err,rows){
             if(err){
                 connection.release();
                 console.log(err);
