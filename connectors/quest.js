@@ -15,7 +15,7 @@ exports.createNowQuest = function(req, res){
             'state' : req.body.state,
             'type' : req.body.type,
             'fk_std_que' : req.body.fk_std_que,
-            'fk_parnets_quest' : req.body.fk_parnets_quest,
+            'fk_parents_quest' : req.body.fk_parents_quest,
             'fk_kids' : req.user.fk_kids
         };
 
