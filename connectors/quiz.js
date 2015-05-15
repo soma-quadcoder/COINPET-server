@@ -58,7 +58,7 @@ exports.updateQuiz = function(req, res){
     console.error('MySQl connection err');
     }
     var pk_std_quiz = req.params.pk_std_quiz;
-    var Query = conn.query("UPDATE std_quiz SET point = ?, content =? WHERE pk_quiz = ?",[req.body.point, req.body.content,pk_std_quiz], function(err, result){
+    var Query = conn.query("UPDATE std_quiz SET point = ?, content =? WHERE pk_std_quiz = ?",[req.body.point, req.body.content,pk_std_quiz], function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
@@ -79,7 +79,7 @@ exports.removeStdQuiz = function(req, res){
 	    }
         var pk_quiz = req.params.pk_std_quiz;
 
-        var Query = conn.query("DELETE FROM std_quiz WHERE pk_quiz =? ", pk_std_quiz , function(err,rows){
+        var Query = conn.query("DELETE FROM std_quiz WHERE pk_std_quiz =? ", pk_std_quiz , function(err,rows){
 		    if(err){
 			    connection.release();
 			    console.log(err);
