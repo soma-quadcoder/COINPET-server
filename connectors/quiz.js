@@ -68,8 +68,6 @@ exports.updateQuiz = function(req, res){
         });
     });
 }
-
-
 //DELETE REMOVE
 exports.removeStdQuiz = function(req, res){
     console.log("DELETE /quiz/admin/:pk_std_quiz is called");
@@ -77,7 +75,7 @@ exports.removeStdQuiz = function(req, res){
     	if(err){
 	    	console.error('MySQl connection err');
 	    }
-        var pk_quiz = req.params.pk_std_quiz;
+        var pk_std_quiz = req.params.pk_std_quiz;
 
         var Query = conn.query("DELETE FROM std_quiz WHERE pk_std_quiz =? ", pk_std_quiz , function(err,rows){
 		    if(err){
