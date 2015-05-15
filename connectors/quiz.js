@@ -68,8 +68,6 @@ exports.updateQuiz = function(req, res){
         });
     });
 }
-
-
 //DELETE REMOVE
 exports.removeStdQuiz = function(req, res){
     console.log("DELETE /quiz/admin/:pk_std_quiz is called");
