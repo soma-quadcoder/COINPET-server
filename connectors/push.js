@@ -23,8 +23,8 @@ exports.pushQuestQuiz = function(req, res){
             }
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
 
-            var pk_std_quiz = JSON.stringify(rows);
-            var test = rows.pk_std_quiz;
+            //var pk_std_quiz = JSON.stringify(rows);
+            var test = rows.MAX(pk_std_quiz);
             console.log(test);
             console.log('pk_std_quiz is = ' + pk_std_quiz[0]);
             console.log(pk_std_quiz);
