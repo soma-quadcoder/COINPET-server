@@ -22,16 +22,14 @@ exports.pushQuestQuiz = function(req, res){
                 connection.release();
             }
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-
             //var pk_std_quiz = JSON.stringify(rows);
-            var test = rows['MAX(pk_std_quiz)'];
+            var test = rows["MAX(pk_std_quiz)"];
             console.log(test);
 
             console.log(rows);
             res.status(200).send(rows);
             connection.release();
         });
-        console.log(Query);
     });
 };
 
