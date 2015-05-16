@@ -21,6 +21,19 @@ exports.pushQuestQuiz = function(req, res){
                 console.log('err is' + err);
                 connection.release();
             }
+            //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
+
+            var pk_std_quiz = rows[0];
+            console.log('pk_std_quiz is = ' + pk_std_quiz);
+
+
+
+
+
+
+
+
+
             console.log(rows);
             res.status(200).send(rows);
             connection.release();
