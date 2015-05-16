@@ -10,7 +10,6 @@ exports.createNowQuest = function(req, res){
         }
         var questInfo = {
             'que_num' : req.body.que_num,
-            'content' : req.body.content,
             'point' : req.body.point,
             'state' : req.body.state,
             'type' : req.body.type,
@@ -30,6 +29,10 @@ exports.createNowQuest = function(req, res){
     });
 }
 
+
+
+
+
 //CREATE CREATE post /quest
 exports.createParents = function(req, res){
 	console.log("POST /quest/parents is called by parents");
@@ -41,7 +44,8 @@ exports.createParents = function(req, res){
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
-            'startTime': req.body.startTime
+            'startTime': req.body.startTime,
+            'fk_kids' : req.params.fk_kids
         };
 
         var Query = conn.query('INSERT INTO parents_quest SET ?', questInfo, function (err, result) {
@@ -67,8 +71,6 @@ exports.createAdmin = function(req, res){
             'point' : req.body.point
         };
 
-        console.log(req.params.fk_kids);
-        var condition = "fk_kids = "+ req.params.fk_kids;
         var Query =  conn.query('INSERT INTO std_que SET ?', questInfo  ,function(err, result){
             if(err){
                 connection.release();

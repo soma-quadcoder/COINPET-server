@@ -2,16 +2,14 @@ var conn = require('./db.js');
 
 
 //CREATE CREATE post /quest
-exports.createQuiz = function(req, res){
-    console.log("POST /quiz is called");
+exports.createNowQuiz = function(req, res){
+    console.log("POST /quiz is called by app");
     conn.getConnection(function(err,connection) {
         if (err) {
             console.error('MySQl connection err');
             console.log(err);
         }
         var quizInfo = {
-            'point' : req.body.point,
-            'content' : req.body.content,
             'state' : req.body.state,
             'fk_std_quiz' : req.body.fk_std_quiz,
             'fk_kids' : req.user.fk_kids
