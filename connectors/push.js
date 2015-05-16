@@ -1,6 +1,35 @@
 var gcm = require('node-gcm');
 var conn = require('./db.js');
 
+
+
+exports.pushQuestQuiz = function(req, res){
+    console.log('GET / is called');
+
+    conn.getConnection(function(err, connection){
+        if(err)
+            console.error('MySAL connection err in /regist');
+
+        var quizVers = req.body.pk_std_quiz;
+        var questPVer = req.body.pk_parents_quest;
+        var questSVer = req.body.pk_std_que;
+        var fk_kids = req.user.fk_kids;
+
+
+        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz UNION SELECT MAX(pk_parents_quest) FROM parents_quest UNION SELECT MAX(pk_std_que) FROM std_que", function(err, rows){
+            if(err){
+                console.log('err is' + err);
+                connection.release();
+            }
+            console.log(rows);
+            res.status(200).send(rows);
+            connection.release();
+        });
+    });
+};
+
+
+
 exports.regist = function(req, res){
 	console.log('POST /regist is called');
 	conn.getConnection(function(err, connection){
@@ -25,29 +54,4 @@ exports.regist = function(req, res){
 			connection.release();
 		});
 	});
-};
-
-exports.pushQuestQuiz = function(req, res){
-    console.log('GET / is called');
-
-    conn.getConnection(function(err, connection){
-        if(err)
-            console.error('MySAL connection err in /regist');
-
-        var quizVers = req.body.pk_std_quiz;
-        var questPVer = req.body.pk_parents_quest;
-        var questSVer = req.body.pk_std_que;
-        var fk_kids = req.user.fk_kids;
-
-
-        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz", function(err, rows){
-            if(err){
-                console.log('err is' + err);
-                connection.release();
-            }
-            console.log(rows);
-            res.status(200).send(rows);
-            connection.release();
-        });
-    });
 };
