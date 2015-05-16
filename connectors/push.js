@@ -23,9 +23,9 @@ exports.pushQuestQuiz = function(req, res){
             }
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
 
-            var pk_std_quiz = rows[1];
-            console.log('pk_std_quiz is = ' + pk_std_quiz);
-
+            var pk_std_quiz = JSON.stringify(rows);
+            console.log('pk_std_quiz is = ' + pk_std_quiz[0]);
+            console.log(pk_std_quiz);
 
 
 
