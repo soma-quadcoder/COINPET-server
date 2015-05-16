@@ -20,7 +20,7 @@ var user = require('./user');
 var user = require('./user/index');
 
 //QUIZ
-router.post('/quiz', jwt({secret:secretKey}), quiz.createQuiz);
+router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
 router.post('/quiz/admin', jwt({secret:secretKey}), quiz.createStdQuiz);
 router.put('/quiz/admin/:pk_std_quiz',jwt({secret:secretKey}), quiz.updateQuiz);
 router.delete('/quiz/admin/:pk_std_quiz', jwt({secret:secretKey}), quiz.removeStdQuiz);
@@ -38,11 +38,8 @@ router.delete('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), que
 router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 
 //PUSH SERVER
-//router.post('/regist', jwt({secret:secretKey}), push.regist);
-router.post('/regist', function(req,res){
-	console.log('call push server');
-	push.regist(req, res);
-});
+router.post('/regist', jwt({secret:secretKey}), push.regist);
+router.get('/getInfoQ', jwt({secret:secretKey}), push.pushQuestQuiz); //조회할때 get 괜찮음.
 
 
 // GOAL
