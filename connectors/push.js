@@ -16,7 +16,7 @@ exports.pushQuestQuiz = function(req, res){
         var fk_kids = req.user.fk_kids;
 
 
-        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz UNION SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_fkids = ?  UNION SELECT MAX(pk_std_que) FROM std_que", fk_kids, function(err, rows){
+        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz UNION SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  UNION SELECT MAX(pk_std_que) FROM std_que", fk_kids, function(err, rows){
             if(err){
                 console.log('err is' + err);
                 connection.release();
