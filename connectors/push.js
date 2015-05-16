@@ -25,6 +25,7 @@ exports.pushQuestQuiz = function(req, res){
 
             var pk_std_quiz = JSON.stringify(rows);
             var test = rows.pk_std_quiz;
+            console.log(test);
             console.log('pk_std_quiz is = ' + pk_std_quiz[0]);
             console.log(pk_std_quiz);
 
