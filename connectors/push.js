@@ -16,14 +16,14 @@ exports.pushQuestQuiz = function(req, res){
         var fk_kids = req.user.fk_kids;
 
 
-        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz UNION SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  UNION SELECT MAX(pk_std_que) FROM std_que", fk_kids, function(err, rows){
+        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function(err, rows){
             if(err){
                 console.log('err is' + err);
                 connection.release();
             }
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
             //var pk_std_quiz = JSON.stringify(rows);
-            var test = rows["MAX(pk_std_quiz)"];
+            var test = rows[0];
             console.log(test);
 
             console.log(rows);
