@@ -46,8 +46,15 @@ exports.pushQuestQuiz = function(req, res){
 
                 if (pk_std_quiz > quizVers) {
                     // Need update
+                    Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quix = ? ", quizVers, function(err, rows){
+                        if(err){
+                            console.log('err is ' + err);
+                            connection.release();
+                        }
+                        res.status(200).send(rows);
+                        connection.release();
+                    });
                     console.log('update quiz');
-
                 }
                 //else res.json("The lastet version of the system quiz");
 
