@@ -55,7 +55,7 @@ exports.pushQuestQuiz = function(req, res){
                     //Need parents quest update
                     console.log('update parents quest');
                 }
-                else res.json("The latest version of the parents quest.");
+                //else res.json("The latest version of the parents quest.");
 
                 if (pk_std_que > questSVer) {
                     //Need system quest update
@@ -63,8 +63,6 @@ exports.pushQuestQuiz = function(req, res){
                 }
                 //else res.json("The latest version of the system quest.");
 
-
-                console.log(rows);
                 res.status(200).send(rows);
                 connection.release();
             });
