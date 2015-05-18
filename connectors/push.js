@@ -34,13 +34,14 @@ exports.pushInfo = function(req, res){
                     }
                     console.log(rows);
                     //res.status(200).send(rows);
-                    connection.release();
                 });
                 callback(null);
             }],
             function(err, result){
                 console.log('end');
                 console.log(result);
+                res.status(200).send(result);
+                connection.release();
             }
         );
 
