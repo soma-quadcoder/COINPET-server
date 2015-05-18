@@ -26,7 +26,8 @@ exports.pushQuestQuiz = function(req, res){
             var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
             console.log(pk_std_quiz);
             console.log(pk_std_quiz[1]);
-            console.log(pk_std_quiz.pk_std_quiz);
+            var pk_std = pk_std_quiz.split(":");
+            console.log(pk_std);
             //pk_std_quiz = pk_std_quiz.split(":");
             //pk_std_quiz = pk_std_quiz.split("}");
             console.log(pk_std_quiz);
