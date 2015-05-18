@@ -35,7 +35,7 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                 });
-                res.status(200).send(rows);
+                res.status(200).json(rows);
                 callback(null);
             },
             function(callback) {
@@ -47,7 +47,7 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     });
-                    res.status(200).send(rows);
+                    res.status(200).json(rows);
                     callback(null);
             }
             ],function(err, result) {
