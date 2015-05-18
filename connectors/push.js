@@ -15,30 +15,55 @@ exports.pushQuestQuiz = function(req, res){
         var questSVer = req.body.pk_std_que;
         var fk_kids = req.user.fk_kids;
 
+        if(quizVers == null || questPVer == null || questSVer == null)
+            res.message('error parameters');
+        else {
+            var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
+                if (err) {
+                    console.log('err is' + err);
+                    connection.release();
+                }
+                //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
+                //split
+                var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
+                pk_std_quiz = pk_std_quiz.split(":")[1];
+                pk_std_quiz = pk_std_quiz.split("}")[0];
 
-        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function(err, rows){
-            if(err){
-                console.log('err is' + err);
+                var pk_parents_quest = JSON.stringify(rows[1]);
+                pk_parents_quest = pk_parents_quest.split(":")[1];
+                pk_parents_quest = pk_parents_quest.split("}")[0];
+
+                var pk_std_que = JSON.stringify(rows[2]);
+                pk_std_que = pk_std_que.split(":")[1];
+                pk_std_que = pk_std_que.split("}")[0];
+
+                console.log(pk_std_quiz + pk_parents_quest + pk_std_que);
+
+                if (pk_std_quiz > quizVers) {
+                    // Need update
+                    console.log('update quiz');
+
+                }
+                else res.message("The lastet version of the system quiz");
+
+                if (pk_parents_quest > questPVer) {
+                    //Need parents quest update
+                    console.log('update parents quest');
+                }
+                else res.message("The latest version of the parents quest.");
+
+                if (pk_std_que > questSVer) {
+                    //Need system quest update
+                    console.log('update system quest');
+                }
+                else res.message("The latest version of the system quest.");
+
+
+                console.log(rows);
+                res.status(200).send(rows);
                 connection.release();
-            }
-            //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-            //split pk_std_quiz
-            var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-            pk_std_quiz = pk_std_quiz.split(":")[1]; pk_std_quiz = pk_std_quiz.split("}")[0];
-
-            var pk_parents_quest = JSON.stringify(rows[1]);
-            pk_parents_quest = pk_parents_quest.split(":")[1]; pk_parents_quest = pk_parents_quest.split("}")[0];
-
-            var pk_std_que = JSON.stringify(rows[2]);
-            pk_std_que = pk_std_que.split(":")[1]; pk_std_que = pk_std_que.split("}")[0];
-
-            console.log(pk_std_quiz + pk_parents_quest + pk_std_que);
-
-
-            console.log(rows);
-            res.status(200).send(rows);
-            connection.release();
-        });
+            });
+        }
     });
 };
 
