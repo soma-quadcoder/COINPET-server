@@ -24,12 +24,24 @@ exports.pushQuestQuiz = function(req, res){
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
             //var pk_std_quiz = JSON.stringify(rows);
             var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
+            /*
             console.log(pk_std_quiz);
             console.log(pk_std_quiz[1]);
             var pk_std = pk_std_quiz.split(":")[1];
             console.log(pk_std);
             var pk_std_ = pk_std.split("}")[0];
             console.log(pk_std_);
+            */
+
+            //test split
+            pk_std_quiz = pk_std_quiz.split(":")[1];
+            pk_std_quiz = pk_std_quiz.split("}")[0];
+            console.log(pk_std_quiz);
+
+
+
+
+
             //pk_std_quiz = pk_std_quiz.split(":");
             //pk_std_quiz = pk_std_quiz.split("}");
             console.log(pk_std_quiz);
