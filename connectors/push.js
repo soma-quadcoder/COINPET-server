@@ -70,7 +70,7 @@ exports.pushQuestQuiz = function(req, res){
                 }
                 //else res.json("The latest version of the system quest.");
 
-                res.status(200).send(rows);
+                //res.status(200).send(rows);
                 connection.release();
             });
         }
