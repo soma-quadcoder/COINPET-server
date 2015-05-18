@@ -21,7 +21,7 @@ exports.pushQuestQuiz = function(req, res){
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
         if(quizVers == null || questPVer == null || questSVer == null)
-            res.message('error parameters');
+            res.json('error parameters');
         else {
             var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
                 if (err) {
@@ -49,19 +49,19 @@ exports.pushQuestQuiz = function(req, res){
                     console.log('update quiz');
 
                 }
-                else res.message("The lastet version of the system quiz");
+                else res.json("The lastet version of the system quiz");
 
                 if (pk_parents_quest > questPVer) {
                     //Need parents quest update
                     console.log('update parents quest');
                 }
-                else res.message("The latest version of the parents quest.");
+                else res.json("The latest version of the parents quest.");
 
                 if (pk_std_que > questSVer) {
                     //Need system quest update
                     console.log('update system quest');
                 }
-                else res.message("The latest version of the system quest.");
+                else res.json("The latest version of the system quest.");
 
 
                 console.log(rows);
