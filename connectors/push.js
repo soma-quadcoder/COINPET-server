@@ -22,7 +22,7 @@ exports.pushInfo = function(req, res){
                         console.log('err is' + err);
                         connection.release();
                     }
-                    console.log(rows);
+                    //console.log(rows);
                 });
                 callback(null);
             },
@@ -32,7 +32,7 @@ exports.pushInfo = function(req, res){
                         console.log('err is ' + err);
                         connection.release();
                     }
-                    console.log(rows);
+                    //console.log(rows);
                     //res.status(200).send(rows);
                 });
                 callback(null);
@@ -43,21 +43,18 @@ exports.pushInfo = function(req, res){
                         console.log('err is ' + err);
                         connection.release();
                     }
-                    console.log(rows);
+                    //console.log(rows);
                     //res.status(200).send(rows);
                     });
                     callback(null);
-                },
-            function(err, result){
+            }
+            ]
+            ,function(err, result) {
                 console.log('end');
                 console.log(result);
                 res.status(200).send(result);
                 connection.release();
-            }]
-        );
-
-
-
+            });
 /*
         if(quizVers == null || questPVer == null || questSVer == null)
             res.json('error parameters');
