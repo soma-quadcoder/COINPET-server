@@ -35,6 +35,7 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                 });
+                res.status(200).send(rows);
                 callback(null);
             },
             function(callback) {
@@ -46,10 +47,10 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     });
+                    res.status(200).send(rows);
                     callback(null);
             }
-            ]
-            ,function(err, result) {
+            ],function(err, result) {
                 console.log('end');
                 console.log(result);
                 res.status(200).send(result);
