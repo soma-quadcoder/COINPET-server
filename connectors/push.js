@@ -36,13 +36,24 @@ exports.pushInfo = function(req, res){
                     //res.status(200).send(rows);
                 });
                 callback(null);
-            }],
+            },
+            function(callback) {
+                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
+                    if (err) {
+                        console.log('err is ' + err);
+                        connection.release();
+                    }
+                    console.log(rows);
+                    //res.status(200).send(rows);
+                    });
+                    callback(null);
+                },
             function(err, result){
                 console.log('end');
                 console.log(result);
                 res.status(200).send(result);
                 connection.release();
-            }
+            }]
         );
 
 
