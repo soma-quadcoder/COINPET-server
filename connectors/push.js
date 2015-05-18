@@ -46,7 +46,7 @@ exports.pushQuestQuiz = function(req, res){
 
                 if (pk_std_quiz > quizVers) {
                     // Need update
-                    Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quix = ? ", quizVers, function(err, rows){
+                    Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function(err, rows){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
