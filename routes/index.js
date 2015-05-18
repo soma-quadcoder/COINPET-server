@@ -39,9 +39,13 @@ router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 
 //PUSH SERVER
 router.post('/regist', jwt({secret:secretKey}), push.regist);
-router.get('/getInfoQ/:pk_std_quiz/:pk_parents_quest/:pk_std_que', jwt({secret:secretKey}), push.pushQuestQuiz); //조회할때 get 괜찮음.
+router.get('/getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz', jwt({secret:secretKey}), push.pushInfo); //조회할때 get 괜찮음.
 
-
+/*
+router.get('/getInfoStdQuest/:pk_std_que', jwt({secret:secretKey}), push.pushStdQuest); //조회할때 get 괜찮음.
+router.get('/getInfoParentsQuest/:pk_parents_quest', jwt({secret:secretKey}), push.pushParentsQuest); //조회할때 get 괜찮음.
+router.get('/getInfoQuiz/:pk_std_quiz', jwt({secret:secretKey}), push.pushStdQuiz); //조회할때 get 괜찮음.
+*/
 // GOAL
 router.post('/goal', jwt({secret:secretKey}), goal.create);
 router.get('/goal', jwt({secret : secretKey }), function(req, res){
