@@ -47,7 +47,7 @@ exports.pushInfo = function(req, res){
 
 
 
-
+/*
         if(quizVers == null || questPVer == null || questSVer == null)
             res.json('error parameters');
         else {
@@ -101,7 +101,7 @@ exports.pushInfo = function(req, res){
                 //res.status(200).send(rows);
                 connection.release();
             });
-        }
+        }*/
     });
 };
 
