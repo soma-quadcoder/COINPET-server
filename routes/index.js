@@ -39,7 +39,7 @@ router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 
 //PUSH SERVER
 router.post('/regist', jwt({secret:secretKey}), push.regist);
-router.get('/getInfoQ', jwt({secret:secretKey}), push.pushQuestQuiz); //조회할때 get 괜찮음.
+router.get('/getInfoQ/:pk_std_quiz/:pk_parents_quest/:pk_std_que', jwt({secret:secretKey}), push.pushQuestQuiz); //조회할때 get 괜찮음.
 
 
 // GOAL

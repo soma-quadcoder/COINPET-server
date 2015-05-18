@@ -9,12 +9,17 @@ exports.pushQuestQuiz = function(req, res){
     conn.getConnection(function(err, connection){
         if(err)
             console.error('MySAL connection err in /regist');
-
+/*
         var quizVers = req.body.pk_std_quiz;
         var questPVer = req.body.pk_parents_quest;
         var questSVer = req.body.pk_std_que;
         var fk_kids = req.user.fk_kids;
 
+        */
+        var quizVers = req.params.pk_std_quiz;
+        var questPVer = req.params.pk_parents_quest;
+        var questSVer = req.params.pk_std_que;
+        var fk_kids = req.user.fk_kids;
         if(quizVers == null || questPVer == null || questSVer == null)
             res.message('error parameters');
         else {
