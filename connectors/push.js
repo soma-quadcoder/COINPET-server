@@ -22,29 +22,19 @@ exports.pushQuestQuiz = function(req, res){
                 connection.release();
             }
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-            //var pk_std_quiz = JSON.stringify(rows);
+            //split pk_std_quiz
             var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-            /*
-            console.log(pk_std_quiz);
-            console.log(pk_std_quiz[1]);
-            var pk_std = pk_std_quiz.split(":")[1];
-            console.log(pk_std);
-            var pk_std_ = pk_std.split("}")[0];
-            console.log(pk_std_);
-            */
+            pk_std_quiz = pk_std_quiz.split(":")[1]; pk_std_quiz = pk_std_quiz.split("}")[0];
 
-            //test split
-            pk_std_quiz = pk_std_quiz.split(":")[1];
-            pk_std_quiz = pk_std_quiz.split("}")[0];
-            console.log(pk_std_quiz);
+            var pk_parents_quest = JSON.stringify(rows[1]);
+            pk_parents_quest = pk_parents_quest.split(":")[1]; pk_parents_quest = pk_parents_quest.split("}")[0];
+
+            var pk_std_que = JSON.stringify(rows[2]);
+            pk_std_que = pk_std_que.split(":")[1]; pk_std_que = pk_std_que.split("}")[0];
+
+            console.log(pk_std_quiz + pk_parents_quest + pk_std_que);
 
 
-
-
-
-            //pk_std_quiz = pk_std_quiz.split(":");
-            //pk_std_quiz = pk_std_quiz.split("}");
-            console.log(pk_std_quiz);
             console.log(rows);
             res.status(200).send(rows);
             connection.release();
