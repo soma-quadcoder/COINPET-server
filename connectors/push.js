@@ -49,7 +49,7 @@ exports.pushQuestQuiz = function(req, res){
                     console.log('update quiz');
 
                 }
-                else res.json("The lastet version of the system quiz");
+                //else res.json("The lastet version of the system quiz");
 
                 if (pk_parents_quest > questPVer) {
                     //Need parents quest update
@@ -61,7 +61,7 @@ exports.pushQuestQuiz = function(req, res){
                     //Need system quest update
                     console.log('update system quest');
                 }
-                else res.json("The latest version of the system quest.");
+                //else res.json("The latest version of the system quest.");
 
 
                 console.log(rows);
