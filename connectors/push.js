@@ -18,34 +18,36 @@ exports.pushInfo = function(req, res){
         var pk_std_quiz;
         var pk_parents_quest;
         var pk_std_que;
-        var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
-            if (err) {
-                console.log('err is' + err);
-                connection.release();
-            }
 
-            //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-            //split
-            pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-            pk_std_quiz = pk_std_quiz.split(":")[1];
-            pk_std_quiz = pk_std_quiz.split("}")[0];
-            console.log(pk_std_quiz);
-
-            pk_parents_quest = JSON.stringify(rows[1]);
-            pk_parents_quest = pk_parents_quest.split(":")[1];
-            pk_parents_quest = pk_parents_quest.split("}")[0];
-
-            pk_std_que = JSON.stringify(rows[2]);
-            pk_std_que = pk_std_que.split(":")[1];
-            pk_std_que = pk_std_que.split("}")[0];
-
-        });
         async.waterfall(
             [
+            function(callback){
+                var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
+                    if (err) {
+                            console.log('err is' + err);
+                            connection.release();
+                        }
+                    //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
+                    //split
+                    pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
+                    pk_std_quiz = pk_std_quiz.split(":")[1];
+                    pk_std_quiz = pk_std_quiz.split("}")[0];
+                    console.log(pk_std_quiz);
+
+                    pk_parents_quest = JSON.stringify(rows[1]);
+                    pk_parents_quest = pk_parents_quest.split(":")[1];
+                    pk_parents_quest = pk_parents_quest.split("}")[0];
+
+                    pk_std_que = JSON.stringify(rows[2]);
+                    pk_std_que = pk_std_que.split(":")[1];
+                    pk_std_que = pk_std_que.split("}")[0];
+
+                });
+            },
             function(callback) {
                 console.log(pk_std_quiz + quizVers);
                 if (pk_std_quiz > quizVers) {
-                    Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz >  ?) ", quizVers, function (err, rows) {
+                    var Query = conn.query("SELECT * FROM std_quiz ", function (err, rows) {
                         if (err) {
                             console.log('err is ' + err);
                             connection.release();
@@ -59,25 +61,20 @@ exports.pushInfo = function(req, res){
                     callback(null, 'The lastet version of the system quiz');
             },
             function(arg1, callback) {
-                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
+                var Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
                         connection.release();
                     }
-                    //console.log(rows);
-                    //res.status(200).send(rows);
-                    //res.status(200).json(rows);
+
                     var arg2 = arg1 + JSON.stringify(rows);
                     console.log(arg2);
                     callback(null, arg2);
                     });
-                    //callback(null, rows);
-                    //console.log(arg1);
             }
             ],function(err, results) {
                 console.log('end');
                 console.log(results);
-                //console.log(result);
                 res.status(200).send(results);
                 connection.release();
             });
