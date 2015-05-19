@@ -12,7 +12,7 @@ exports.read = function(req, res){
 			connection.release();
 		}
 		console.log(rows);
-		res.state(200).json(rows);
+		res.status(200).json(rows);
 		connection.release();
 	});
 	});
@@ -34,7 +34,7 @@ exports.readParents = function(req, res){
 			console.log(err);
 		}
 		console.log(rows);
-		res.state(200).json(rows);
+		res.status(200).json(rows);
 		connection.release();
 	});
 	});
