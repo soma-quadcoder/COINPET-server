@@ -56,7 +56,7 @@ exports.pushInfo = function(req, res){
                         });
                     }
                     else {
-                        var arg1 = 'The lastet version of the system quiz';
+                        var arg1 = 'The lastet version of the system quiz \r\n';
                         callback(null, arg1);
                     }
                 },
@@ -73,14 +73,14 @@ exports.pushInfo = function(req, res){
                         });
                     }
                     else {
-                        var arg2 = arg1 + 'The lastest version of the system quest';
+                        var arg2 = arg1 + 'The lastest version of the system quest \r\n';
                         callback(null, arg2);
                     }
                 },
                 function(arg2, callback) {
                     console.log('pk_parents_quest');
                     if (pk_parents_quest > questPVer) {
-                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? )  ", questPVer , function (err, rows) {
+                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ?  ", questPVer, fk_kids , function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
@@ -90,7 +90,7 @@ exports.pushInfo = function(req, res){
                         });
                     }
                     else {
-                        var arg3 = arg2 + 'The lastest version of the parents quest';
+                        var arg3 = arg2 + 'The lastest version of the parents quest \r\n';
                         callback(null, arg3);
                     }
                 }
