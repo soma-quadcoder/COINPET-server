@@ -32,17 +32,14 @@ exports.pushInfo = function(req, res){
                         pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
                         pk_std_quiz = pk_std_quiz.split(":")[1];
                         pk_std_quiz = pk_std_quiz.split("}")[0];
-                        console.log(pk_std_quiz);
 
                         pk_parents_quest = JSON.stringify(rows[1]);
                         pk_parents_quest = pk_parents_quest.split(":")[1];
                         pk_parents_quest = pk_parents_quest.split("}")[0];
-                        console.log(pk_parents_quest);
 
                         pk_std_que = JSON.stringify(rows[2]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
-                        console.log(pk_std_que);
                         callback(null);
                     });
                 },
@@ -58,8 +55,8 @@ exports.pushInfo = function(req, res){
                             callback(null, arg1);
                         });
                     }
-                    //else
-                       // callback(null, 'The lastet version of the system quiz');
+                    else
+                        callback(null, 'The lastet version of the system quiz');
                 },
                 function(arg1, callback) {
                     console.log('pk_std_que function');
@@ -73,8 +70,8 @@ exports.pushInfo = function(req, res){
                             callback(null, arg2);
                         });
                     }
-                   // else
-                    //    callback(null, 'The lastet version of the system quest');
+                    else
+                        callback(null, 'The lastet version of the system quest');
                 },
                 function(arg2, callback) {
                     console.log('pk_parents_quest');
@@ -88,8 +85,8 @@ exports.pushInfo = function(req, res){
                             callback(null, arg3);
                         });
                     }
-                   // else
-                    //    callback(null, 'The lastet version of the parents quest');
+                    else
+                        callback(null, 'The lastet version of the parents quest');
                 }
             ],function(err, results) {
                 console.log('end');
