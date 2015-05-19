@@ -51,7 +51,7 @@ exports.pushInfo = function(req, res){
                             console.log('err is ' + err);
                             connection.release();
                         }
-                        var arg1 = JSON.stringify(rows);
+                        var arg1 = 'system quiz : ' + JSON.stringify(rows);
                         callback(null, arg1);
                     });
                 }
@@ -59,16 +59,33 @@ exports.pushInfo = function(req, res){
                     callback(null, 'The lastet version of the system quiz');
             },
             function(arg1, callback) {
-                var Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
-                    if (err) {
-                        console.log('err is ' + err);
-                        connection.release();
-                    }
-
-                    var arg2 = arg1 +'\r\narg2\r\n ' + JSON.stringify(rows);
-                    callback(null, arg2);
+                if (pk_std_que > questSVer) {
+                    var Query = conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
+                        if (err) {
+                            console.log('err is ' + err);
+                            connection.release();
+                        }
+                        var arg2 = 'system quest : ' + JSON.stringify(rows);
+                        callback(null, arg2);
                     });
-            }
+                }
+                else
+                    callback(null, 'The lastet version of the system quest');
+            },
+            function(arg2, callback) {
+                if (pk_parents_quest > questPVer) {
+                    var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? )  ", questPVer , function (err, rows) {
+                        if (err) {
+                            console.log('err is ' + err);
+                            connection.release();
+                        }
+                        var arg3 = 'parents quest : ' + JSON.stringify(rows);
+                        callback(null, arg3);
+                    });
+                }
+                else
+                    callback(null, 'The lastet version of the parents quest');
+            },
             ],function(err, results) {
                 console.log('end');
                 console.log(results);
