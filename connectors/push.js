@@ -29,6 +29,7 @@ exports.pushInfo = function(req, res){
             pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
             pk_std_quiz = pk_std_quiz.split(":")[1];
             pk_std_quiz = pk_std_quiz.split("}")[0];
+            console.log(pk_std_quiz);
 
             pk_parents_quest = JSON.stringify(rows[1]);
             pk_parents_quest = pk_parents_quest.split(":")[1];
