@@ -15,7 +15,8 @@ exports.pushInfo = function(req, res){
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
 
-        waterfall([
+        waterfall(
+            [
             function(callback){
                 var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
                     if (err) {
@@ -24,7 +25,7 @@ exports.pushInfo = function(req, res){
                     }
                     //console.log(rows);
                 });
-                callback(null, arg1);
+                callback(null, rows);
             },
             function(arg1, callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
@@ -35,9 +36,8 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
-                    arg1 += rows;
                 });
-                callback(null, arg1);
+                callback(null, rows);
             },
             function(arg1, callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
@@ -48,9 +48,8 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
-                    arg1 += rows;
                     });
-                    callback(null, arg1);
+                    callback(null, rows);
                     console.log(arg1);
             }
             ],function(err, result) {
