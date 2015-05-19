@@ -39,6 +39,7 @@ exports.pushInfo = function(req, res){
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
                     var arg2 = arg1 + rows;
+                    console.log(arg2);
                     callback(null, arg2);
                 });
 
@@ -53,6 +54,7 @@ exports.pushInfo = function(req, res){
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
                     var arg3 = arg2 + rows;
+                    console.log(arg3);
                     callback(null, arg3);
                     });
                     //callback(null, rows);
