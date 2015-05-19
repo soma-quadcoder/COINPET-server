@@ -73,7 +73,7 @@ exports.pushInfo = function(req, res){
                         });
                     }
                     else {
-                        var arg2 = 'The lastest version of the system quest';
+                        var arg2 = arg1 + 'The lastest version of the system quest';
                         callback(null, arg2);
                     }
                 },
@@ -90,7 +90,7 @@ exports.pushInfo = function(req, res){
                         });
                     }
                     else {
-                        var arg3 = 'The lastest version of the parents quest';
+                        var arg3 = arg2 + 'The lastest version of the parents quest';
                         callback(null, arg3);
                     }
                 }
