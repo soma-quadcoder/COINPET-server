@@ -42,7 +42,7 @@ exports.pushInfo = function(req, res){
 
             },
             function(arg1, callback) {
-                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
+                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
                         connection.release();
@@ -53,10 +53,11 @@ exports.pushInfo = function(req, res){
                     callback(null, rows);
                     });
                     //callback(null, rows);
-                    console.log(arg1);
+                    //console.log(arg1);
             }
-            ],function(err, result) {
+            ],function(err, response) {
                 console.log('end');
+                console.log(response);
                 console.log(result);
                 res.status(200).send(result);
                 connection.release();
