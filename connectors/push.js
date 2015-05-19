@@ -28,7 +28,7 @@ exports.pushInfo = function(req, res){
                 });
 
             },
-            function(arg1, callback) {
+            function(callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
@@ -41,7 +41,7 @@ exports.pushInfo = function(req, res){
                 });
 
             },
-            function(arg1, callback) {
+            function(callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
@@ -58,8 +58,8 @@ exports.pushInfo = function(req, res){
             ],function(err, response) {
                 console.log('end');
                 console.log(response);
-                console.log(result);
-                res.status(200).send(result);
+                //console.log(result);
+                res.status(200).send();
                 connection.release();
             });
 /*
