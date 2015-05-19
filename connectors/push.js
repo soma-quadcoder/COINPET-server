@@ -82,7 +82,8 @@ exports.pushInfo = function(req, res){
                     console.log('pk_parents_quest');
                     if (pk_parents_quest > questPVer) {
                         console.log(pk_parents_quest);
-                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", questPVer,fk_kids, function (err, rows) {
+                        console.log(fk_kids);
+                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", questPVer, fk_kids, function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
