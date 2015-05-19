@@ -24,9 +24,9 @@ exports.pushInfo = function(req, res){
                     }
                     //console.log(rows);
                 });
-                callback(null);
+                callback(null, arg1);
             },
-            function(callback) {
+            function(arg1, callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
@@ -34,11 +34,12 @@ exports.pushInfo = function(req, res){
                     }
                     //console.log(rows);
                     //res.status(200).send(rows);
-                    res.status(200).json(rows);
+                    //res.status(200).json(rows);
+                    arg1 += rows;
                 });
-                callback(null);
+                callback(null, arg1);
             },
-            function(callback) {
+            function(arg1, callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
@@ -46,9 +47,11 @@ exports.pushInfo = function(req, res){
                     }
                     //console.log(rows);
                     //res.status(200).send(rows);
-                    res.status(200).json(rows);
+                    //res.status(200).json(rows);
+                    arg1 += rows;
                     });
-                    callback(null);
+                    callback(null, arg1);
+                    console.log(arg1);
             }
             ],function(err, result) {
                 console.log('end');
