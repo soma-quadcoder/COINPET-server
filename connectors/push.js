@@ -53,7 +53,7 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
-                    var arg3 = arg2 + rows;
+                    var arg3[] = arg2 + rows;
                     console.log(arg3);
                     callback(null, arg3);
                     });
@@ -64,6 +64,7 @@ exports.pushInfo = function(req, res){
                 console.log('end');
                 console.log(result);
                 //console.log(result);
+                console.log(arguments);
                 res.status(200).send();
                 connection.release();
             });
