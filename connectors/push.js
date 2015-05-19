@@ -55,7 +55,6 @@ exports.pushInfo = function(req, res){
                 }
                 else
                     callback(null, 'The lastet version of the system quiz');
-
             },
             function(arg1, callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
