@@ -60,9 +60,9 @@ exports.pushInfo = function(req, res){
                     //callback(null, rows);
                     //console.log(arg1);
             }
-            ],function(err, result) {
+            ],function(err, results) {
                 console.log('end');
-                console.log(result);
+                console.log(results);
                 //console.log(result);
                 console.log(arguments);
                 res.status(200).send();
