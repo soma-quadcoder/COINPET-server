@@ -97,6 +97,7 @@ exports.pushInfo = function(req, res){
                 res.status(200).send(results);
                 connection.release();
             });
+
         /*
          if(quizVers == null || questPVer == null || questSVer == null)
          res.json('error parameters');
