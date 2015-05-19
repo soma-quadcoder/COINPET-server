@@ -55,8 +55,10 @@ exports.pushInfo = function(req, res){
                             callback(null, arg1);
                         });
                     }
-                    else
-                        callback(null, 'The lastet version of the system quiz');
+                    else {
+                        var arg1 = 'The lastet version of the system quiz';
+                        callback(null, arg1);
+                    }
                 },
                 function(arg1, callback) {
                     console.log('pk_std_que function');
@@ -70,8 +72,10 @@ exports.pushInfo = function(req, res){
                             callback(null, arg2);
                         });
                     }
-                    else
-                        callback(null, 'The lastet version of the system quest');
+                    else {
+                        var arg2 = 'The lastest version of the system quest';
+                        callback(null, arg2);
+                    }
                 },
                 function(arg2, callback) {
                     console.log('pk_parents_quest');
@@ -85,8 +89,10 @@ exports.pushInfo = function(req, res){
                             callback(null, arg3);
                         });
                     }
-                    else
-                        callback(null, 'The lastet version of the parents quest');
+                    else {
+                        var arg3 = 'The lastest version of the parents quest';
+                        callback(null, arg3);
+                    }
                 }
             ],function(err, results) {
                 console.log('end');
