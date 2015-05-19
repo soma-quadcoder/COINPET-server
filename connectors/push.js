@@ -42,6 +42,7 @@ exports.pushInfo = function(req, res){
         async.waterfall(
             [
             function(callback) {
+                console.log(pk_std_quiz + quizVers);
                 if (pk_std_quiz > quizVers) {
                     Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz >  ?) ", quizVers, function (err, rows) {
                         if (err) {
