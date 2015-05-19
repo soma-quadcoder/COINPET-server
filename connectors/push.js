@@ -36,7 +36,8 @@ exports.pushInfo = function(req, res){
                         pk_parents_quest = JSON.stringify(rows[1]);
                         pk_parents_quest = pk_parents_quest.split(":")[1];
                         pk_parents_quest = pk_parents_quest.split("}")[0];
-
+                        console.log(pk_parents_quest);
+                        console.log(questPVer);
                         pk_std_que = JSON.stringify(rows[2]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
@@ -51,7 +52,7 @@ exports.pushInfo = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg1 = 'system quiz : ' + JSON.stringify(rows);
+                            var arg1 = 'system quiz : ' + JSON.stringify(rows) + '\r\n';
                             callback(null, arg1);
                         });
                     }
@@ -68,7 +69,7 @@ exports.pushInfo = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg2 = arg1 + 'system quest : ' + JSON.stringify(rows);
+                            var arg2 = arg1 + 'system quest : ' + JSON.stringify(rows) + '\r\n';
                             callback(null, arg2);
                         });
                     }
@@ -80,12 +81,13 @@ exports.pushInfo = function(req, res){
                 function(arg2, callback) {
                     console.log('pk_parents_quest');
                     if (pk_parents_quest > questPVer) {
-                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ?  ", questPVer, fk_kids , function (err, rows) {
+                        console.log(pk_parents_quest);
+                        var Query = conn.query("SELECT * FROM parents_quest WHERE fk_kids = ? AND ( pk_parents_quest > ? )  ",fk_kids, questPVer, function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg3 = arg2 + 'parents quest : ' + JSON.stringify(rows);
+                            var arg3 = arg2 + 'parents quest : ' + JSON.stringify(rows) + '\r\n';
                             callback(null, arg3);
                         });
                     }
