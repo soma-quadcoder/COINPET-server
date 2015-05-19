@@ -54,7 +54,7 @@ exports.pushInfo = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg1 =  JSON.stringify(rows);
+                            var arg1 = 'system quiz : ' + JSON.stringify(rows);
                             callback(null, arg1);
                         });
                     }
@@ -69,7 +69,7 @@ exports.pushInfo = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg2 = arg1  + JSON.stringify(rows);
+                            var arg2 = arg1 + 'system quest : ' + JSON.stringify(rows);
                             callback(null, arg2);
                         });
                     }
@@ -84,13 +84,13 @@ exports.pushInfo = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg3 = arg2  + JSON.stringify(rows);
+                            var arg3 = arg2 + 'parents quest : ' + JSON.stringify(rows);
                             callback(null, arg3);
                         });
                     }
                    // else
                     //    callback(null, 'The lastet version of the parents quest');
-                },
+                }
             ],function(err, results) {
                 console.log('end');
                 console.log(results);
