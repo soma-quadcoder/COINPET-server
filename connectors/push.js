@@ -15,6 +15,9 @@ exports.pushInfo = function(req, res){
         var questPVer = req.params.pk_parents_quest;
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
+        var pk_std_quiz;
+        var pk_parents_quest;
+        var pk_std_que;
         var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
             if (err) {
                 console.log('err is' + err);
@@ -23,39 +26,38 @@ exports.pushInfo = function(req, res){
 
             //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
             //split
-            var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
+            pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
             pk_std_quiz = pk_std_quiz.split(":")[1];
             pk_std_quiz = pk_std_quiz.split("}")[0];
 
-            var pk_parents_quest = JSON.stringify(rows[1]);
+            pk_parents_quest = JSON.stringify(rows[1]);
             pk_parents_quest = pk_parents_quest.split(":")[1];
             pk_parents_quest = pk_parents_quest.split("}")[0];
 
-            var pk_std_que = JSON.stringify(rows[2]);
+            pk_std_que = JSON.stringify(rows[2]);
             pk_std_que = pk_std_que.split(":")[1];
             pk_std_que = pk_std_que.split("}")[0];
-
-
 
         });
         async.waterfall(
             [
             function(callback) {
-                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
-                    if (err) {
-                        console.log('err is ' + err);
-                        connection.release();
-                    }
-                    //console.log(rows);
-                    //res.status(200).send(rows);
-                    //res.status(200).json(rows);
-                    var arg2 = JSON.stringify(rows);
-                    console.log(arg2);
-                    callback(null, arg2);
-                });
+                if (pk_std_quiz > quizVers) {
+                    Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz >  ?) ", quizVers, function (err, rows) {
+                        if (err) {
+                            console.log('err is ' + err);
+                            connection.release();
+                        }
+                        var arg1 = JSON.stringify(rows);
+                        console.log(arg1);
+                        callback(null, arg1);
+                    });
+                }
+                else
+                    callback(null, 'The lastet version of the system quiz');
 
             },
-            function(arg2, callback) {
+            function(arg1, callback) {
                 Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", 7 , function (err, rows) {
                     if (err) {
                         console.log('err is ' + err);
@@ -64,9 +66,9 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
-                    var arg3 = arg2 + JSON.stringify(rows);
-                    console.log(arg3);
-                    callback(null, arg3);
+                    var arg2 = arg1 + JSON.stringify(rows);
+                    console.log(arg2);
+                    callback(null, arg2);
                     });
                     //callback(null, rows);
                     //console.log(arg1);
@@ -75,8 +77,7 @@ exports.pushInfo = function(req, res){
                 console.log('end');
                 console.log(results);
                 //console.log(result);
-                console.log(arguments);
-                res.status(200).send();
+                res.status(200).send(results);
                 connection.release();
             });
 /*
