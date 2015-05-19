@@ -1,6 +1,7 @@
 var gcm = require('node-gcm');
 var conn = require('./db.js');
-var waterfall = require('async-waterfall');
+//var waterfall = require('async-waterfall');
+var async = require('async');
 
 
 exports.pushInfo = function(req, res){
@@ -15,7 +16,7 @@ exports.pushInfo = function(req, res){
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
 
-        waterfall(
+        async.waterfall(
             [
             function(callback){
                 var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
