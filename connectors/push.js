@@ -42,19 +42,16 @@ exports.pushInfo = function(req, res){
                     pk_std_que = pk_std_que.split(":")[1];
                     pk_std_que = pk_std_que.split("}")[0];
                     callback(null);
-
                 });
             },
             function(callback) {
-                console.log(pk_std_quiz + quizVers);
                 if (pk_std_quiz > quizVers) {
-                    var Query = conn.query("SELECT * FROM std_quiz ", function (err, rows) {
+                    var Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
                         if (err) {
                             console.log('err is ' + err);
                             connection.release();
                         }
                         var arg1 = JSON.stringify(rows);
-                        console.log(arg1);
                         callback(null, arg1);
                     });
                 }
@@ -68,8 +65,7 @@ exports.pushInfo = function(req, res){
                         connection.release();
                     }
 
-                    var arg2 = arg1 + JSON.stringify(rows);
-                    console.log(arg2);
+                    var arg2 = arg1 +'\r\narg2\r\n ' + JSON.stringify(rows);
                     callback(null, arg2);
                     });
             }
