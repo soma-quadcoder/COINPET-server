@@ -53,7 +53,7 @@ exports.pushInfo = function(req, res){
                     //console.log(rows);
                     //res.status(200).send(rows);
                     //res.status(200).json(rows);
-                    var arg3[] = arg2 + rows;
+                    var arg3 = arg2 + rows;
                     console.log(arg3);
                     callback(null, arg3);
                     });
