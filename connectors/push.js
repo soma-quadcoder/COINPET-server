@@ -24,32 +24,35 @@ exports.pushInfo = function(req, res){
                         connection.release();
                     }
                     //console.log(rows);
-                });
-                callback(null, rows);
-            },
-            function(arg1, callback) {
-                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
-                    if (err) {
-                        console.log('err is ' + err);
-                        connection.release();
-                    }
-                    //console.log(rows);
-                    //res.status(200).send(rows);
-                    //res.status(200).json(rows);
-                });
-                callback(null, rows);
-            },
-            function(arg1, callback) {
-                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
-                    if (err) {
-                        console.log('err is ' + err);
-                        connection.release();
-                    }
-                    //console.log(rows);
-                    //res.status(200).send(rows);
-                    //res.status(200).json(rows);
-                    });
                     callback(null, rows);
+                });
+
+            },
+            function(arg1, callback) {
+                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
+                    if (err) {
+                        console.log('err is ' + err);
+                        connection.release();
+                    }
+                    //console.log(rows);
+                    //res.status(200).send(rows);
+                    //res.status(200).json(rows);
+                    callback(null, rows);
+                });
+
+            },
+            function(arg1, callback) {
+                Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function (err, rows) {
+                    if (err) {
+                        console.log('err is ' + err);
+                        connection.release();
+                    }
+                    //console.log(rows);
+                    //res.status(200).send(rows);
+                    //res.status(200).json(rows);
+                    callback(null, rows);
+                    });
+                    //callback(null, rows);
                     console.log(arg1);
             }
             ],function(err, result) {
