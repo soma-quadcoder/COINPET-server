@@ -41,6 +41,7 @@ exports.pushInfo = function(req, res){
                     pk_std_que = JSON.stringify(rows[2]);
                     pk_std_que = pk_std_que.split(":")[1];
                     pk_std_que = pk_std_que.split("}")[0];
+                    callback(null);
 
                 });
             },
