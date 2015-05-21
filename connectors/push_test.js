@@ -39,8 +39,6 @@ exports.regist = function(req, res){
 			else console.log(result);
 	});
 };
-
-
 exports.createParents = function(req, res){
     console.log("POST /quest is called");
     conn.getConnection(function(err,connection){

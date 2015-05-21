@@ -1,6 +1,5 @@
 var gcm = require('node-gcm');
 var conn = require('./db.js');
-//var waterfall = require('async-waterfall');
 var async = require('async');
 
 
@@ -36,8 +35,7 @@ exports.pushInfo = function(req, res){
                         pk_parents_quest = JSON.stringify(rows[1]);
                         pk_parents_quest = pk_parents_quest.split(":")[1];
                         pk_parents_quest = pk_parents_quest.split("}")[0];
-                        console.log(pk_parents_quest);
-                        console.log(questPVer);
+
                         pk_std_que = JSON.stringify(rows[2]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
@@ -45,7 +43,7 @@ exports.pushInfo = function(req, res){
                     });
                 },
                 function(callback) {
-                    console.log('pk_std_quiz function');
+                    //system Quiz check and update
                     if (pk_std_quiz > quizVers) {
                         var Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
                             if (err) {
@@ -62,7 +60,7 @@ exports.pushInfo = function(req, res){
                     }
                 },
                 function(arg1, callback) {
-                    console.log('pk_std_que function');
+                    //System quest check and update
                     if (pk_std_que > questSVer) {
                         var Query = conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
                             if (err) {
@@ -79,10 +77,8 @@ exports.pushInfo = function(req, res){
                     }
                 },
                 function(arg2, callback) {
-                    console.log('pk_parents_quest');
+                    //Parents quest check and update
                     if (pk_parents_quest > questPVer) {
-                        console.log(pk_parents_quest);
-                        console.log(fk_kids);
                         var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
@@ -97,272 +93,17 @@ exports.pushInfo = function(req, res){
                         callback(null, arg3);
                     }
                 }
-            ],function(err, results) {
-                console.log('end');
+            ],
+            function(err, results) {
+
                 console.log(results);
-                res.status(200).send(results);
+                res.status(200).json(results);
                 connection.release();
             });
-
-        /*
-         if(quizVers == null || questPVer == null || questSVer == null)
-         res.json('error parameters');
-         else {
-         var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
-         if (err) {
-         console.log('err is' + err);
-         connection.release();
-         }
-         //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-         //split
-         var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-         pk_std_quiz = pk_std_quiz.split(":")[1];
-         pk_std_quiz = pk_std_quiz.split("}")[0];
-
-         var pk_parents_quest = JSON.stringify(rows[1]);
-         pk_parents_quest = pk_parents_quest.split(":")[1];
-         pk_parents_quest = pk_parents_quest.split("}")[0];
-
-         var pk_std_que = JSON.stringify(rows[2]);
-         pk_std_que = pk_std_que.split(":")[1];
-         pk_std_que = pk_std_que.split("}")[0];
-
-         console.log(pk_std_quiz + pk_parents_quest + pk_std_que);
-
-         if (pk_std_quiz > quizVers) {
-         // Need update
-         Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function(err, rows){
-         if(err){
-         console.log('err is ' + err);
-         connection.release();
-         }
-         res.status(200).send(rows);
-         connection.release();
-         });
-         console.log('update quiz');
-         }
-         //else res.json("The lastet version of the system quiz");
-
-         if (pk_parents_quest > questPVer) {
-         //Need parents quest update
-         console.log('update parents quest');
-         }
-         //else res.json("The latest version of the parents quest.");
-
-         if (pk_std_que > questSVer) {
-         //Need system quest update
-         console.log('update system quest');
-         }
-         //else res.json("The latest version of the system quest.");
-
-         //res.status(200).send(rows);
-         connection.release();
-         });
-         }*/
     });
 };
 
-exports.pushStdQuest = function(req, res){
-    console.log('GET /getInfoStdQuest/:pk_std_que is called');
-
-    conn.getConnection(function(err, connection){
-        if(err)
-            console.error('MySAL connection err in /regist');
-        /*
-         var quizVers = req.body.pk_std_quiz;
-         var questPVer = req.body.pk_parents_quest;
-         var questSVer = req.body.pk_std_que;
-         var fk_kids = req.user.fk_kids;
-
-         */
-        var quizVers = req.params.pk_std_quiz;
-        var questPVer = req.params.pk_parents_quest;
-        var questSVer = req.params.pk_std_que;
-        var fk_kids = req.user.fk_kids;
-        if(quizVers == null || questPVer == null || questSVer == null)
-            res.json('error parameters');
-        else {
-            var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
-                if (err) {
-                    console.log('err is' + err);
-                    connection.release();
-                }
-                //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-                //split
-                var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-                pk_std_quiz = pk_std_quiz.split(":")[1];
-                pk_std_quiz = pk_std_quiz.split("}")[0];
-
-                var pk_parents_quest = JSON.stringify(rows[1]);
-                pk_parents_quest = pk_parents_quest.split(":")[1];
-                pk_parents_quest = pk_parents_quest.split("}")[0];
-
-                var pk_std_que = JSON.stringify(rows[2]);
-                pk_std_que = pk_std_que.split(":")[1];
-                pk_std_que = pk_std_que.split("}")[0];
-
-                console.log(pk_std_quiz + pk_parents_quest + pk_std_que);
-
-                if (pk_std_quiz > quizVers) {
-                    // Need update
-                    Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function(err, rows){
-                        if(err){
-                            console.log('err is ' + err);
-                            connection.release();
-                        }
-                        res.status(200).send(rows);
-                        connection.release();
-                    });
-                    console.log('update quiz');
-                }
-                //else res.json("The lastet version of the system quiz");
-
-                if (pk_parents_quest > questPVer) {
-                    //Need parents quest update
-                    console.log('update parents quest');
-                }
-                //else res.json("The latest version of the parents quest.");
-
-                if (pk_std_que > questSVer) {
-                    //Need system quest update
-                    console.log('update system quest');
-                }
-                //else res.json("The latest version of the system quest.");
-
-                //res.status(200).send(rows);
-                connection.release();
-            });
-        }
-    });
-};
-
-exports.pushStdQuiz = function(req, res){
-    console.log('GET /getInfoStdQuest/:pk_std_que is called');
-
-    conn.getConnection(function(err, connection){
-        if(err)
-            console.error('MySAL connection err in /regist');
-        /*
-         var quizVers = req.body.pk_std_quiz;
-         var questPVer = req.body.pk_parents_quest;
-         var questSVer = req.body.pk_std_que;
-         var fk_kids = req.user.fk_kids;
-
-         */
-        var quizVers = req.params.pk_std_quiz;
-
-        if(quizVers == null) {
-            res.json('error parameters');
-            connection.release();
-        }
-        else {
-            var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz",function (err, rows) {
-                if (err) {
-                    console.log('err is' + err);
-                    connection.release();
-                }
-                //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-                //split
-                var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-                pk_std_quiz = pk_std_quiz.split(":")[1];
-                pk_std_quiz = pk_std_quiz.split("}")[0];
-
-                console.log(pk_std_quiz);
-
-                if (pk_std_quiz > quizVers) {
-                    // Need update
-                    Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function(err, rows){
-                        if(err){
-                            console.log('err is ' + err);
-                            connection.release();
-                        }
-                        res.status(200).send(rows);
-                        connection.release();
-                    });
-                    console.log('update quiz');
-                }
-                //res.status(200).send(rows);
-                connection.release();
-            });
-        }
-    });
-}
-
-exports.pushParentsQuest = function(req, res){
-    console.log('GET /getInfoStdQuest/:pk_std_que is called');
-
-    conn.getConnection(function(err, connection){
-        if(err)
-            console.error('MySAL connection err in /regist');
-        /*
-         var quizVers = req.body.pk_std_quiz;
-         var questPVer = req.body.pk_parents_quest;
-         var questSVer = req.body.pk_std_que;
-         var fk_kids = req.user.fk_kids;
-
-         */
-        var quizVers = req.params.pk_std_quiz;
-        var questPVer = req.params.pk_parents_quest;
-        var questSVer = req.params.pk_std_que;
-        var fk_kids = req.user.fk_kids;
-        if(quizVers == null || questPVer == null || questSVer == null)
-            res.json('error parameters');
-        else {
-            var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
-                if (err) {
-                    console.log('err is' + err);
-                    connection.release();
-                }
-                //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-                //split
-                var pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-                pk_std_quiz = pk_std_quiz.split(":")[1];
-                pk_std_quiz = pk_std_quiz.split("}")[0];
-
-                var pk_parents_quest = JSON.stringify(rows[1]);
-                pk_parents_quest = pk_parents_quest.split(":")[1];
-                pk_parents_quest = pk_parents_quest.split("}")[0];
-
-                var pk_std_que = JSON.stringify(rows[2]);
-                pk_std_que = pk_std_que.split(":")[1];
-                pk_std_que = pk_std_que.split("}")[0];
-
-                console.log(pk_std_quiz + pk_parents_quest + pk_std_que);
-
-                if (pk_std_quiz > quizVers) {
-                    // Need update
-                    Query = conn.query("SELECT * FROM std_quiz WHERE pk_std_quiz = ? ", quizVers, function(err, rows){
-                        if(err){
-                            console.log('err is ' + err);
-                            connection.release();
-                        }
-                        res.status(200).send(rows);
-                        connection.release();
-                    });
-                    console.log('update quiz');
-                }
-                //else res.json("The lastet version of the system quiz");
-
-                if (pk_parents_quest > questPVer) {
-                    //Need parents quest update
-                    console.log('update parents quest');
-                }
-                //else res.json("The latest version of the parents quest.");
-
-                if (pk_std_que > questSVer) {
-                    //Need system quest update
-                    console.log('update system quest');
-                }
-                //else res.json("The latest version of the system quest.");
-
-                //res.status(200).send(rows);
-                connection.release();
-            });
-        }
-    });
-}
-
-
+//regist push id
 exports.regist = function(req, res){
     console.log('POST /regist is called');
     conn.getConnection(function(err, connection){

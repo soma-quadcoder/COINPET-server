@@ -29,9 +29,29 @@ exports.createNowQuest = function(req, res){
     });
 }
 
+exports.updateQuestKids = function(req, res){
+    console.log("PUT /quest is called by kids");
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+        }
+        var fk_kids = req.user.fk_kids;
 
+        var condition = "state = " + req.body.state +
+            " , type = " + req.body.type +
+            " , check_state = " + req.body.check_state +
+            " WHERE fk_kids = " + fk_kids;
 
-
+        var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+            }
+            res.status(200).send();
+            connection.release();
+        });
+    });
+}
 
 //CREATE CREATE post /quest
 exports.createParents = function(req, res){
@@ -90,7 +110,10 @@ exports.updateStdQuest = function(req, res){
         console.error('MySQl connection err');
     }
     var pk_std_que = req.params.pk_std_que;
-	var Query = conn.query("UPDATE std_que SET point = ?, content =? WHERE pk_std_que = ?",[req.body.point, req.body.content,pk_std_que], function(err, result){
+    var condition = "point = " + req.body.point +
+                    " , content = " + req.body.content +
+                    " WHERE pk_std_que = " + pk_std_que;
+        var Query = conn.query("UPDATE std_que SET "+condition, function(err, result){
 		if(err){
 			console.log('err is ' + err);
 			connection.release();
@@ -109,7 +132,12 @@ exports.updateParentsQuest = function(req, res){
     console.error('MySQl connection err');
     }
     var pk_parents_quest = req.params.pk_parents_quest;
-    var Query = conn.query("UPDATE parents_quest SET point = ?, content =?, startTime = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,req.body.startTime,pk_parents_quest], function(err, result){
+    var condition = "point = " + req.body.point +
+                    " , content = " + req.body.content +
+                    " , startTime = " + req.body.startTime +
+                    " WHERE pk_parents_quest = " + pk_parents_quest;
+
+    var Query = conn.query("UPDATE parents_quest SET "+condition, function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
