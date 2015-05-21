@@ -9,8 +9,6 @@ exports.createNowQuest = function(req, res){
             console.log(err);
         }
         var questInfo = {
-            'que_num' : req.body.que_num,
-            'point' : req.body.point,
             'state' : req.body.state,
             'type' : req.body.type,
             'fk_std_que' : req.body.fk_std_que,
