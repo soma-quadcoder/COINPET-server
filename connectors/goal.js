@@ -16,6 +16,7 @@ exports.create = function(req, res){
 			'goal_date' : date,
 			'date' : nowDate,
 			'now_cost' : req.body.now_cost,
+            'state' : req.body.state,
 			'fk_kids' : req.user.fk_kids
 		};
 		var Query =  conn.query("INSERT INTO goal SET ? ", goalInfo  ,function(err, result){
@@ -135,7 +136,7 @@ exports.update = function(req, res){
     var condition = "g.pk_goal = k.current_goal" + " AND " +
                     "g.fk_kids = k.pk_kids" + " SET " +
                     "now_cost=(now_cost+?);" + req.body.now_cost +
-                    " INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)" + req.body.now_cost + nowDate + req.user.fk_kids;
+                    " INSERT INTO saving_list (now_cost, date, state ,fk_kids) values(?,?,?,?)" + req.body.now_cost + nowDate + req.body.state + req.user.fk_kids;
     var Query = conn.query(	"UPDATE goal g INNER JOIN kids k ON "+condition, function(err, result){
 
         if(err){
