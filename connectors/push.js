@@ -19,15 +19,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var pk_std_quiz;
         var pk_parents_quest;
         var pk_std_que;
-        /*var results =[];
+        var results =[{}];
 
-        results.systemQuest = ['a : 1' , ' ssss ', ' sssssss'];
-        results.systemQuiz = ['a : 2' , ' ssss ', ' sssssss'];
-        results.parentsQuest= ['a : 3' , ' ssss ', ' sssssss'];
-*/
-        var results = new Array();
-        results.push(new systemQuest('1','2','4'));
-        results.push(new systemQuest('1','2','4'));
+        results.systemQuest = [{a : 1 ,  ssss : 1 ,  sssssss : 10}];
+        results.systemQuiz = [{a : 2 ,  ssss : 1 ,  sssssss : 10}];
+        results.parentsQuest= [{a : 3 ,  ssss : 1 ,  sssssss : 10}];
+
         console.log(results);
 /*
         async.waterfall(
