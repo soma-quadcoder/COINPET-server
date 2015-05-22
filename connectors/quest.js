@@ -155,7 +155,6 @@ exports.updateQuestState = function(req, res){
         if(err){
             console.error('MySQl connection err');
         }
-        var pk_parents_quest = req.params.pk_parents_quest;
         var condition = "state = " + req.body.state +
                         "WHERE fk_kids = " + req.params.fk_kids + " AND " +
                         "fk_parents_quest " + req.body.fk_parents_quest;
