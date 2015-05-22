@@ -25,12 +25,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             parentsQuest: ""
         };
 
-        results.systemQuest = ['1:2', '3:2', '4:4'];
-        results.systemQuiz = [{a : 2},{b :2}];
-        console.log(results);
 
-
-/*
         async.waterfall(
             [
                 function(callback){
@@ -63,8 +58,9 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg1 = 'systemQuiz:' + JSON.stringify(rows);
-                            callback(null, arg1);
+                            var results = systemQuiz.(JSON.stringify(rows));
+                            console.log(results);
+                            callback(null, results);
                         });
                     }
                     else {
