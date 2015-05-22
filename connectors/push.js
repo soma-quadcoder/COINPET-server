@@ -96,7 +96,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 },
                 function(arg2, callback) {
                     //Parents quest check and update
-                    if (pk_parents_quest > questPVer) {
+                    //if (pk_parents_quest > questPVer) {
                         conn.query("SELECT * FROM parents_quest WHERE AND fk_kids = ? ", fk_kids, function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
@@ -106,11 +106,11 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             results.parentsQuest = rows;
                             callback(null, results);
                         });
-                    }
-                    else {
-                        results.parentsQuest = 'The lastest version of the parents quest';
-                        callback(null, results);
-                    }
+                    //}
+                    //else {
+                    //    results.parentsQuest = 'The lastest version of the parents quest';
+                     //   callback(null, results);
+                    //}
                 },
             ],
             function(err, results) {
