@@ -30,7 +30,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         async.waterfall(
             [
                 function(callback){
-                    var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
+                    conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
                         if (err) {
                             console.log('err is' + err);
                             connection.release();
