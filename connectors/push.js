@@ -137,6 +137,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             });
     });
 };
+
 /*
 //GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
 exports.pushQeustAndQuizInfoToApp = function(req, res){
