@@ -21,7 +21,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             needUpate : "",
             systemQuest : "",
             systemQuiz : "",
-            parentsQuest: ""
+            parentsQuest: "",
+            parentsQuestState : ""
         };
 
 
@@ -117,17 +118,17 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         callback(null, results);
                     }
                 },
-                /*function(arg3, callback){
+                function(arg3, callback){
                     var Query = conn.query("SELECT * FROM quest WHERE fk_kids = ? AND (state > 2 ) AND (state < 5) ", fk_kids , function(err, rows){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
                         }
                         //var arg4 = arg3 + 'questState:' + JSON.stringify(rows);
-
-                        callback(null, arg4);
+                        results.parentsQuestState = rows;
+                        callback(null, results);
                     });
-                }*/
+                }
             ],
             function(err, results) {
 
