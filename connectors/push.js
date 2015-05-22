@@ -123,7 +123,7 @@ exports.pushQuestState = function(req, res){
                 console.log('err is ' + err);
                 connection.release();
             }
-            res.status(200).json(rows);
+            res.json(rows);
             connection.release();
         });
 
