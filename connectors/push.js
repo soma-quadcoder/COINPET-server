@@ -58,7 +58,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             results.needUpate = 0;
                             callback(null, results);
                         }
-                       // callback(null);
+                        //callback(null);
                     });
                 },
                 function(callback) {
@@ -75,11 +75,11 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                       // var arg1 = 'The lastet version of the system quiz';
-                       // callback(null, arg1);
+                        var arg1 = 'The lastet version of the system quiz';
+                        callback(null, arg1);
                     }
                 },
-                function(callback) {
+                function(arg1, callback) {
                     //System quest check and update
                     if (pk_std_que > questSVer) {
                         var Query = conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
@@ -93,11 +93,11 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                       // var arg2 = arg1 + 'The lastest version of the system quest';
-                       // callback(null, arg2);
+                        var arg2 = arg1 + 'The lastest version of the system quest';
+                        callback(null, arg2);
                     }
                 },
-                function(callback) {
+                function(arg2, callback) {
                     //Parents quest check and update
                     if (pk_parents_quest > questPVer) {
                         var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
@@ -111,8 +111,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                      //  var arg3 = arg2 + 'The lastest version of the parents quest';
-                      //  callback(null, arg3);
+                        var arg3 = arg2 + 'The lastest version of the parents quest';
+                        callback(null, arg3);
                     }
                 },
                 /*function(arg3, callback){
