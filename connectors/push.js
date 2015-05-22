@@ -19,13 +19,15 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var pk_std_quiz;
         var pk_parents_quest;
         var pk_std_que;
-        var results =[{}];
+        var results = [
+        ];
 
         results.systemQuest = [{a : 1 ,  ssss : 1 ,  sssssss : 10}];
         results.systemQuiz = [{a : 2 ,  ssss : 1 ,  sssssss : 10}];
         results.parentsQuest= [{a : 3 ,  ssss : 1 ,  sssssss : 10}];
 
         console.log(results);
+        console.log(results[1]);
 /*
         async.waterfall(
             [
