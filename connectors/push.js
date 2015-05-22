@@ -61,7 +61,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         //callback(null);
                     });
                 },
-                function(callback) {
+                function(arg ,callback) {
                     //system Quiz check and update
                     if (pk_std_quiz > quizVers) {
                         var Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
