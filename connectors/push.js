@@ -59,7 +59,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 connection.release();
                             }
                             //systemQuiz.(JSON.stringify(rows));
-                            results.systemQuiz = (JSON.stringify(rows));
+                            results.systemQuiz = rows;
                             console.log(results);
                             callback(null, results);
                         });
