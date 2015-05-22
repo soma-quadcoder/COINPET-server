@@ -105,28 +105,25 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
 
 exports.pushQuestState = function(req, res){
     console.log('GET /getQuestInfo/:fk_kids is called by parents');
-
     conn.getConnection(function(err, connection){
-        if(err)
+        if(err) {
             console.error('MySAL connection err');
-
-
+        }
         //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
        // var fk_parents = req.user.fk_parents;
         //var fk_kids = req.params.fk_kids;
-
-        var condition = "state = 3 AND type = 2 " + " AND "+
-                        "fk_kids = ? " + req.params.fk_kids;
+        //"state = 3 AND type = 2 " + " AND "+
+        var condition = "fk_kids = ? " + req.params.fk_kids;
 
         var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
             }
+            console.log(rows);
             res.json(rows);
             connection.release();
         });
-
     });
 };
 
