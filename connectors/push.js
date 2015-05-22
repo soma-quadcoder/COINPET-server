@@ -113,10 +113,10 @@ exports.pushQuestState = function(req, res){
 
         //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
        // var fk_parents = req.user.fk_parents;
-        var fk_kids = req.params.fk_kids;
+        //var fk_kids = req.params.fk_kids;
 
         var condition = "state = 3 AND type = 2 " + " AND "+
-                        "fk_kids = ? " + fk_kids;
+                        "fk_kids = ? " + req.params.fk_kids;
 
         var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows){
             if(err){
