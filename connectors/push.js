@@ -50,7 +50,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_que = pk_std_que.split("}")[0];
                         if(pk_std_quiz > quizVers | pk_std_que > questSVer | pk_parents_quest > questPVer )
                         {
-                            conn.query("UPDATE quest SET getTime = ? WHERE (pk_std_quiz > quizVers) AND pk_std_que > questSVer AND pk_parents_quest > questPVer ",new Date());
+                            conn.query("UPDATE quest SET getTime = ? WHERE pk_std_quiz > quizVers ",new Date());
                             results.needUpate = 1;
                             callback(null, results);
                         }
@@ -64,7 +64,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg ,callback) {
                     //system Quiz check and update
                     if (pk_std_quiz > quizVers) {
-                        var Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
+                        conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
@@ -82,7 +82,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg1, callback) {
                     //System quest check and update
                     if (pk_std_que > questSVer) {
-                        var Query = conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
+                        conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
@@ -100,7 +100,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg2, callback) {
                     //Parents quest check and update
                     if (pk_parents_quest > questPVer) {
-                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
+                        conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
@@ -287,7 +287,7 @@ exports.regist = function(req, res){
             'regist_id' : req.body.regist_id,
             'fk_kids' : my_fk_kids
         };
-        var Query = conn.query("INSERT INTO push SET ?", pushInfo, function(err, result){
+        conn.query("INSERT INTO push SET ?", pushInfo, function(err, result){
             if(err){
                 console.log('err is' + err);
                 connection.release();
