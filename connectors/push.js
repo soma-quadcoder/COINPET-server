@@ -27,7 +27,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         results.parentsQuest= [{a : 3 ,  ssss : 1 ,  sssssss : 10}];
 
         console.log(results);
-        console.log(results[1]);
+        console.log(results.systemQuest);
 /*
         async.waterfall(
             [
