@@ -156,7 +156,7 @@ exports.updateQuestState = function(req, res){
             console.error('MySQl connection err');
         }
         var condition = "state = " + req.body.state +
-                        "WHERE fk_kids = " + req.params.fk_kids + " AND " +
+                        " WHERE fk_kids = " + req.params.fk_kids + " AND " +
                         "fk_parents_quest = " + req.body.fk_parents_quest;
         var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
             if(err){
