@@ -9,9 +9,8 @@ exports.createNowQuest = function(req, res){
             console.log(err);
         }
         var questInfo = {
-            'type' : req.body.type,
+            'state' : req.body.state,
             'fk_std_que' : req.body.fk_std_que,
-            'fk_parents_quest' : req.body.fk_parents_quest,
             'fk_kids' : req.user.fk_kids
         };
 
@@ -39,8 +38,8 @@ exports.updateQuestKids = function(req, res){
         var fk_kids = req.user.fk_kids;
 
         var condition = "state = " + req.body.state +
-            " , type = " + req.body.type +
-            " WHERE fk_kids = " + fk_kids;
+                        "fk_std_que = " + req.body.fk_std_que +
+                         " WHERE fk_kids = " + fk_kids;
 
         var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
             if(err){
@@ -65,6 +64,7 @@ exports.createParents = function(req, res){
             'content': req.body.content,
             'point': req.body.point,
             'startTime': req.body.startTime,
+            'state' : req.body.state,
             'fk_kids' : req.params.fk_kids
         };
 
@@ -135,6 +135,7 @@ exports.updateParentsQuest = function(req, res){
     var condition = "point = " + req.body.point +
                     " , content = " + req.body.content +
                     " , startTime = " + req.body.startTime +
+                    " , state = " + req.body.state +
                     " WHERE pk_parents_quest = " + pk_parents_quest;
 
     var Query = conn.query("UPDATE parents_quest SET "+condition, function(err, result){

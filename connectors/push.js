@@ -21,8 +21,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             needUpate : "",
             systemQuest : "",
             systemQuiz : "",
-            parentsQuest: "",
-            parentsQuestState : ""
+            parentsQuest: ""
         };
 
 
@@ -103,7 +102,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg2, callback) {
                     //Parents quest check and update
                     if (pk_parents_quest > questPVer) {
-                        conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
+                        conn.query("SELECT * FROM parents_quest WHERE AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
@@ -118,7 +117,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         callback(null, results);
                     }
                 },
-                function(arg3, callback){
+                /*function(arg3, callback){
                     var Query = conn.query("SELECT * FROM quest WHERE fk_kids = ? AND (state > 2 ) AND (state < 5) ", fk_kids , function(err, rows){
                         if(err){
                             console.log('err is ' + err);
@@ -128,7 +127,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         results.parentsQuestState = rows;
                         callback(null, results);
                     });
-                }
+                }*/
             ],
             function(err, results) {
 
