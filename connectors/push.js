@@ -94,7 +94,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                     }
                 },
                 function(arg3, callback){
-                    var Query = conn.query("SELECT state FROM quest WHERE fk_kids = ? AND (state > 2 ) ", [fk_kids, pk_parents_quest], function(err, rows){
+                    var Query = conn.query("SELECT state FROM quest WHERE fk_kids = ? AND (state > 2 ) ", fk_kids , function(err, rows){
                        if(err){
                            console.log('err is ' + err);
                            connection.release();
