@@ -50,6 +50,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_que = pk_std_que.split("}")[0];
                         if(pk_std_quiz > quizVers | pk_std_que > questSVer | pk_parents_quest > questPVer )
                         {
+                            conn.query("UPDATE quest SET getTime = ? WHERE (pk_std_quiz > quizVers) AND pk_std_que > questSVer AND pk_parents_quest > questPVer ",new Date());
                             results.needUpate = 1;
                             callback(null, results);
                         }
