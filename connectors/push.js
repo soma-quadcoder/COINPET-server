@@ -58,7 +58,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             results.needUpate = 0;
                             callback(null, results);
                         }
-                        //callback(null);
                     });
                 },
                 function(arg ,callback) {
@@ -75,8 +74,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                        var arg1 = 'The lastet version of the system quiz';
-                        callback(null, arg1);
+                        results.systemQuiz = 'The lastet version of the system quiz';
+                        callback(null, results);
                     }
                 },
                 function(arg1, callback) {
@@ -93,9 +92,9 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                        var arg2 = arg1 + 'The lastest version of the system quest';
-                        callback(null, arg2);
-                    }
+                        results.systemQuest = arg1 + 'The lastest version of the system quest';
+                        callback(null, results);
+                }
                 },
                 function(arg2, callback) {
                     //Parents quest check and update
@@ -111,8 +110,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                        var arg3 = arg2 + 'The lastest version of the parents quest';
-                        callback(null, arg3);
+                        results.parentsQuest = arg2 + 'The lastest version of the parents quest';
+                        callback(null, results);
                     }
                 },
                 /*function(arg3, callback){
