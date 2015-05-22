@@ -19,8 +19,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var pk_std_que;
         var results = {
             needUpate : "",
-            systemQuest : "",
             systemQuiz : "",
+            systemQuest : "",
             parentsQuest: ""
         };
 
@@ -90,7 +90,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                        results.systemQuest = arg1 + 'The lastest version of the system quest';
+                        results.systemQuest = 'The lastest version of the system quest';
                         callback(null, results);
                 }
                 },
@@ -108,21 +108,10 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                        results.parentsQuest = arg2 + 'The lastest version of the parents quest';
+                        results.parentsQuest = 'The lastest version of the parents quest';
                         callback(null, results);
                     }
                 },
-                /*function(arg3, callback){
-                    var Query = conn.query("SELECT * FROM quest WHERE fk_kids = ? AND (state > 2 ) AND (state < 5) ", fk_kids , function(err, rows){
-                        if(err){
-                            console.log('err is ' + err);
-                            connection.release();
-                        }
-                        //var arg4 = arg3 + 'questState:' + JSON.stringify(rows);
-                        results.parentsQuestState = rows;
-                        callback(null, results);
-                    });
-                }*/
             ],
             function(err, results) {
 
