@@ -38,14 +38,15 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
                         pk_std_quiz = pk_std_quiz.split(":")[1];
                         pk_std_quiz = pk_std_quiz.split("}")[0];
-
+                        console.log(pk_std_quiz);
                         pk_parents_quest = JSON.stringify(rows[1]);
                         pk_parents_quest = pk_parents_quest.split(":")[1];
                         pk_parents_quest = pk_parents_quest.split("}")[0];
-
+                        console.log(pk_parents_quest);
                         pk_std_que = JSON.stringify(rows[2]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
+                        console.log(pk_std_que);
                         if(pk_std_quiz > quizVers | pk_std_que > questSVer | pk_parents_quest > questPVer )
                         {
                             results.needUpate = 1;
