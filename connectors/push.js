@@ -50,7 +50,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         {
                             var date = new Date();
 
-                            conn.query("UPDATE quest SET getTime = ? WHERE fk_std_quiz > ? ",[date, quizVers], function(err, result){
+                            conn.query("UPDATE quest SET getTime = ? WHERE fk_std_que > ? ",[date, questSVer ], function(err, result){
                                 console.log('update result' + result);
                             });
                             results.needUpate = 1;
