@@ -60,7 +60,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             }
                             //systemQuiz.(JSON.stringify(rows));
                             results.systemQuiz = rows;
-                            console.log(results);
                             callback(null, results);
                         });
                     }
@@ -77,8 +76,9 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg2 = arg1 + 'systemQuest:' + JSON.stringify(rows);
-                            callback(null, arg2);
+                            //var arg2 = arg1 + 'systemQuest:' + JSON.stringify(rows);
+                            results.systemQuest = rows;
+                            callback(null, results);
                         });
                     }
                     else {
@@ -94,8 +94,9 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
-                            callback(null, arg3);
+                            //var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
+                            results.parentsQuest = rows;
+                            callback(null, results);
                         });
                     }
                     else {
@@ -103,16 +104,17 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         callback(null, arg3);
                     }
                 },
-                function(arg3, callback){
+                /*function(arg3, callback){
                     var Query = conn.query("SELECT * FROM quest WHERE fk_kids = ? AND (state > 2 ) AND (state < 5) ", fk_kids , function(err, rows){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
                         }
-                        var arg4 = arg3 + 'questState:' + JSON.stringify(rows);
+                        //var arg4 = arg3 + 'questState:' + JSON.stringify(rows);
+
                         callback(null, arg4);
                     });
-                }
+                }*/
             ],
             function(err, results) {
 
