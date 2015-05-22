@@ -92,6 +92,16 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         var arg3 = arg2 + 'The lastest version of the parents quest \r\n';
                         callback(null, arg3);
                     }
+                },
+                function(arg3, callback){
+                    var Query = conn.query("SELECT state FROM quest WHERE fk_kids = ? AND fk_parents_quest = ? AND (state > 3) ", [fk_kids, pk_parents_quest], function(err, rows){
+                       if(err){
+                           console.log('err is ' + err);
+                           connection.release();
+                       }
+                       var arg4 = arg3 + 'quest state : ' + JSON.stringify(rows) + '\r\n';
+                       callback(null, arg4);
+                    });
                 }
             ],
             function(err, results) {
