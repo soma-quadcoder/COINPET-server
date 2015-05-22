@@ -42,7 +42,7 @@ router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 //PUSH SERVER
 router.post('/regist', jwt({secret:secretKey}), push.regist);
 router.get('/getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz', jwt({secret:secretKey}), push.pushQeustAndQuizInfoToApp); //조회할때 get 괜찮음.
-router.goet('/getQuestInfo/:fk_kids', jwt({secret : secretKey}), push.pushQuestState);//웹에서 검사받기 버튼 상태를 확인하기 위해서.
+router.get('/getQuestInfo/:fk_kids', jwt({secret : secretKey}), push.pushQuestState);//웹에서 검사받기 버튼 상태를 확인하기 위해서.
 
 // GOAL
 router.post('/goal', jwt({secret:secretKey}), goal.create);
