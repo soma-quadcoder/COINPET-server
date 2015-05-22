@@ -122,7 +122,7 @@ exports.pushQuestState = function(req, res){
                 connection.release();
             }
             console.log(rows);
-            res.json(rows);
+            res.status(200).json(rows);
             connection.release();
         });
     });
