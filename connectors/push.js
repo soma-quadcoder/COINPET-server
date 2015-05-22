@@ -19,11 +19,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var pk_std_quiz;
         var pk_parents_quest;
         var pk_std_que;
-        var results =[{
-            systemQuest : {},
-            systemQuiz :{},
-            parentsQuest :{}
-        }];
+        var results =[];
 
         results.systemQuest = ['a : 1' , ' ssss ', ' sssssss'];
         results.systemQuiz = ['a : 2' , ' ssss ', ' sssssss'];
