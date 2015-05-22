@@ -19,7 +19,11 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var pk_std_quiz;
         var pk_parents_quest;
         var pk_std_que;
-        var results = [
+        var results = [{
+            systemQuest : [{}],
+            systemQuiz : [{}],
+            parentsQuest: [{}]
+        }
         ];
 
         results.systemQuest = [{a : 1 ,  ssss : 1 ,  sssssss : 10}];
@@ -28,6 +32,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
 
         console.log(results);
         console.log(results.systemQuest);
+        console.log(results[1]);
 /*
         async.waterfall(
             [
