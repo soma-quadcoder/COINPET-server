@@ -26,7 +26,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         }
         ];
 
-        results[0].systemQuest = [{1:2, 3:2, 4:4}];
+        results[0].systemQuest = ['1:2', '3:2', '4:4'];
         console.log(results);
 
 
