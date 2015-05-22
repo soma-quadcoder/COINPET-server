@@ -25,12 +25,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             parentsQuest :{}
         }];
 
-        result.systemQuest = ['a : 1' , ' ssss ', ' sssssss'];
-        result.systemQuiz = ['a : 2' , ' ssss ', ' sssssss'];
-        result.parentsQuest= ['a : 3' , ' ssss ', ' sssssss'];
+        results.systemQuest = ['a : 1' , ' ssss ', ' sssssss'];
+        results.systemQuiz = ['a : 2' , ' ssss ', ' sssssss'];
+        results.parentsQuest= ['a : 3' , ' ssss ', ' sssssss'];
 
-        console.log(result);
-
+        console.log(results);
+/*
         async.waterfall(
             [
                 function(callback){
@@ -123,6 +123,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 res.status(200).json(results);
                 connection.release();
             });
+            */
     });
 };
 /*
