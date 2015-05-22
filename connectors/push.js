@@ -2,8 +2,6 @@ var gcm = require('node-gcm');
 var conn = require('./db.js');
 var async = require('async');
 
-
-
 //GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
 exports.pushQeustAndQuizInfoToApp = function(req, res){
     console.log('GET /getInfoStdQuest/:pk_std_que is called');
@@ -51,7 +49,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         if(pk_std_quiz > quizVers | pk_std_que > questSVer | pk_parents_quest > questPVer )
                         {
                             var date = new Date();
-                            conn.query("UPDATE quest SET getTime = ? WHERE pk_std_quiz > ? ",[date, quizVers], function(err, result){
+
+                            conn.query("UPDATE quest SET getTime = ? WHERE fk_std_quiz > ? ",[date, quizVers], function(err, result){
                                 console.log('update result' + result);
                             });
                             results.needUpate = 1;
