@@ -114,6 +114,7 @@ exports.pushQuestState = function(req, res){
         //var fk_kids = req.params.fk_kids;
         //"state = 3 AND type = 2 " + " AND "+
         var condition = "fk_kids = ? " + req.params.fk_kids;
+        console.log(req.params.fk_kids);
 
         var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows){
             if(err){
