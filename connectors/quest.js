@@ -9,7 +9,6 @@ exports.createNowQuest = function(req, res){
             console.log(err);
         }
         var questInfo = {
-            //'check_state' : req.body.check_state,
             'type' : req.body.type,
             'fk_std_que' : req.body.fk_std_que,
             'fk_parents_quest' : req.body.fk_parents_quest,
@@ -26,6 +25,7 @@ exports.createNowQuest = function(req, res){
         });
     });
 };
+
 /*
 * 퀘스트 상태를 업데이틑 하는 부분
 *  req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
@@ -40,7 +40,6 @@ exports.updateQuestKids = function(req, res){
 
         var condition = "state = " + req.body.state +
             " , type = " + req.body.type +
-           // " , check_state = " + req.body.check_state +
             " WHERE fk_kids = " + fk_kids;
 
         var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
@@ -149,6 +148,27 @@ exports.updateParentsQuest = function(req, res){
     });
 };
 
+//UPDATE quest state retry and done
+exports.updateQuestState = function(req, res){
+    console.log("PUT /quest/stateUpdate/:fk_kids is called by parents");
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+        }
+        var pk_parents_quest = req.params.pk_parents_quest;
+        var condition = "state = " + req.body.state +
+                        "WHERE fk_kids = " + req.params.fk_kids + " AND " +
+                        "fk_parents_quest " + req.body.fk_parents_quest;
+        var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+            }
+            res.status(200).send();
+            connection.release();
+        });
+    });
+};
 
 //DELETE REMOVE
 exports.removeStdQuest = function(req, res){
