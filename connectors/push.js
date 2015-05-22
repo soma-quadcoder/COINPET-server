@@ -58,7 +58,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var results = systemQuiz.(JSON.stringify(rows));
+                            //systemQuiz.(JSON.stringify(rows));
+                            results = systemQuiz.rows;
                             console.log(results);
                             callback(null, results);
                         });
@@ -119,7 +120,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 res.status(200).json(results);
                 connection.release();
             });
-            */
     });
 };
 /*
