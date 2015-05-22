@@ -157,7 +157,7 @@ exports.updateQuestState = function(req, res){
         }
         var condition = "state = " + req.body.state +
                         "WHERE fk_kids = " + req.params.fk_kids + " AND " +
-                        "fk_parents_quest " + req.body.fk_parents_quest;
+                        "fk_parents_quest = " + req.body.fk_parents_quest;
         var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
             if(err){
                 console.log('err is ' + err);
