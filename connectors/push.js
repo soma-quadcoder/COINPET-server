@@ -20,6 +20,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var pk_parents_quest;
         var pk_std_que;
         var results = {
+            needUpate : "",
             systemQuest : "",
             systemQuiz : "",
             parentsQuest: ""
@@ -47,7 +48,17 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_que = JSON.stringify(rows[2]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
-                        callback(null);
+                        if(pk_std_quiz > quizVers | pk_std_que > questSVer | pk_parents_quest > questPVer )
+                        {
+                            results.needUpate = 1;
+                            callback(null, results);
+                        }
+                        else
+                        {
+                            results.needUpate = 0;
+                            callback(null, results);
+                        }
+                       // callback(null);
                     });
                 },
                 function(callback) {
@@ -64,11 +75,11 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                     }
                     else {
-                        var arg1 = 'The lastet version of the system quiz';
-                        callback(null, arg1);
+                       // var arg1 = 'The lastet version of the system quiz';
+                       // callback(null, arg1);
                     }
                 },
-                function(arg1, callback) {
+                function(callback) {
                     //System quest check and update
                     if (pk_std_que > questSVer) {
                         var Query = conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
