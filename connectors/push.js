@@ -2,6 +2,130 @@ var gcm = require('node-gcm');
 var conn = require('./db.js');
 var async = require('async');
 
+
+
+//GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
+exports.pushQeustAndQuizInfoToApp = function(req, res){
+    console.log('GET /getInfoStdQuest/:pk_std_que is called');
+
+    conn.getConnection(function(err, connection){
+        if(err)
+            console.error('MySAL connection err');
+
+        var quizVers = req.params.pk_std_quiz;
+        var questPVer = req.params.pk_parents_quest;
+        var questSVer = req.params.pk_std_que;
+        var fk_kids = req.user.fk_kids;
+        var pk_std_quiz;
+        var pk_parents_quest;
+        var pk_std_que;
+        var results =[{
+            systemQuest : {},
+            systemQuiz :{},
+            parentsQuest :{}
+        }];
+
+        result.systemQuest = ['a : 1' , ' ssss ', ' sssssss'];
+        result.systemQuiz = ['a : 2' , ' ssss ', ' sssssss'];
+        result.parentsQuest= ['a : 3' , ' ssss ', ' sssssss'];
+
+        console.log(result);
+
+        async.waterfall(
+            [
+                function(callback){
+                    var Query = conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
+                        if (err) {
+                            console.log('err is' + err);
+                            connection.release();
+                        }
+                        //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
+                        //split
+                        pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
+                        pk_std_quiz = pk_std_quiz.split(":")[1];
+                        pk_std_quiz = pk_std_quiz.split("}")[0];
+
+                        pk_parents_quest = JSON.stringify(rows[1]);
+                        pk_parents_quest = pk_parents_quest.split(":")[1];
+                        pk_parents_quest = pk_parents_quest.split("}")[0];
+
+                        pk_std_que = JSON.stringify(rows[2]);
+                        pk_std_que = pk_std_que.split(":")[1];
+                        pk_std_que = pk_std_que.split("}")[0];
+                        callback(null);
+                    });
+                },
+                function(callback) {
+                    //system Quiz check and update
+                    if (pk_std_quiz > quizVers) {
+                        var Query = conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
+                            if (err) {
+                                console.log('err is ' + err);
+                                connection.release();
+                            }
+                            var arg1 = 'systemQuiz:' + JSON.stringify(rows);
+                            callback(null, arg1);
+                        });
+                    }
+                    else {
+                        var arg1 = 'The lastet version of the system quiz';
+                        callback(null, arg1);
+                    }
+                },
+                function(arg1, callback) {
+                    //System quest check and update
+                    if (pk_std_que > questSVer) {
+                        var Query = conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
+                            if (err) {
+                                console.log('err is ' + err);
+                                connection.release();
+                            }
+                            var arg2 = arg1 + 'systemQuest:' + JSON.stringify(rows);
+                            callback(null, arg2);
+                        });
+                    }
+                    else {
+                        var arg2 = arg1 + 'The lastest version of the system quest';
+                        callback(null, arg2);
+                    }
+                },
+                function(arg2, callback) {
+                    //Parents quest check and update
+                    if (pk_parents_quest > questPVer) {
+                        var Query = conn.query("SELECT * FROM parents_quest WHERE ( pk_parents_quest > ? ) AND fk_kids = ? ", [questPVer, fk_kids], function (err, rows) {
+                            if (err) {
+                                console.log('err is ' + err);
+                                connection.release();
+                            }
+                            var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
+                            callback(null, arg3);
+                        });
+                    }
+                    else {
+                        var arg3 = arg2 + 'The lastest version of the parents quest';
+                        callback(null, arg3);
+                    }
+                },
+                function(arg3, callback){
+                    var Query = conn.query("SELECT * FROM quest WHERE fk_kids = ? AND (state > 2 ) AND (state < 5) ", fk_kids , function(err, rows){
+                        if(err){
+                            console.log('err is ' + err);
+                            connection.release();
+                        }
+                        var arg4 = arg3 + 'questState:' + JSON.stringify(rows);
+                        callback(null, arg4);
+                    });
+                }
+            ],
+            function(err, results) {
+
+                console.log(results);
+                res.status(200).json(results);
+                connection.release();
+            });
+    });
+};
+/*
 //GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
 exports.pushQeustAndQuizInfoToApp = function(req, res){
     console.log('GET /getInfoStdQuest/:pk_std_que is called');
@@ -50,12 +174,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg1 = 'system quiz : ' + JSON.stringify(rows) + '\r\n';
+                            var arg1 = 'systemQuiz:' + JSON.stringify(rows);
                             callback(null, arg1);
                         });
                     }
                     else {
-                        var arg1 = 'The lastet version of the system quiz \r\n';
+                        var arg1 = 'The lastet version of the system quiz';
                         callback(null, arg1);
                     }
                 },
@@ -67,12 +191,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg2 = arg1 + 'system quest : ' + JSON.stringify(rows) + '\r\n';
+                            var arg2 = arg1 + 'systemQuest:' + JSON.stringify(rows);
                             callback(null, arg2);
                         });
                     }
                     else {
-                        var arg2 = arg1 + 'The lastest version of the system quest \r\n';
+                        var arg2 = arg1 + 'The lastest version of the system quest';
                         callback(null, arg2);
                     }
                 },
@@ -84,12 +208,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            var arg3 = arg2 + 'parents quest : ' + JSON.stringify(rows) + '\r\n';
+                            var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
                             callback(null, arg3);
                         });
                     }
                     else {
-                        var arg3 = arg2 + 'The lastest version of the parents quest \r\n';
+                        var arg3 = arg2 + 'The lastest version of the parents quest';
                         callback(null, arg3);
                     }
                 },
@@ -99,7 +223,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                            console.log('err is ' + err);
                            connection.release();
                        }
-                       var arg4 = arg3 + 'quest state : ' + JSON.stringify(rows) + '\r\n';
+                       var arg4 = arg3 + 'questState:' + JSON.stringify(rows);
                        callback(null, arg4);
                     });
                 }
@@ -112,7 +236,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             });
     });
 };
-
+*/
 exports.pushQuestState = function(req, res){
     console.log('GET /getQuestInfo/:fk_kids is called by parents');
     conn.getConnection(function(err, connection){
