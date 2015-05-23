@@ -99,7 +99,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg2, callback) {
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
-                    conn.query("SELECT * FROM parents_quest WHERE fk_kids = ? AND state BETWEEN 2 AND 6 ", fk_kids, function (err, rows) {
+                    conn.query("SELECT * FROM parents_quest WHERE fk_kids = ? AND state BETWEEN 3 AND 5 ", fk_kids, function (err, rows) {
                         if (err) {
                             console.log('err is ' + err);
                             connection.release();
