@@ -14,14 +14,15 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var questPVer = req.params.pk_parents_quest;
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
+        console.log
         var pk_std_quiz;
         var pk_parents_quest;
         var pk_std_que;
         var results = {
-            needUpate : "",
-            systemQuiz : "",
-            systemQuest : "",
-            parentsQuest: ""
+            needUpate : '',
+            systemQuiz : '',
+            systemQuest : '',
+            parentsQuest: ''
         };
 
 
@@ -98,15 +99,16 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg2, callback) {
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
-                        conn.query("SELECT * FROM parents_quest WHERE AND fk_kids = ? ", fk_kids, function (err, rows) {
-                            if (err) {
-                                console.log('err is ' + err);
-                                connection.release();
-                            }
-                            //var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
-                            results.parentsQuest = rows;
-                            callback(null, results);
-                        });
+                    conn.query("SELECT * FROM parents_quest WHERE fk_kids = ? ", fk_kids, function (err, rows) {
+                        if (err) {
+                            console.log('err is ' + err);
+                            connection.release();
+                        }
+                        //var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
+                        console.log('parents quest ' + rows);
+                        results.parentsQuest = rows;
+                        callback(null, results);
+                    });
                     //}
                     //else {
                     //    results.parentsQuest = 'The lastest version of the parents quest';
