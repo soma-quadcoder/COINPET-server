@@ -137,7 +137,7 @@ exports.update = function(req, res){
                     "state = " + req.body.state + " AND " +
                     "now_cost = now_cost+ " + req.body.now_cost;, [req.body.now_cost,req.body.now_cost,nowDate,req.user.fk_kids],
                     " INSERT INTO saving_list (now_cost, date, state ,fk_kids) values( , , )" + req.body.now_cost + nowDate + req.user.fk_kids;*/
-    var Query = conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?); INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [req.body.now_cost ,req.body.now_cost,nowDate,req.user.fk_kids], function(err, result){
+    var Query = conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET state = ? , now_cost=(now_cost+?) ; INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [ req.body.state ,req.body.now_cost, req.body.now_cost, nowDate,req.user.fk_kids], function(err, result){
 
         if(err){
 			console.log('err is ' + err);

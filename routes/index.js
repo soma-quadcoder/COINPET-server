@@ -22,9 +22,9 @@ var user = require('./user/index');
 
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
-router.post('/quiz/admin', jwt({secret:secretKey}), quiz.createStdQuiz);
-router.put('/quiz/admin/:pk_std_quiz',jwt({secret:secretKey}), quiz.updateQuiz);
-router.delete('/quiz/admin/:pk_std_quiz', jwt({secret:secretKey}), quiz.removeStdQuiz);
+router.post('/quiz/admin', quiz.createStdQuiz);
+router.put('/quiz/admin/:pk_std_quiz', quiz.updateQuiz);
+router.delete('/quiz/admin/:pk_std_quiz', quiz.removeStdQuiz);
 
 
 //QUEST
