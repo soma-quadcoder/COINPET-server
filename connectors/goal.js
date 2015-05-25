@@ -18,12 +18,12 @@ exports.create = function(req, res){
             'state' : req.body.state,
 			'fk_kids' : req.user.fk_kids
 		};
-		var Query =  conn.query("INSERT INTO goal SET ? ", goalInfo  ,function(err, result){
+		conn.query("INSERT INTO goal SET ? ", goalInfo  ,function(err, result){
 			if(err){
 				connection.release();
 				console.log("err is " + err);
 			}
-			var Query = conn.query("UPDATE kids SET current_goal = ? WHERE pk_kids = ? ", [result.insertId, req.user.fk_kids],  function(err, result){
+			conn.query("UPDATE kids SET current_goal = ? WHERE pk_kids = ? ", [result.insertId, req.user.fk_kids],  function(err, result){
 				if(err){
 					connection.release();
 					console.log("err is " + err);
@@ -34,7 +34,7 @@ exports.create = function(req, res){
 			connection.release();
 		});
 	});
-}
+};
 //READ GET /goal
 exports.allGoal = function(req, res){
 	console.log("GET /goal is called by kids");
@@ -45,7 +45,7 @@ exports.allGoal = function(req, res){
 		}
 
 		var condition = "fk_kids = " + req.user.fk_kids;
-		var Query = conn.query("SELECT * FROM goal WHERE "+condition, function(err, rows){
+		conn.query("SELECT * FROM goal WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
@@ -54,7 +54,7 @@ exports.allGoal = function(req, res){
 			connection.release();
 		});
 	});
-}
+};
 exports.allGoalParents = function(req, res){
 	console.log("GEt /goal:/fk_kids is called by parents");
 	conn.getConnection(function(err, connection){
@@ -65,7 +65,7 @@ exports.allGoalParents = function(req, res){
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 						"p.fk_kids = " + req.params.fk_kids + " AND " +
 						"g.fk_kids = " + req.params.fk_kids;
-		var Query = conn.query("SELECT g.* FROM goal g, parents_has_kids p WHERE "+condition, function(err, rows){
+		conn.query("SELECT g.* FROM goal g, parents_has_kids p WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
@@ -74,7 +74,7 @@ exports.allGoalParents = function(req, res){
 			connection.release();
 		});
 	});
-}
+};
 // current goal info get /goal/current - require kids
 exports.currentGoal = function(req, res){
 	console.log('GET /goal/current is called by kids');
@@ -85,7 +85,7 @@ exports.currentGoal = function(req, res){
 		}
 		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
 						"g.fk_kids = " + req.user.fk_kids;
-		var Query = conn.query("SELECT g.* FROM goal g, kids k WHERE "+condition, function(err, rows){
+		conn.query("SELECT g.* FROM goal g, kids k WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
@@ -94,7 +94,7 @@ exports.currentGoal = function(req, res){
 				connection.release();
 		});
 	});
-}
+};
 // /goal/current/:fk_kids it all always use parents
 exports.currentGoalParents = function(req, res){
 	console.log('GET /goal/currents/:fk_kids is called by parents');
@@ -106,7 +106,7 @@ exports.currentGoalParents = function(req, res){
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 						"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
 						"g.fk_kids = " + req.params.fk_kids;
-		var Query = conn.query("SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE "+condition, function(err, rows){
+		conn.query("SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
@@ -115,7 +115,7 @@ exports.currentGoalParents = function(req, res){
 				connection.release();
 		});
 	});
-}
+};
 //UPDATE PUT
 exports.update = function(req, res){
 	console.log("PUT /goal is called");
@@ -137,7 +137,7 @@ exports.update = function(req, res){
                     "state = " + req.body.state + " AND " +
                     "now_cost = now_cost+ " + req.body.now_cost;, [req.body.now_cost,req.body.now_cost,nowDate,req.user.fk_kids],
                     " INSERT INTO saving_list (now_cost, date, state ,fk_kids) values( , , )" + req.body.now_cost + nowDate + req.user.fk_kids;*/
-    var Query = conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET state = ? , now_cost=(now_cost+?); INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [req.body.state ,req.body.now_cost,nowDate,req.user.fk_kids], function(err, result){
+    conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET state = ? , now_cost=(now_cost+?) ; INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [ req.body.state ,req.body.now_cost, req.body.now_cost, nowDate,req.user.fk_kids], function(err, result){
 
         if(err){
 			console.log('err is ' + err);
@@ -148,7 +148,7 @@ exports.update = function(req, res){
 		connection.release();
 		});
 	});
-}
+};
 
 //DELETE REMOVE
 exports.remove = function(req, res){
@@ -158,7 +158,7 @@ exports.remove = function(req, res){
 		console.error('MySQl connection err');
 	}
 	console.log(req.param('pk_goal'));
-	var Query = conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
+	conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
 		if(err){
 			connection.release();
 			console.log(err);
@@ -168,4 +168,4 @@ exports.remove = function(req, res){
 		connection.release();
 		});
 	});
-}
+};
