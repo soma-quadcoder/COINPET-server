@@ -15,7 +15,7 @@ exports.createNowQuiz = function(req, res){
             'fk_kids' : req.user.fk_kids
         };
 
-        var Query = conn.query('INSERT INTO quiz SET ?', quizInfo, function (err, result) {
+        conn.query('INSERT INTO quiz SET ?', quizInfo, function (err, result) {
             if (err) {
                 connection.release();
                 console.log("err is " + err);
@@ -24,7 +24,7 @@ exports.createNowQuiz = function(req, res){
             connection.release();
         });
     });
-}
+};
 //CREATE CREATE post /quest
 exports.createStdQuiz = function(req, res){
 	console.log("POST /quiz/admin is called");
@@ -38,7 +38,7 @@ exports.createStdQuiz = function(req, res){
             'content' : req.body.content
         };
 
-        var Query = conn.query('INSERT INTO std_quiz SET ?', quizInfo, function (err, result) {
+        conn.query('INSERT INTO std_quiz SET ?', quizInfo, function (err, result) {
             if (err) {
                 connection.release();
                 console.log("err is " + err);
@@ -47,8 +47,8 @@ exports.createStdQuiz = function(req, res){
             connection.release();
         });
     });
-}
-//UPDATE PUT
+};
+//UPDATE PUT //quiz에 등록되어있는경우 삭제안됨.
 exports.updateQuiz = function(req, res){
     console.log("PUT /quiz/admin/:pk_std_quiz is called");
     conn.getConnection(function(err,connection){
@@ -59,7 +59,11 @@ exports.updateQuiz = function(req, res){
     /*var condition = "point = " + req.body.point +
                     "content = " + req.body.content +
                     " WHERE pk_std_quiz = " + pk_std_quiz;*/
+<<<<<<< HEAD
     var Query = conn.query("UPDATE std_quiz SET point = ? , content = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,pk_std_quiz], function(err, result){
+=======
+    conn.query("UPDATE std_quiz SET point = ? , content = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,pk_std_quiz], function(err, result){
+>>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
         if(err){
            console.log('err is ' + err);
             connection.release();
@@ -68,7 +72,7 @@ exports.updateQuiz = function(req, res){
         connection.release();
         });
     });
-}
+};
 //DELETE REMOVE
 exports.removeStdQuiz = function(req, res){
     console.log("DELETE /quiz/admin/:pk_std_quiz is called");
@@ -77,7 +81,11 @@ exports.removeStdQuiz = function(req, res){
 	    	console.error('MySQl connection err');
 	    }
         var pk_std_quiz = req.params.pk_std_quiz;
+<<<<<<< HEAD
 
+=======
+        console.log(pk_std_quiz);
+>>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
         conn.query("DELETE FROM std_quiz WHERE pk_std_quiz = ? ", pk_std_quiz , function(err,rows){
 		    if(err){
 			    connection.release();
@@ -88,5 +96,5 @@ exports.removeStdQuiz = function(req, res){
 		    connection.release();
 		});
 	});
-}
+};
 

@@ -14,7 +14,7 @@ exports.createNowQuest = function(req, res){
             'fk_kids' : req.user.fk_kids
         };
 
-        var Query = conn.query('INSERT INTO quest SET ?', questInfo, function (err, result) {
+        conn.query('INSERT INTO quest SET ?', questInfo, function (err, result) {
             if (err) {
                 connection.release();
                 console.log("err is " + err);
@@ -41,7 +41,7 @@ exports.updateQuestKids = function(req, res){
                         "fk_std_que = " + req.body.fk_std_que +
                          " WHERE fk_kids = " + fk_kids;
 
-        var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
+        conn.query("UPDATE quest SET "+condition, function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -73,7 +73,7 @@ exports.createParents = function(req, res){
             'fk_kids' : req.params.fk_kids
         };
 
-        var Query = conn.query('INSERT INTO parents_quest SET ?', questInfo, function (err, result) {
+        conn.query('INSERT INTO parents_quest SET ?', questInfo, function (err, result) {
             if (err) {
                 connection.release();
                 console.log("err is " + err);
@@ -96,7 +96,7 @@ exports.createAdmin = function(req, res){
             'point' : req.body.point
         };
 
-        var Query =  conn.query('INSERT INTO std_que SET ?', questInfo  ,function(err, result){
+        conn.query('INSERT INTO std_que SET ?', questInfo  ,function(err, result){
             if(err){
                 connection.release();
                 console.log("err is " + err);
@@ -187,7 +187,7 @@ exports.removeStdQuest = function(req, res){
 	    }
         var pk_std_que = req.params.pk_std_que;
 
-        var Query = conn.query("DELETE FROM std_que WHERE pk_std_que =? ", pk_std_que, function(err,rows){
+        conn.query("DELETE FROM std_que WHERE pk_std_que =? ", pk_std_que, function(err,rows){
 		    if(err){
 			    connection.release();
 			    console.log(err);
@@ -215,15 +215,5 @@ exports.removeParentsQuest = function(req, res){
             res.status(200).send();
             connection.release();
         });
-        /*var pk_parents_quest = req.params.pk_parents_quest;
-        var Query = conn.query("DELETE FROM parents_quest WHERE pk_parents_quest = ? ",pk_parents_quest, function(err,rows){
-            if(err){
-                connection.release();
-                console.log(err);
-            }
-            console.log();
-            res.status(200).send();
-            connection.release();
-        });*/
     });
 };
