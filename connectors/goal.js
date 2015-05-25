@@ -131,12 +131,12 @@ exports.update = function(req, res){
 	//IT will be change nowDate --> device time
 	// 'update goal g inner join kids k on g.pk_goal = k.current_goal and g.fk_kids = k.pk_kids set now_cost =(now_cost+?); insert into saving_list (now_cost, date, fk_kids) values(?,?,?) ', [req.body.now_cost,req.body.now_cost,nowDate,req.user.fk_kids],
 	// "UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?); INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)"
-
-    var condition = "g.pk_goal = k.current_goal" + " AND " +
+    //"UPDATE goal g INNER JOIN kids k ON "+condition,
+    /*var condition = "g.pk_goal = k.current_goal" + " AND " +
                     "g.fk_kids = k.pk_kids" + " SET " +
                     "now_cost=(now_cost+?);" + req.body.now_cost +
-                    " INSERT INTO saving_list (now_cost, date, state ,fk_kids) values(?,?,?,?)" + req.body.now_cost + nowDate + req.body.state + req.user.fk_kids;
-    var Query = conn.query(	"UPDATE goal g INNER JOIN kids k ON "+condition, function(err, result){
+                    " INSERT INTO saving_list (now_cost, date, state,fk_kids) values(?,?,?,?)" + req.body.now_cost + nowDate + req.body.state + req.user.fk_kids;*/
+    var Query = conn.query(	'update goal g inner join kids k on g.pk_goal = k.current_goal and g.fk_kids = k.pk_kids set now_cost =(now_cost+?); insert into saving_list (now_cost, date, state, fk_kids) values(?,?,?,?) ', [req.body.now_cost,req.body.now_cost,nowDate,req.body.state,req.user.fk_kids], function(err, result){
 
         if(err){
 			console.log('err is ' + err);
