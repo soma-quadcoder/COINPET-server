@@ -10,7 +10,6 @@ exports.create = function(req, res){
 		var nowDate = new Date();
 		var date = new Date(req.body.goal_date);
 		var goalInfo = {
-			'method' : req.body.method,
 			'content' : req.body.content,
 			'goal_cost' : req.body.goal_cost,
 			'goal_date' : date,

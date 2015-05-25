@@ -60,11 +60,13 @@ exports.createParents = function(req, res){
             console.error('MySQl connection err');
             console.log(err);
         }
+        var nowDate = new Date();
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
             'startTime': req.body.startTime,
             'state' : req.body.state,
+            'modifyTime' : nowDate,
             'fk_kids' : req.params.fk_kids
         };
 
@@ -131,6 +133,8 @@ exports.updateParentsQuest = function(req, res){
     if(err){
     console.error('MySQl connection err');
     }
+    var nowDate = new Date();
+    console.log(nowDate);
     var pk_parents_quest = req.params.pk_parents_quest;
     var condition = "point = " + req.body.point +
                     " , content = " + req.body.content +
@@ -197,7 +201,17 @@ exports.removeParentsQuest = function(req, res){
         if(err){
             console.error('MySQl connection err');
         }
-        var pk_parents_quest = req.params.pk_parents_quest;
+        var condition = "state = " + req.body.staet + " WHERE " +
+                        "pk_parents_quest = " + req.params.pk_parents_quest;
+        conn.query("UPDATE parents_quest SET " +condition, function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+            }
+            res.status(200).send();
+            connection.release();
+        });
+        /*var pk_parents_quest = req.params.pk_parents_quest;
         var Query = conn.query("DELETE FROM parents_quest WHERE pk_parents_quest = ? ",pk_parents_quest, function(err,rows){
             if(err){
                 connection.release();
@@ -206,6 +220,6 @@ exports.removeParentsQuest = function(req, res){
             console.log();
             res.status(200).send();
             connection.release();
-        });
+        });*/
     });
 };
