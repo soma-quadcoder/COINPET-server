@@ -134,8 +134,8 @@ exports.update = function(req, res){
     //"UPDATE goal g INNER JOIN kids k ON "+condition,
     var condition = "g.pk_goal = k.current_goal" + " AND " +
                     "g.fk_kids = k.pk_kids" + " SET " +
-                    "now_cost=(now_cost+?) " + req.body.now_cost + " AND " +
-                    "state = " + req.body.state;
+                    "state = " + req.body.state + " AND " +
+                    "now_cost += " + req.body.now_cost;
                     " INSERT INTO saving_list (now_cost, date, state ,fk_kids) values(?,?,?)" + req.body.now_cost + nowDate + req.user.fk_kids;
     var Query = conn.query(	"UPDATE goal g INNER JOIN kids k ON "+condition, function(err, result){
 
