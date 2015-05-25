@@ -9,9 +9,8 @@ exports.createNowQuest = function(req, res){
             console.log(err);
         }
         var questInfo = {
-            'type' : req.body.type,
+            'state' : req.body.state,
             'fk_std_que' : req.body.fk_std_que,
-            'fk_parents_quest' : req.body.fk_parents_quest,
             'fk_kids' : req.user.fk_kids
         };
 
@@ -39,8 +38,8 @@ exports.updateQuestKids = function(req, res){
         var fk_kids = req.user.fk_kids;
 
         var condition = "state = " + req.body.state +
-            " , type = " + req.body.type +
-            " WHERE fk_kids = " + fk_kids;
+                        "fk_std_que = " + req.body.fk_std_que +
+                         " WHERE fk_kids = " + fk_kids;
 
         var Query = conn.query("UPDATE quest SET "+condition, function(err, result){
             if(err){
@@ -61,10 +60,13 @@ exports.createParents = function(req, res){
             console.error('MySQl connection err');
             console.log(err);
         }
+        var nowDate = new Date();
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
             'startTime': req.body.startTime,
+            'state' : req.body.state,
+            'modifyTime' : nowDate,
             'fk_kids' : req.params.fk_kids
         };
 
@@ -131,10 +133,13 @@ exports.updateParentsQuest = function(req, res){
     if(err){
     console.error('MySQl connection err');
     }
+    var nowDate = new Date();
+    console.log(nowDate);
     var pk_parents_quest = req.params.pk_parents_quest;
     var condition = "point = " + req.body.point +
                     " , content = " + req.body.content +
                     " , startTime = " + req.body.startTime +
+                    " , state = " + req.body.state +
                     " WHERE pk_parents_quest = " + pk_parents_quest;
 
     var Query = conn.query("UPDATE parents_quest SET "+condition, function(err, result){
@@ -196,7 +201,17 @@ exports.removeParentsQuest = function(req, res){
         if(err){
             console.error('MySQl connection err');
         }
-        var pk_parents_quest = req.params.pk_parents_quest;
+        var condition = "state = " + req.body.staet + " WHERE " +
+                        "pk_parents_quest = " + req.params.pk_parents_quest;
+        conn.query("UPDATE parents_quest SET " +condition, function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+            }
+            res.status(200).send();
+            connection.release();
+        });
+        /*var pk_parents_quest = req.params.pk_parents_quest;
         var Query = conn.query("DELETE FROM parents_quest WHERE pk_parents_quest = ? ",pk_parents_quest, function(err,rows){
             if(err){
                 connection.release();
@@ -205,6 +220,6 @@ exports.removeParentsQuest = function(req, res){
             console.log();
             res.status(200).send();
             connection.release();
-        });
+        });*/
     });
 };
