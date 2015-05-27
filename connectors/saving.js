@@ -1,5 +1,24 @@
 var conn = require('./db.js');
 
+Date.prototype.yyyymmdd = function() {
+        var yyyy = this.getFullYear().toString();
+        var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+        var dd  = this.getDate().toString();
+        return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
+};
+
+Date.prototype.hhmmss = function()
+{
+    var hh = this.getHours().toString();
+    var mm = this.getMinutes().toString();
+    var ss = this.getSeconds().toString();
+
+
+    return (hh[1] ? hh : '0'+hh[0]) + ':' +
+	(mm[1] ? mm : '0'+mm[0]) + ':' +
+	(ss[1] ? ss : '0'+ss[0]);
+}
+
 //GET saving list by kids
 exports.read = function(req, res){
 	console.log("GET /saving is called");
@@ -26,12 +45,22 @@ exports.read = function(req, res){
 				var fk_kids = data.fk_kids;
 				
 				delete data.fk_kids;
-
-				if(!resData[fk_kids])
+				
+				var date = new Date(data.date).yyyymmdd();
+				var time = new Date(data.date).hhmmss();
+				if(!resData[date])
 				{
-					resData[fk_kids] = [];
+					resData[date] = {};
+				}			
+	
+				if(!resData[date][fk_kids])
+				{
+					resData[date][fk_kids] = [];
 				}
-				resData[fk_kids].push(data);
+				
+				delete data.date;
+				data.time = time;
+				resData[date][fk_kids].push(data);
 			}
 
 			console.log(resData);
@@ -69,6 +98,8 @@ exports.readParents = function(req, res){
 		if(err){
 			connection.release();
 			console.log(err);
+			res.status(500).send();
+			return;
 		}
 		console.log(rows);
 		res.json(rows);
