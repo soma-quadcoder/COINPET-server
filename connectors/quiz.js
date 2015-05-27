@@ -59,11 +59,7 @@ exports.updateQuiz = function(req, res){
     /*var condition = "point = " + req.body.point +
                     "content = " + req.body.content +
                     " WHERE pk_std_quiz = " + pk_std_quiz;*/
-<<<<<<< HEAD
-    var Query = conn.query("UPDATE std_quiz SET point = ? , content = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,pk_std_quiz], function(err, result){
-=======
     conn.query("UPDATE std_quiz SET point = ? , content = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,pk_std_quiz], function(err, result){
->>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
         if(err){
            console.log('err is ' + err);
             connection.release();
@@ -81,11 +77,7 @@ exports.removeStdQuiz = function(req, res){
 	    	console.error('MySQl connection err');
 	    }
         var pk_std_quiz = req.params.pk_std_quiz;
-<<<<<<< HEAD
 
-=======
-        console.log(pk_std_quiz);
->>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
         conn.query("DELETE FROM std_quiz WHERE pk_std_quiz = ? ", pk_std_quiz , function(err,rows){
 		    if(err){
 			    connection.release();

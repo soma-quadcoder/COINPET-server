@@ -106,11 +106,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         });
                         callback(null, results);
                     });
-<<<<<<< HEAD
-                },
-=======
                 }
->>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
             ],
             function(err, results) {
 
@@ -241,20 +237,36 @@ exports.pushQuestState = function(req, res){
         }
         //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
         //"state = 3 AND
-<<<<<<< HEAD
         var condition = "state = 3 " + " AND "+
-                        "fk_kids =  " + req.params.fk_kids;
-=======
->>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
+            "fk_kids =  " + req.params.fk_kids;
         var fk_kids = req.params.fk_kids;
 
         //, INTERVAL '1 1:1:1' DAY_SECOND
         //var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows)
-<<<<<<< HEAD
-        conn.query("SELECT * FROM parents_quest WHERE "+condition, function(err, rows){
-=======
         conn.query("SELECT * FROM parents_quest WHERE state = 3 AND fk_kids = ?",fk_kids, function(err, rows){
->>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+            }
+            console.log(rows);
+            res.status(200).json(rows);
+            connection.release();
+        });
+    });
+};
+exports.pushCurrentQuest = function(req, res){
+    console.log('GET /getQuestInfo/:fk_kids is called by parents');
+    conn.getConnection(function(err, connection){
+        if(err) {
+            console.error('MySAL connection err');
+        }
+        //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
+        //"state = 3 AND
+
+        var fk_kids = req.params.fk_kids;
+
+        //, INTERVAL '1 1:1:1' DAY_SECOND
+        conn.query("SELECT * FROM parents_quest WHERE state = 3 AND fk_kids = ?",fk_kids, function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
