@@ -11,12 +11,9 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             console.error('MySAL connection err');
 
         var quizVers = req.params.pk_std_quiz;
-        var questPVer = req.params.pk_parents_quest;
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
-        console.log
         var pk_std_quiz;
-        var pk_parents_quest;
         var pk_std_que;
         var results = {
             needUpate : '',
@@ -29,8 +26,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         async.waterfall(
             [
                 function(callback){
-                    conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_parents_quest) FROM parents_quest WHERE fk_kids = ?  ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
-                        if (err) {
+                    conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
+                            if (err) {
                             console.log('err is' + err);
                             connection.release();
                         }
@@ -40,15 +37,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_quiz = pk_std_quiz.split(":")[1];
                         pk_std_quiz = pk_std_quiz.split("}")[0];
                         console.log(pk_std_quiz);
-                        pk_parents_quest = JSON.stringify(rows[1]);
-                        pk_parents_quest = pk_parents_quest.split(":")[1];
-                        pk_parents_quest = pk_parents_quest.split("}")[0];
-                        console.log(pk_parents_quest);
-                        pk_std_que = JSON.stringify(rows[2]);
+
+                        pk_std_que = JSON.stringify(rows[1]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
                         console.log(pk_std_que);
-                        if(pk_std_quiz > quizVers | pk_std_que > questSVer | pk_parents_quest > questPVer )
+                        if(pk_std_quiz > quizVers | pk_std_que > questSVer )
                         {
                             results.needUpate = 1;
                             callback(null, results);
@@ -68,7 +62,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            //systemQuiz.(JSON.stringify(rows));
                             results.systemQuiz = rows;
                             callback(null, results);
                         });
@@ -86,7 +79,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
-                            //var arg2 = arg1 + 'systemQuest:' + JSON.stringify(rows);
                             results.systemQuest = rows;
                             callback(null, results);
                         });
@@ -99,22 +91,26 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg2, callback) {
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
-                    conn.query("SELECT * FROM parents_quest WHERE fk_kids = ?  ",fk_kids, function (err, rows) {
-                        if (err) {
+                    var nowDate = new Date();
+                    conn.query("SELECT * FROM parents_quest WHERE fk_kids = ? AND TIMESTAMPDIFF(SECOND, modifyTime, getTime) ",fk_kids,function(err, rows){
+                        if(err){
                             console.log('err is ' + err);
                             connection.release();
                         }
-                        //var arg3 = arg2 + 'parentsQuest: ' + JSON.stringify(rows);
-                        console.log('parents quest ' + rows);
                         results.parentsQuest = rows;
+                        conn.query("UPDATE parents_quest SET getTime = ? , modifyTime = ? WHERE fk_kids = ?",[nowDate,nowDate, fk_kids], function(err, rows){
+                            if(err){
+                                console.log('err is ' + err);
+                                connection.release();
+                            }
+                        });
                         callback(null, results);
                     });
-                    //}
-                    //else {
-                    //    results.parentsQuest = 'The lastest version of the parents quest';
-                     //   callback(null, results);
-                    //}
+<<<<<<< HEAD
                 },
+=======
+                }
+>>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
             ],
             function(err, results) {
 
@@ -244,13 +240,21 @@ exports.pushQuestState = function(req, res){
             console.error('MySAL connection err');
         }
         //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
-       // var fk_parents = req.user.fk_parents;
-        //var fk_kids = req.params.fk_kids;
-        //"state = 3 AND type = 2 " + " AND "+
-        var condition = "state = 3 AND type = 2 " + " AND "+
+        //"state = 3 AND
+<<<<<<< HEAD
+        var condition = "state = 3 " + " AND "+
                         "fk_kids =  " + req.params.fk_kids;
+=======
+>>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
+        var fk_kids = req.params.fk_kids;
 
-        var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows){
+        //, INTERVAL '1 1:1:1' DAY_SECOND
+        //var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows)
+<<<<<<< HEAD
+        conn.query("SELECT * FROM parents_quest WHERE "+condition, function(err, rows){
+=======
+        conn.query("SELECT * FROM parents_quest WHERE state = 3 AND fk_kids = ?",fk_kids, function(err, rows){
+>>>>>>> 34b72e8ed079e5576be23fb7fb7205046466807d
             if(err){
                 console.log('err is ' + err);
                 connection.release();
