@@ -6,6 +6,9 @@ exports.create = function(req, res){
 		if(err){
 			console.error('MySQl connection err');
 			console.log(err);
+			connection.release();
+			res.status(500).send();
+			return;
 		}
 		var nowDate = new Date();
 		var date = new Date(req.body.goal_date);
@@ -42,6 +45,9 @@ exports.allGoal = function(req, res){
 		if(err){
 			console.log('err' + err);
 			console.error('MySQl connection err');
+			connection.release();
+			res.status(500).send();
+			return;
 		}
 
 		var condition = "fk_kids = " + req.user.fk_kids;
@@ -49,6 +55,9 @@ exports.allGoal = function(req, res){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
+				connection.release();
+				res.status(500).send();
+				return;
 			}
 			res.status(200).json(rows);
 			connection.release();
@@ -61,6 +70,9 @@ exports.allGoalParents = function(req, res){
 		if(err){
 			console.log('MySQL connection err');
 			console.log('err is ' + err);
+			connection.release();
+			res.status(500).send();
+			return;
 		}
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 						"p.fk_kids = " + req.params.fk_kids + " AND " +
@@ -69,6 +81,8 @@ exports.allGoalParents = function(req, res){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
+				res.status(500).send();
+				return;
 			}
 			res.status(200).json(rows);
 			connection.release();
@@ -82,6 +96,9 @@ exports.currentGoal = function(req, res){
 		if(err){
 			console.log('err' + err);
 			console.error('MySQL connection err in cuurentGoal');
+			connection.release();
+			res.status(500).send();
+			return;
 		}
 		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
 						"g.fk_kids = " + req.user.fk_kids;
@@ -89,6 +106,8 @@ exports.currentGoal = function(req, res){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
+				res.status(500).send();
+				return;
 			}
 				res.status(200).json(rows);
 				connection.release();
@@ -102,6 +121,9 @@ exports.currentGoalParents = function(req, res){
 		if(err){
 			console.log('err' + err);
 			console.error('MySQL connection err in cuurentGoal');
+			connection.release();
+			res.status(500).send();
+			return;
 		}
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 						"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
@@ -110,6 +132,8 @@ exports.currentGoalParents = function(req, res){
 			if(err){
 				console.log('err is ' + err);
 				connection.release();
+				res.status(500).send();
+				return;
 			}
 				res.status(200).json(rows);
 				connection.release();
@@ -122,6 +146,10 @@ exports.update = function(req, res){
 	conn.getConnection(function(err,connection){
 	if(err){
 		console.error('MySQl connection err');
+		console.log(err);
+		connection.release();
+		res.status(500).send();
+		return;
 	}
 	//update the current cost of saving_list table
 	var nowDate = new Date();
@@ -143,6 +171,8 @@ exports.update = function(req, res){
         if(err){
 			console.log('err is ' + err);
 			connection.release();
+			res.status(500).send();
+			return;
 		}
 		console.log(req.body.now_cost);
 		res.status(200).send();
@@ -157,12 +187,18 @@ exports.remove = function(req, res){
 	conn.getConnection(function(err,connection){
 	if(err){
 		console.error('MySQl connection err');
+		console.log(err);
+		connection.release();
+		res.status(500).send();
+		return;
 	}
 	console.log(req.param('pk_goal'));
 	conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
 		if(err){
 			connection.release();
 			console.log(err);
+			res.status(500).send();
+			return;
 		}
 		console.log(rows);
 		res.status(200);

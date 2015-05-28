@@ -7,6 +7,9 @@ exports.createNowQuest = function(req, res){
         if (err) {
             console.error('MySQl connection err');
             console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         var questInfo = {
             'state' : req.body.state,
@@ -18,6 +21,8 @@ exports.createNowQuest = function(req, res){
             if (err) {
                 connection.release();
                 console.log("err is " + err);
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();
@@ -34,6 +39,10 @@ exports.updateQuestKids = function(req, res){
     conn.getConnection(function(err,connection){
         if(err){
             console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         var fk_kids = req.user.fk_kids;
 
@@ -45,6 +54,8 @@ exports.updateQuestKids = function(req, res){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();
@@ -59,6 +70,9 @@ exports.createParents = function(req, res){
         if (err) {
             console.error('MySQl connection err');
             console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         //'%Y/%m/%d %h:%i:%s'
         var nowDate = new Date();
@@ -77,6 +91,8 @@ exports.createParents = function(req, res){
             if (err) {
                 connection.release();
                 console.log("err is " + err);
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();
@@ -90,6 +106,9 @@ exports.createAdmin = function(req, res){
         if(err){
             console.error('MySQl connection err');
             console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         var questInfo = {
             'content' : req.body.content,
@@ -100,6 +119,8 @@ exports.createAdmin = function(req, res){
             if(err){
                 connection.release();
                 console.log("err is " + err);
+                res.status(500).send();
+                return;
             }
         });
         res.status(200).send();
@@ -113,6 +134,10 @@ exports.updateStdQuest = function(req, res){
 	conn.getConnection(function(err,connection){
 	if(err) {
         console.error('MySQl connection err');
+        console.log(err);
+        connection.release();
+        res.status(500).send();
+        return;
     }
     var pk_std_que = req.params.pk_std_que;
     /*var condition = "point = " + req.body.point +
@@ -122,6 +147,8 @@ exports.updateStdQuest = function(req, res){
 		if(err){
 			console.log('err is ' + err);
 			connection.release();
+            res.status(500).send();
+            return;
 		}
 		res.status(200).send();
 		connection.release();
@@ -134,7 +161,11 @@ exports.updateParentsQuest = function(req, res){
     console.log("PUT /quest/parents/:pk_parents_quest is called by parents");
     conn.getConnection(function(err,connection){
     if(err){
-    console.error('MySQl connection err');
+        console.error('MySQl connection err');
+        console.log(err);
+        connection.release();
+        res.status(500).send();
+        return;
     }
     var nowDate = new Date();
     var startTime = new Date(req.body.startTime);
@@ -150,6 +181,8 @@ exports.updateParentsQuest = function(req, res){
         if(err){
            console.log('err is ' + err);
             connection.release();
+            res.status(500).send();
+            return;
         }
         res.status(200).send();
         connection.release();
@@ -163,6 +196,10 @@ exports.updateQuestState = function(req, res){
     conn.getConnection(function(err,connection){
         if(err){
             console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         /*var condition = "state = " + req.body.state +
                         " WHERE fk_kids = " + req.params.fk_kids + " AND " +
@@ -170,7 +207,9 @@ exports.updateQuestState = function(req, res){
         conn.query("UPDATE parents_quest SET state = ? WHERE fk_kids = ? AND pk_parents_quest = ?",[req.body.state, req.params.fk_kids, req.body.fk_parents_quest ], function(err, result){
             if(err){
                 console.log('err is ' + err);
-                connection.release();
+                connection.release();;
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();
@@ -184,6 +223,10 @@ exports.removeStdQuest = function(req, res){
 	conn.getConnection(function(err,connection){
     	if(err){
 	    	console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
 	    }
         var pk_std_que = req.params.pk_std_que;
 
@@ -191,6 +234,8 @@ exports.removeStdQuest = function(req, res){
 		    if(err){
 			    connection.release();
 			    console.log(err);
+                res.status(500).send();
+                return;
 		    }
 		    res.status(200).send();
 		    connection.release();
@@ -204,6 +249,10 @@ exports.removeParentsQuest = function(req, res){
     conn.getConnection(function(err,connection){
         if(err){
             console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         var condition = "state = " + req.body.state + " WHERE " +
                         "pk_parents_quest = " + req.params.pk_parents_quest;
@@ -211,6 +260,8 @@ exports.removeParentsQuest = function(req, res){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();

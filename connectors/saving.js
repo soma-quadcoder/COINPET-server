@@ -29,7 +29,7 @@ exports.read = function(req, res){
 
 	if(req.user.fk_parents)
 	{
-		conn.query('select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents, function(err, rows)
+		var Query = conn.query('select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents, function(err, rows)
 		{
 			if(err) {
 				connection.release();

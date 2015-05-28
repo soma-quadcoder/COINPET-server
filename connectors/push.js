@@ -7,9 +7,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
     console.log('GET /getInfoStdQuest/:pk_std_que is called');
 
     conn.getConnection(function(err, connection){
-        if(err)
+        if(err) {
             console.error('MySAL connection err');
-
+            connection.release();
+            res.status(500).send();
+            return;
+        }
         var quizVers = req.params.pk_std_quiz;
         var questSVer = req.params.pk_std_que;
         var fk_kids = req.user.fk_kids;
@@ -30,6 +33,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             if (err) {
                             console.log('err is' + err);
                             connection.release();
+                            res.status(500).send();
+                            return;
                         }
                         //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
                         //split
@@ -55,6 +60,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
+                                res.status(500).send();
+                                return;
                             }
                             results.needUpate = 1;
                             results.systemQuiz = rows;
@@ -73,6 +80,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
+                                res.status(500).send();
+                                return;
                             }
                             results.needUpate = 1;
                             results.systemQuest = rows;
@@ -92,6 +101,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
+                            res.status(500).send();
+                            return;
                         }
                         results.parentsQuest = rows;
 
@@ -99,6 +110,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             if(err){
                                 console.log('err is ' + err);
                                 connection.release();
+                                res.status(500).send();
+                                return;
                             }
                         });
                         callback(null, results);
@@ -231,6 +244,9 @@ exports.pushQuestState = function(req, res){
     conn.getConnection(function(err, connection){
         if(err) {
             console.error('MySAL connection err');
+            connection.release();
+            res.status(500).send();
+            return;
         }
         var questSVer = req.params.pk_std_que;
         var pk_std_que;
@@ -276,6 +292,8 @@ exports.pushQuestState = function(req, res){
                         if (err) {
                             console.log('err is' + err);
                             connection.release();
+                            res.status(500).send();
+                            return;
                         }
 
                         pk_std_que = JSON.stringify(rows[0]);
@@ -293,9 +311,9 @@ exports.pushQuestState = function(req, res){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
+                            res.status(500).send();
                             return;
                         }
-                        console.log(rows);
                         for(var i in rows) {
                             console.log(i);
                             var data = rows[i];
@@ -319,22 +337,21 @@ exports.pushQuestState = function(req, res){
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
+                                res.status(500).send();
+                                return;
                             }
-                        console.log(rows);
-                        for(var i in rows) {
-                            console.log(i);
-                            var data = rows[i];
-                            console.log(data);
-                            fk_kids = data.fk_kids;
+                            for(var i in rows) {
+                                console.log(i);
+                                var data = rows[i];
+                                console.log(data);
+                                fk_kids = data.fk_kids;
 
-                            if(results[fk_kids] == null)
-                                results[fk_kids] = [];
+                                if(results[fk_kids] == null)
+                                    results[fk_kids] = [];
 
-                            /*delete data.fk_kids;
-                            delete data.modifyTime;
-                            delete data.getTime;*/
-                            results[fk_kids].push(data);
-                        }
+                                delete data.fk_kids;
+                                results[fk_kids].push(data);
+                            }
                             callback(null, results);
                     });
                 },
@@ -345,6 +362,8 @@ exports.pushQuestState = function(req, res){
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
+                                res.status(500).send();
+                                return;
                             }
                             results.stdQuest = rows;
                             callback(null, results);
@@ -365,6 +384,9 @@ exports.pushCurrentQuest = function(req, res){
     conn.getConnection(function(err, connection){
         if(err) {
             console.error('MySAL connection err');
+            connection.release();
+            res.status(500).send();
+            return;
         }
         //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
         //"state = 3 AND
@@ -380,6 +402,7 @@ exports.pushCurrentQuest = function(req, res){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
+                res.status(500).send();
                 return;
             }
             results.parents_quest = rows[0];
@@ -394,9 +417,12 @@ exports.pushCurrentQuest = function(req, res){
 exports.regist = function(req, res){
     console.log('POST /regist is called');
     conn.getConnection(function(err, connection){
-        if(err)
+        if(err) {
             console.error('MySAL connection err in /regist');
-
+            connection.release();
+            res.status(500).send();
+            return;
+        }
         var registration_id = req.body.regist_id;
         var user_id = req.body.user_id;
         console.log(registration_id + '\r\n'+ user_id);
@@ -409,6 +435,8 @@ exports.regist = function(req, res){
             if(err){
                 console.log('err is' + err);
                 connection.release();
+                res.status(500).send();
+                return;
             }
             console.log(result);
             res.status(200).json();

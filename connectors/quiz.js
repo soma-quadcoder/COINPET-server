@@ -8,6 +8,8 @@ exports.createNowQuiz = function(req, res){
         if (err) {
             console.error('MySQl connection err');
             console.log(err);
+            res.status(500).send();
+            return;
         }
         var quizInfo = {
             'state' : req.body.state,
@@ -19,6 +21,8 @@ exports.createNowQuiz = function(req, res){
             if (err) {
                 connection.release();
                 console.log("err is " + err);
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();
@@ -32,6 +36,9 @@ exports.createStdQuiz = function(req, res){
         if (err) {
             console.error('MySQl connection err');
             console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
         }
         var quizInfo = {
             'point' : req.body.point,
@@ -42,6 +49,8 @@ exports.createStdQuiz = function(req, res){
             if (err) {
                 connection.release();
                 console.log("err is " + err);
+                res.status(500).send();
+                return;
             }
             res.status(200).send();
             connection.release();
@@ -53,7 +62,11 @@ exports.updateQuiz = function(req, res){
     console.log("PUT /quiz/admin/:pk_std_quiz is called");
     conn.getConnection(function(err,connection){
     if(err){
-    console.error('MySQl connection err');
+        console.error('MySQl connection err');
+        console.log(err);
+        connection.release();
+        res.status(500).send();
+        return;
     }
     var pk_std_quiz = req.params.pk_std_quiz;
     /*var condition = "point = " + req.body.point +
@@ -61,8 +74,10 @@ exports.updateQuiz = function(req, res){
                     " WHERE pk_std_quiz = " + pk_std_quiz;*/
     conn.query("UPDATE std_quiz SET point = ? , content = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,pk_std_quiz], function(err, result){
         if(err){
-           console.log('err is ' + err);
+            console.log('err is ' + err);
             connection.release();
+            res.status(500).send();
+            return;
         }
         res.status(200).send();
         connection.release();
@@ -75,13 +90,19 @@ exports.removeStdQuiz = function(req, res){
 	conn.getConnection(function(err,connection){
     	if(err){
 	    	console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
 	    }
         var pk_std_quiz = req.params.pk_std_quiz;
 
         conn.query("DELETE FROM std_quiz WHERE pk_std_quiz = ? ", pk_std_quiz , function(err,rows){
 		    if(err){
-			    connection.release();
-			    console.log(err);
+                console.log('MySQL err' + err);
+                connection.release();
+                res.status(500).send();
+                return;
 		    }
 		    console.log();
 		    res.status(200).send();
