@@ -42,16 +42,10 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
                         console.log(pk_std_que);
-                        if(pk_std_quiz > quizVers | pk_std_que > questSVer )
-                        {
-                            results.needUpate = 1;
-                            callback(null, results);
-                        }
-                        else
-                        {
-                            results.needUpate = 0;
-                            callback(null, results);
-                        }
+
+                        results.needUpate = 0;
+                        callback(null, results);
+
                     });
                 },
                 function(arg ,callback) {
@@ -62,12 +56,13 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
+                            results.needUpate = 1;
                             results.systemQuiz = rows;
                             callback(null, results);
                         });
                     }
                     else {
-                        results.systemQuiz = 'The lastet version of the system quiz';
+                        results.systemQuiz = [];
                         callback(null, results);
                     }
                 },
@@ -79,12 +74,13 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 console.log('err is ' + err);
                                 connection.release();
                             }
+                            results.needUpate = 1;
                             results.systemQuest = rows;
                             callback(null, results);
                         });
                     }
                     else {
-                        results.systemQuest = 'The lastest version of the system quest';
+                        results.systemQuest = [];
                         callback(null, results);
                 }
                 },
@@ -98,6 +94,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             connection.release();
                         }
                         results.parentsQuest = rows;
+
                         conn.query("UPDATE parents_quest SET getTime = ? , modifyTime = ? WHERE fk_kids = ?",[nowDate,nowDate, fk_kids], function(err, rows){
                             if(err){
                                 console.log('err is ' + err);
@@ -235,27 +232,38 @@ exports.pushQuestState = function(req, res){
         if(err) {
             console.error('MySAL connection err');
         }
-        //req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
-        //"state = 3 AND
-        var condition = "state = 3 " + " AND "+
-            "fk_kids =  " + req.params.fk_kids;
-        var fk_kids = req.params.fk_kids;
-
-        //, INTERVAL '1 1:1:1' DAY_SECOND
-        //var Query = conn.query("SELECT * FROM quest WHERE "+condition, function(err, rows)
-        conn.query("SELECT * FROM parents_quest WHERE state = 3 AND fk_kids = ?",fk_kids, function(err, rows){
+        var fk_parents = req.user.fk_parents;
+        var results = {};
+        //select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents,
+        conn.query("SELECT q.* FROM parents_quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function(err, rows){
             if(err){
                 console.log('err is ' + err);
+                //conn.release();
                 connection.release();
+                return;
             }
             console.log(rows);
-            res.status(200).json(rows);
+            for(var i in rows) {
+                console.log(i);
+                var data = rows[i];
+                var fk_kids = data.fk_kids;
+
+                if(results[fk_kids] == null)
+                    results[fk_kids] = [];
+
+                delete data.fk_kids;
+                delete data.modifyTime;
+                delete data.getTime;
+                results[fk_kids].push(data);
+            }
+            console.log(results);
+            res.status(200).json(results);
             connection.release();
         });
     });
 };
 exports.pushCurrentQuest = function(req, res){
-    console.log('GET /getQuestInfo/:fk_kids is called by parents');
+    console.log('GET /getCurrentQuest/:fk_kids is called by parents');
     conn.getConnection(function(err, connection){
         if(err) {
             console.error('MySAL connection err');
@@ -266,13 +274,19 @@ exports.pushCurrentQuest = function(req, res){
         var fk_kids = req.params.fk_kids;
 
         //, INTERVAL '1 1:1:1' DAY_SECOND
-        conn.query("SELECT * FROM parents_quest WHERE state = 3 AND fk_kids = ?",fk_kids, function(err, rows){
+        var results = {
+            parents_quest : '',
+            quest : ''
+        };
+        conn.query("SELECT * FROM parents_quest WHERE state = 3 AND fk_kids = ?; SELECT * FROM quest WHERE fk_kids = ? ",[fk_kids, fk_kids], function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
+                return;
             }
-            console.log(rows);
-            res.status(200).json(rows);
+            results.parents_quest = rows[0];
+            results.quest = rows[1];
+            res.status(200).json(results);
             connection.release();
         });
     });

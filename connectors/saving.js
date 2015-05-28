@@ -29,7 +29,7 @@ exports.read = function(req, res){
 
 	if(req.user.fk_parents)
 	{
-		var Query = conn.query('select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents, function(err, rows)
+		conn.query('select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents, function(err, rows)
 		{
 			if(err) {
 				connection.release();
@@ -70,7 +70,7 @@ exports.read = function(req, res){
 		return;
 	}
 
-	var Query = conn.query('select * from saving_list where fk_kids = ? ',req.user.fk_kids, function(err, rows){
+	conn.query('select * from saving_list where fk_kids = ? ',req.user.fk_kids, function(err, rows){
 		if(err){
 			connection.release();
 			res.status(500).send();
@@ -93,7 +93,7 @@ exports.readParents = function(req, res){
 	var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 					"p.fk_kids = " + req.params.fk_kids + " AND " +
 					"s.fk_kids = " + req.params.fk_kids;
-	var Query = conn.query("SELECT s.* FROM saving_list s, parents_has_kids p  WHERE "+condition, function(err, rows){
+	conn.query("SELECT s.* FROM saving_list s, parents_has_kids p  WHERE "+condition, function(err, rows){
 		console.log(Query.sql);
 		if(err){
 			connection.release();
