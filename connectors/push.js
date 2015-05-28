@@ -26,7 +26,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         async.waterfall(
             [
                 function(callback){
-                    conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_std_que) FROM std_que", fk_kids, function (err, rows) {
+                    conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_std_que) FROM std_que", function (err, rows) {
                             if (err) {
                             console.log('err is' + err);
                             connection.release();
@@ -232,13 +232,18 @@ exports.pushQuestState = function(req, res){
         if(err) {
             console.error('MySAL connection err');
         }
+        var questSVer = req.params.pk_std_que;
+        var pk_std_que;
+        var fk_kids;
         var fk_parents = req.user.fk_parents;
-        var results = {};
+        var results = {
+            'stdQuest' : ''
+        };
         //select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents,
+        /*
         conn.query("SELECT q.* FROM parents_quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function(err, rows){
             if(err){
                 console.log('err is ' + err);
-                //conn.release();
                 connection.release();
                 return;
             }
@@ -246,20 +251,113 @@ exports.pushQuestState = function(req, res){
             for(var i in rows) {
                 console.log(i);
                 var data = rows[i];
+                console.log(data);
                 var fk_kids = data.fk_kids;
 
                 if(results[fk_kids] == null)
-                    results[fk_kids] = [];
+                    results[fk_kids] = ['ParetnsQuest'];
 
                 delete data.fk_kids;
                 delete data.modifyTime;
                 delete data.getTime;
                 results[fk_kids].push(data);
             }
+
+
             console.log(results);
             res.status(200).json(results);
             connection.release();
-        });
+        });*/
+
+        async.waterfall(
+            [
+                function(callback){
+                    conn.query("SELECT MAX(pk_std_que) FROM std_que", function (err, rows) {
+                        if (err) {
+                            console.log('err is' + err);
+                            connection.release();
+                        }
+
+                        pk_std_que = JSON.stringify(rows[0]);
+                        pk_std_que = pk_std_que.split(":")[1];
+                        pk_std_que = pk_std_que.split("}")[0];
+                        console.log(pk_std_que);
+
+                        callback(null, results);
+
+                    });
+                },
+                function(arg, callback){
+                    //select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents,
+                    conn.query("SELECT q.* FROM parents_quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function(err, rows){
+                        if(err){
+                            console.log('err is ' + err);
+                            connection.release();
+                            return;
+                        }
+                        console.log(rows);
+                        for(var i in rows) {
+                            console.log(i);
+                            var data = rows[i];
+                            console.log(data);
+                            fk_kids = data.fk_kids;
+
+                            if(results[fk_kids] == null)
+                                results[fk_kids] = [];
+
+                            delete data.fk_kids;
+                            delete data.modifyTime;
+                            delete data.getTime;
+                            results[fk_kids].push(data);
+                        }
+                        callback(null, results);
+                    });
+                },
+                function(arg1 ,callback) {
+                    //system Quiz check and update
+                    conn.query("SELECT q.* FROM quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function (err, rows) {
+                            if (err) {
+                                console.log('err is ' + err);
+                                connection.release();
+                            }
+                        console.log(rows);
+                        for(var i in rows) {
+                            console.log(i);
+                            var data = rows[i];
+                            console.log(data);
+                            fk_kids = data.fk_kids;
+
+                            if(results[fk_kids] == null)
+                                results[fk_kids] = [];
+
+                            /*delete data.fk_kids;
+                            delete data.modifyTime;
+                            delete data.getTime;*/
+                            results[fk_kids].push(data);
+                        }
+                            callback(null, results);
+                    });
+                },
+                function(arg2, callback) {
+                    //System quest check and update
+                    if (pk_std_que > questSVer) {
+                        conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
+                            if (err) {
+                                console.log('err is ' + err);
+                                connection.release();
+                            }
+                            results.stdQuest = rows;
+                            callback(null, results);
+                        });
+                    }
+                }
+            ],
+            function(err, results) {
+
+                console.log(results);
+                res.status(200).json(results);
+                connection.release();
+            });
     });
 };
 exports.pushCurrentQuest = function(req, res){
