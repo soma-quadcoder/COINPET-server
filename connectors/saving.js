@@ -94,11 +94,11 @@ exports.readParents = function(req, res){
 					"p.fk_kids = " + req.params.fk_kids + " AND " +
 					"s.fk_kids = " + req.params.fk_kids;
 	conn.query("SELECT s.* FROM saving_list s, parents_has_kids p  WHERE "+condition, function(err, rows){
-		console.log(Query.sql);
 		if(err){
 			connection.release();
 			console.log(err);
 			res.status(500).send();
+			console.log(this.sql);
 			return;
 		}
 		console.log(rows);
