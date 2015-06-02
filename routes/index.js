@@ -32,7 +32,7 @@ router.post('/quest',jwt({secret:secretKey}), quest.createNowQuest);
 router.post('/quest/parents/:fk_kids', jwt({secret:secretKey}), quest.createParents);
 router.post('/quest/admin', quest.createAdmin);
 
-router.put('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), quest.updateParentsQuest); //parents
+router.put('/quest/parentsUpdate', jwt({secret : secretKey}), quest.updateParentsQuest); //parents and kids
 router.put('/quest/admin/:pk_std_que', quest.updateStdQuest); //admin
 router.put('/quest', jwt({secret:secretKey}), quest.updateQuestKids); //kids
 router.put('/quest/stateUpdate/:fk_kids',jwt({secret:secretKey}), quest.updateQuestState);//update state call by parents

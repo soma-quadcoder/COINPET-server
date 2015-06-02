@@ -161,7 +161,7 @@ exports.updateStdQuest = function(req, res){
 
 //UPDATE parents quest
 exports.updateParentsQuest = function(req, res){
-    console.log("PUT /quest/parents/:pk_parents_quest is called by parents");
+    console.log("PUT /quest/parents/:pk_parents_quest is called by parents and kids");
     conn.getConnection(function(err,connection){
     if(err){
         console.error('MySQl connection err');
@@ -172,7 +172,7 @@ exports.updateParentsQuest = function(req, res){
     }
     var nowDate = new Date();
     var startTime = new Date(req.body.startTime);
-    var pk_parents_quest = req.params.pk_parents_quest;
+    //var pk_parents_quest = req.params.pk_parents_quest;
     /*var condition = "point =  " + req.body.point +
                     ",content = " + req.body.content +
                     ",startTime = " + startTime +
@@ -180,7 +180,7 @@ exports.updateParentsQuest = function(req, res){
                     ",state = " + req.body.state +
                     "WHERE pk_parents_quest = " + pk_parents_quest;*/
 
-    conn.query("UPDATE parents_quest SET point = ? , content = ? , startTime = ? , modifyTime = ?, state = ?, type = ?, comment = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,startTime,nowDate,req.body.state,req.body.type, req.body.comment,pk_parents_quest], function(err, result){
+    conn.query("UPDATE parents_quest SET point = ? , content = ? , startTime = ? , modifyTime = ?, state = ?, type = ?, comment = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,startTime,nowDate,req.body.state,req.body.type, req.body.comment,req.body.fk_parents_quest], function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
