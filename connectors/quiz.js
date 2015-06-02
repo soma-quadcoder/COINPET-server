@@ -42,7 +42,12 @@ exports.createStdQuiz = function(req, res){
         }
         var quizInfo = {
             'point' : req.body.point,
-            'content' : req.body.content
+            'content' : req.body.content,
+            'hint' : req.body.hint,
+            'time' : req.body.time,
+            'level' : req.body.level,
+            'solution' : req.body.solution,
+            'answer' : req.body.answer
         };
 
         conn.query('INSERT INTO std_quiz SET ?', quizInfo, function (err, result) {
@@ -72,7 +77,7 @@ exports.updateQuiz = function(req, res){
     /*var condition = "point = " + req.body.point +
                     "content = " + req.body.content +
                     " WHERE pk_std_quiz = " + pk_std_quiz;*/
-    conn.query("UPDATE std_quiz SET point = ? , content = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,pk_std_quiz], function(err, result){
+    conn.query("UPDATE std_quiz SET point = ? , content = ?, hint = ?, time = ?, level = ?, solution = ?, answer = ? WHERE pk_std_quiz = ? ",[req.body.point,req.body.content,req.body.hint, req.body.time, req.body.level,req.body.solution, req.body.answer,pk_std_quiz], function(err, result){
         if(err){
             console.log('err is ' + err);
             connection.release();

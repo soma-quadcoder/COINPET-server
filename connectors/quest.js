@@ -84,6 +84,8 @@ exports.createParents = function(req, res){
             'startTime': startDate,
             'state' : req.body.state,
             'modifyTime' : nowDate,
+            'type' : req.body.type,
+            'comment' : req.body.comment,
             'fk_kids' : req.params.fk_kids
         };
 
@@ -112,7 +114,8 @@ exports.createAdmin = function(req, res){
         }
         var questInfo = {
             'content' : req.body.content,
-            'point' : req.body.point
+            'point' : req.body.point,
+            'type' : req.body.type
         };
 
         conn.query('INSERT INTO std_que SET ?', questInfo  ,function(err, result){
@@ -143,7 +146,7 @@ exports.updateStdQuest = function(req, res){
     /*var condition = "point = " + req.body.point +
                     " , content = " + req.body.content +
                     " WHERE pk_std_que = " + pk_std_que;*/
-        conn.query("UPDATE std_que SET point = ?, content = ? WHERE pk_std_que = ? ",[req.body.point,req.body.content,pk_std_que], function(err, result){
+        conn.query("UPDATE std_que SET point = ?, content = ?, type = ? WHERE pk_std_que = ? ",[req.body.point,req.body.content,req.body.type,pk_std_que], function(err, result){
 		if(err){
 			console.log('err is ' + err);
 			connection.release();
@@ -177,7 +180,7 @@ exports.updateParentsQuest = function(req, res){
                     ",state = " + req.body.state +
                     "WHERE pk_parents_quest = " + pk_parents_quest;*/
 
-    conn.query("UPDATE parents_quest SET point = ? , content = ? , startTime = ? , modifyTime = ?, state = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,startTime,nowDate,req.body.state,pk_parents_quest], function(err, result){
+    conn.query("UPDATE parents_quest SET point = ? , content = ? , startTime = ? , modifyTime = ?, state = ?, type = ?, comment = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,startTime,nowDate,req.body.state,req.body.type, req.body.comment,pk_parents_quest], function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
@@ -191,6 +194,7 @@ exports.updateParentsQuest = function(req, res){
 };
 
 //UPDATE quest state retry and done
+//사용 안할듯요
 exports.updateQuestState = function(req, res){
     console.log("PUT /quest/stateUpdate/:fk_kids is called by parents");
     conn.getConnection(function(err,connection){
@@ -207,7 +211,7 @@ exports.updateQuestState = function(req, res){
         conn.query("UPDATE parents_quest SET state = ? WHERE fk_kids = ? AND pk_parents_quest = ?",[req.body.state, req.params.fk_kids, req.body.fk_parents_quest ], function(err, result){
             if(err){
                 console.log('err is ' + err);
-                connection.release();;
+                connection.release();
                 res.status(500).send();
                 return;
             }
