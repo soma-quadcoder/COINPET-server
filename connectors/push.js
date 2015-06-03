@@ -48,7 +48,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_que = pk_std_que.split("}")[0];
                         console.log(pk_std_que);
 
-                        results.needUpate = 0;
+                        results.needUpate = false;
                         callback(null, results);
 
                     });
@@ -63,7 +63,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 res.status(500).send();
                                 return;
                             }
-                            results.needUpate = 1;
+                            results.needUpate = true;
                             results.systemQuiz = rows;
                             callback(null, results);
                         });
@@ -83,7 +83,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 res.status(500).send();
                                 return;
                             }
-                            results.needUpate = 1;
+                            results.needUpate = true;
                             results.systemQuest = rows;
                             callback(null, results);
                         });
@@ -105,6 +105,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             return;
                         }
                         results.parentsQuest = rows;
+
 
                         conn.query("UPDATE parents_quest SET getTime = ? , modifyTime = ? WHERE fk_kids = ?",[nowDate,nowDate, fk_kids], function(err, rows){
                             if(err){
