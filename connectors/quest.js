@@ -77,13 +77,14 @@ exports.createParents = function(req, res){
         //'%Y/%m/%d %h:%i:%s'
         var nowDate = new Date();
         var startDate = new Date(req.body.startTime);
-
+        var getTime = new Date("2015-06-01");
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
             'startTime': startDate,
             'state' : req.body.state,
             'modifyTime' : nowDate,
+            'getTime' : getTime,
             'type' : req.body.type,
             'comment' : req.body.comment,
             'fk_kids' : req.params.fk_kids
