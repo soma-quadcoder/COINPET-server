@@ -24,11 +24,15 @@ exports.create = function(req, res){
 		conn.query("INSERT INTO goal SET ? ", goalInfo  ,function(err, result){
 			if(err){
 				connection.release();
+                res.status(500).send();
+                return;
 				console.log("err is " + err);
 			}
 			conn.query("UPDATE kids SET current_goal = ? WHERE pk_kids = ? ", [result.insertId, req.user.fk_kids],  function(err, result){
 				if(err){
 					connection.release();
+                    res.status(500).send();
+                    return;
 					console.log("err is " + err);
 				}
 				console.log(result);
@@ -54,7 +58,6 @@ exports.allGoal = function(req, res){
 		conn.query("SELECT * FROM goal WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
-				connection.release();
 				connection.release();
 				res.status(500).send();
 				return;
@@ -109,6 +112,7 @@ exports.currentGoal = function(req, res){
 				res.status(500).send();
 				return;
 			}
+                console.log(rows);
 				res.status(200).json(rows);
 				connection.release();
 		});
@@ -126,7 +130,7 @@ exports.currentGoalParents = function(req, res){
 			return;
 		}
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
-						"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
+						"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal "+ " AND " +
 						"g.fk_kids = " + req.params.fk_kids;
 		conn.query("SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE "+condition, function(err, rows){
 			if(err){
@@ -135,7 +139,8 @@ exports.currentGoalParents = function(req, res){
 				res.status(500).send();
 				return;
 			}
-				res.status(200).json(rows);
+				console.log(rows);
+				res.status(200).json(rows[0]);
 				connection.release();
 		});
 	});
