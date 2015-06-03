@@ -1,10 +1,9 @@
-var gcm = require('node-gcm');
 var conn = require('./db.js');
 var async = require('async');
 
 //GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
 exports.pushQeustAndQuizInfoToApp = function(req, res){
-    console.log('GET /getInfoStdQuest/:pk_std_que is called');
+    console.log('GET /getInfo/:pk_std_que/:pk_std_quiz is called');
 
     conn.getConnection(function(err, connection){
         if(err) {
@@ -15,6 +14,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         }
         var quizVers = req.params.pk_std_quiz;
         var questSVer = req.params.pk_std_que;
+        console.log('quiz'+quizVers);
+        console.log('quest'+questSVer);
         var fk_kids = req.user.fk_kids;
         var pk_std_quiz;
         var pk_std_que;
@@ -41,12 +42,12 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
                         pk_std_quiz = pk_std_quiz.split(":")[1];
                         pk_std_quiz = pk_std_quiz.split("}")[0];
-                        console.log(pk_std_quiz);
+                        console.log('db quiz' + pk_std_quiz);
 
                         pk_std_que = JSON.stringify(rows[1]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
-                        console.log(pk_std_que);
+                        console.log('db quest' + pk_std_que);
 
                         results.needUpate = false;
                         callback(null, results);
@@ -64,6 +65,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 return;
                             }
                             results.needUpate = true;
+                            console.log(rows);
                             results.systemQuiz = rows;
                             callback(null, results);
                         });
@@ -84,6 +86,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 return;
                             }
                             results.needUpate = true;
+                            console.log(rows);
                             results.systemQuest = rows;
                             callback(null, results);
                         });
@@ -105,7 +108,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             return;
                         }
                         results.parentsQuest = rows;
-
+                        console.log(rows);
 
                         conn.query("UPDATE parents_quest SET getTime = ? , modifyTime = ? WHERE fk_kids = ?",[nowDate,nowDate, fk_kids], function(err, rows){
                             if(err){
@@ -114,6 +117,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                                 res.status(500).send();
                                 return;
                             }
+                            console.log(rows);
                         });
                         callback(null, results);
                     });
