@@ -76,7 +76,8 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
                     var nowDate = new Date();
-                    conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ? AND TIMESTAMPDIFF(SECOND, modifyTime, getTime) ",fk_kids,function(err, rows){
+                    //AND TIMESTAMPDIFF(SECOND, modifyTime, getTime)
+                    conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ? ",fk_kids,function(err, rows){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
