@@ -84,6 +84,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             res.status(500).send();
                             return;
                         }
+
                         for(var i in rows) {
                             var data = rows[i];
                             data["state"] = data["state+0"];
