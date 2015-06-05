@@ -16,13 +16,11 @@ var account = require('../connectors/account.js');
 var push = require('../connectors/push.js');
 var quest = require('../connectors/quest.js');
 var quiz = require('../connectors/quiz.js');
-var pnG = require('../connectors/pnGenerator.js')
 //여기 왜 user 똑같아 ?
 var user = require('./user');
 var user = require('./user/index');
 
 
-router.post('/pnGenerator', pnG.createNewPn);
 
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
