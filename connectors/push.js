@@ -1,6 +1,5 @@
 var conn = require('./db.js');
 var async = require('async');
-
 //GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
 exports.pushQeustAndQuizInfoToApp = function(req, res){
     console.log('GET /getInfo/:pk_std_que/:pk_std_quiz is called');
@@ -19,41 +18,14 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
         var fk_kids = req.user.fk_kids;
         var pk_std_quiz;
         var pk_std_que;
-        var results = {
-            needUpate : '',
-            systemQuiz : '',
-            systemQuest : '',
-            parentsQuest: ''
-        };
-
+        var results = {};
+        results["needUpdate"] = false;
+        results["systemQuiz"] = [];
+        results["systemQuest"] = [];
+        results["parentsQuest"] = [];
 
         async.waterfall(
             [
-                /*function(callback){
-                    conn.query("SELECT MAX(pk_std_quiz) FROM std_quiz ; SELECT MAX(pk_std_que) FROM std_que", function (err, rows) {
-                            if (err) {
-                            console.log('err is' + err);
-                            connection.release();
-                            res.status(500).send();
-                            return;
-                        }
-                        //[{'MAX(pk_std_quiz)' : ?} , {'MAX(pk_parents_quest)' : ? }, {'MAX(pk_std_que)' : ? } ]
-                        //split
-                        pk_std_quiz = JSON.stringify(rows[0]); // pk_std_quiz change string
-                        pk_std_quiz = pk_std_quiz.split(":")[1];
-                        pk_std_quiz = pk_std_quiz.split("}")[0];
-                        console.log('db quiz' + pk_std_quiz);
-
-                        pk_std_que = JSON.stringify(rows[1]);
-                        pk_std_que = pk_std_que.split(":")[1];
-                        pk_std_que = pk_std_que.split("}")[0];
-                        console.log('db quest' + pk_std_que);
-
-                        results.needUpate = false;
-                        callback(null, results);
-
-                    });
-                },*/
                 function(callback) {
                     //system Quiz check and update
                     conn.query("SELECT * FROM std_quiz WHERE ( pk_std_quiz > ? )  ", quizVers, function (err, rows) {
@@ -63,8 +35,18 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             res.status(500).send();
                             return;
                         }
-                        results.needUpate = true;
-                        results.systemQuiz = rows;
+                        //var data = rows;
+
+                        for(var i in rows) {
+                            var data = rows[i];
+                            data.level = parseInt(data.level);
+
+                            if(results["systemQuiz"] == null)
+                                results["systemQuiz"] = [];
+
+                            results["systemQuiz"].push(data);
+                            results["needUpdate"] = true;
+                        }
                         callback(null, results);
                     });
 
@@ -78,8 +60,15 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             res.status(500).send();
                             return;
                         }
-                        results.needUpate = true;
-                        results.systemQuest = rows;
+                        for(var i in rows) {
+                            var data = rows[i];
+
+                            if(results["systemQuest"] == null)
+                                results["systemQuest"] = [];
+
+                            results["systemQuest"].push(data);
+                            results["needUpdate"] = true;
+                        }
                         callback(null, results);
                     });
                 },
@@ -87,15 +76,25 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
                     var nowDate = new Date();
-                    conn.query("SELECT pk_parents_quest, point, content, state, type, comment, fk_kids FROM parents_quest WHERE fk_kids = ? AND TIMESTAMPDIFF(SECOND, modifyTime, getTime) ",fk_kids,function(err, rows){
+                    conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ? AND TIMESTAMPDIFF(SECOND, modifyTime, getTime) ",fk_kids,function(err, rows){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
                             res.status(500).send();
                             return;
                         }
-                        results.parentsQuest = rows;
+                        for(var i in rows) {
+                            var data = rows[i];
+                            data["state"] = data["state+0"];
+                            if(results["parentsQuest"] == null)
+                                results["parentsQuest"] = [];
+                            delete data["state+0"];
+                            delete data.modifyTime;
+                            delete data.getTime;
 
+                            results["parentsQuest"].push(data);
+                            results["needUpdate"] = true;
+                        }
                         conn.query("UPDATE parents_quest SET getTime = ? , modifyTime = ? WHERE fk_kids = ?",[nowDate,nowDate, fk_kids], function(err, rows){
                             if(err){
                                 console.log('err is ' + err);
@@ -109,8 +108,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 }
             ],
             function(err, results) {
-
-                console.log(results);
                 res.status(200).json(results);
                 connection.release();
             });
@@ -130,38 +127,7 @@ exports.pushQuestState = function(req, res){
         var pk_std_que;
         var fk_kids;
         var fk_parents = req.user.fk_parents;
-        var results = {
-            'stdQuest' : ''
-        };
-        //select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents,
-        /*
-        conn.query("SELECT q.* FROM parents_quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function(err, rows){
-            if(err){
-                console.log('err is ' + err);
-                connection.release();
-                return;
-            }
-            console.log(rows);
-            for(var i in rows) {
-                console.log(i);
-                var data = rows[i];
-                console.log(data);
-                var fk_kids = data.fk_kids;
-
-                if(results[fk_kids] == null)
-                    results[fk_kids] = ['ParetnsQuest'];
-
-                delete data.fk_kids;
-                delete data.modifyTime;
-                delete data.getTime;
-                results[fk_kids].push(data);
-            }
-
-
-            console.log(results);
-            res.status(200).json(results);
-            connection.release();
-        });*/
+        var results = {};
 
         async.waterfall(
             [
@@ -185,7 +151,7 @@ exports.pushQuestState = function(req, res){
                 },
                 function(arg, callback){
                     //select s.* from saving_list s, parents_has_kids p where s.fk_kids = p.fk_kids AND p.fk_parents = ?', req.user.fk_parents,
-                    conn.query("SELECT q.* FROM parents_quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function(err, rows){
+                    conn.query("SELECT q.* ,q.state+0 FROM parents_quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function(err, rows){
                         if(err){
                             console.log('err is ' + err);
                             connection.release();
@@ -200,10 +166,11 @@ exports.pushQuestState = function(req, res){
 
                             if(results[fk_kids] == null)
                                 results[fk_kids] = [];
-
+                            data["state"] = data["q.state+0"];
                             delete data.fk_kids;
                             delete data.modifyTime;
                             delete data.getTime;
+                            delete data["q.state+0"];
                             results[fk_kids].push(data);
                         }
                         callback(null, results);
@@ -235,18 +202,17 @@ exports.pushQuestState = function(req, res){
                 },
                 function(arg2, callback) {
                     //System quest check and update
-                    if (pk_std_que > questSVer) {
-                        conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
-                            if (err) {
-                                console.log('err is ' + err);
-                                connection.release();
-                                res.status(500).send();
-                                return;
-                            }
-                            results.stdQuest = rows;
-                            callback(null, results);
-                        });
-                    }
+                    conn.query("SELECT * FROM std_que WHERE ( pk_std_que > ? )  ", questSVer, function (err, rows) {
+                        if (err) {
+                            console.log('err is ' + err);
+                            connection.release();
+                            res.status(500).send();
+                            return;
+                        }
+                        results["stdQuest"] = rows;
+                        callback(null, results);
+                    });
+
                 }
             ],
             function(err, results) {

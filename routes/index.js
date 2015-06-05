@@ -22,7 +22,7 @@ var user = require('./user');
 var user = require('./user/index');
 
 
-router.post('/pnGenerator', pnG.createNewPn);
+router.get('/pnGenerator', pnG.createNewPn);
 
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
