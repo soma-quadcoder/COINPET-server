@@ -115,7 +115,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
             });
     });
 };
-
 exports.pushQuestState = function(req, res){
     console.log('GET /getQuestInfo/:fk_kids is called by parents');
     conn.getConnection(function(err, connection){
