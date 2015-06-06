@@ -78,6 +78,7 @@ exports.createParents = function(req, res){
         var nowDate = new Date();
         var startDate = new Date(req.body.startTime);
         var getTime = new Date("2015-06-01");
+       // var update = 1;
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
@@ -87,6 +88,7 @@ exports.createParents = function(req, res){
             'getTime' : getTime,
             'type' : req.body.type,
             'comment' : req.body.comment,
+            //'update' : update,
             'fk_kids' : req.params.fk_kids
         };
 
@@ -162,7 +164,8 @@ exports.updateStdQuest = function(req, res){
 
 //UPDATE parents quest
 exports.updateParentsQuest = function(req, res){
-    console.log("PUT /quest/parents/:pk_parents_quest is called by parents and kids");
+    console.log("PUT /quest/parentsUpdate is called by parents and kids");
+    /*
     conn.getConnection(function(err,connection){
     if(err){
         console.error('MySQl connection err');
@@ -173,23 +176,61 @@ exports.updateParentsQuest = function(req, res){
     }
     var nowDate = new Date();
     var startTime = new Date(req.body.startTime);
+
     //var pk_parents_quest = req.params.pk_parents_quest;
     /*var condition = "point =  " + req.body.point +
                     ",content = " + req.body.content +
                     ",startTime = " + startTime +
                     ",modifyTime = " + nowDate +
                     ",state = " + req.body.state +
-                    "WHERE pk_parents_quest = " + pk_parents_quest;*/
+                    "WHERE pk_parents_quest = " + pk_parents_quest;
+    console.log(req.user.fk_kids);
+        console.log(req.user.fk_parents);
+    if(req.user.fk_parents) {
+        var update = 1;
+        console.log('fk_parents' + update);
+    }
+    if(req.user.fk_kids) {
+        var update = 2;
+        console.log('fk_kids' + update);
+    }
+        console.log(update);
 
-    conn.query("UPDATE parents_quest SET point = ? , content = ? , startTime = ? , modifyTime = ?, state = ?, type = ?, comment = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,startTime,nowDate,req.body.state,req.body.type, req.body.comment,req.body.fk_parents_quest], function(err, result){
+    conn.query("UPDATE parents_quest SET content =? , point =? , state =?, type =?, up = ? WHERE pk_parents_quest = ? ",[req.body.content, req.body.point, req.body.state, req.body.type, update ,req.body.fk_parents_quest], function(err, result){
         if(err){
            console.log('err is ' + err);
             connection.release();
             res.status(500).send();
             return;
         }
+        console.log(result);
         res.status(200).send();
         connection.release();
+        });
+    });
+*/
+
+    console.log("PUT /quest/parents/:pk_parents_quest is called by parents and kids");
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
+        }
+        var nowDate = new Date();
+        var startTime = new Date(req.body.startTime);
+
+        conn.query("UPDATE parents_quest SET point = ? , content = ? , startTime = ? , modifyTime = ?, state = ?, type = ?, comment = ? WHERE pk_parents_quest = ?",[req.body.point, req.body.content,startTime,nowDate,req.body.state,req.body.type, req.body.comment,req.body.fk_parents_quest], function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+                res.status(500).send();
+                return;
+            }
+            res.status(200).send();
+            connection.release();
         });
     });
 };
