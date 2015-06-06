@@ -11,9 +11,11 @@ exports.createNowQuest = function(req, res){
             res.status(500).send();
             return;
         }
+        var nowDate = new Date();
         var questInfo = {
             'state' : req.body.state,
             'fk_std_que' : req.body.fk_std_que,
+            'startTime' : nowDate,
             'fk_kids' : req.user.fk_kids
         };
 
