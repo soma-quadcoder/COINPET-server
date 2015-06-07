@@ -106,6 +106,7 @@ exports.createParents = function(req, res){
         });
     });
 };
+//System quest create by admin
 //CREATE CREATE post /quest
 exports.createAdmin = function(req, res){
     console.log("POST /quest/admin is called by admin");
@@ -120,7 +121,10 @@ exports.createAdmin = function(req, res){
         var questInfo = {
             'content' : req.body.content,
             'point' : req.body.point,
-            'type' : req.body.type
+            'type' : req.body.type,
+            'con_type' : req.body.con_type,
+            'con_method' : req.body.con_method,
+            'con_count' : req.body.con_count
         };
 
         conn.query('INSERT INTO std_que SET ?', questInfo  ,function(err, result){
@@ -147,19 +151,17 @@ exports.updateStdQuest = function(req, res){
         res.status(500).send();
         return;
     }
-    var pk_std_que = req.params.pk_std_que;
-    /*var condition = "point = " + req.body.point +
-                    " , content = " + req.body.content +
-                    " WHERE pk_std_que = " + pk_std_que;*/
+        var pk_std_que = req.params.pk_std_que;
+
         conn.query("UPDATE std_que SET point = ?, content = ?, type = ? WHERE pk_std_que = ? ",[req.body.point,req.body.content,req.body.type,pk_std_que], function(err, result){
-		if(err){
-			console.log('err is ' + err);
-			connection.release();
-            res.status(500).send();
-            return;
-		}
-		res.status(200).send();
-		connection.release();
+	        if(err){
+		    	console.log('err is ' + err);
+		    	connection.release();
+               res.status(500).send();
+               return;
+		    }
+		    res.status(200).send();
+		    connection.release();
 		});
 	});
 };

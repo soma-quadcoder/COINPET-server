@@ -179,7 +179,7 @@ exports.pushQuestState = function(req, res){
                 },
                 function(arg1 ,callback) {
                     //system Quiz check and update
-                    conn.query("SELECT q.* FROM quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function (err, rows) {
+                    conn.query("SELECT q.*, q.state+0 FROM quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function (err, rows) {
                             if (err) {
                                 console.log('err is ' + err);
                                 connection.release();
@@ -194,7 +194,9 @@ exports.pushQuestState = function(req, res){
 
                                 if(results[fk_kids] == null)
                                     results[fk_kids] = [];
+                                data["state"] = data["q.state+0"];
 
+                                delete data["q.state+0"];
                                 delete data.fk_kids;
                                 results[fk_kids].push(data);
                             }
