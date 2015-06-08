@@ -36,10 +36,12 @@ router.post('/quest',jwt({secret:secretKey}), quest.createNowQuest);
 router.post('/quest/parents/:fk_kids', jwt({secret:secretKey}), quest.createParents);
 router.post('/quest/admin', quest.createAdmin);
 
+//부모 퀘스트 업데이트 하는 경우
 router.put('/quest/parentsUpdate', jwt({secret : secretKey}), quest.updateParentsQuest); //parents and kids
 router.put('/quest/admin/:pk_std_que', quest.updateStdQuest); //admin
 router.put('/quest', jwt({secret:secretKey}), quest.updateQuestKids); //kids
-//router.put('/quest/stateUpdate/:fk_kids',jwt({secret:secretKey}), quest.updateQuestState);//update state call by parents
+//부모퀘스트의 state만 따로 업데이트 하는 경우
+router.put('/quest/stateUpdate',jwt({secret:secretKey}), quest.updateQuestState);//update state call by parents
 
 router.delete('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), quest.removeParentsQuest); //parents
 router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
