@@ -98,6 +98,7 @@ router.get('/goal/current/:fk_kids', jwt({secret:secretKey}), function(req, res)
 });
 
 router.put('/goal', jwt({secret:secretKey}), goal.update);
+router.put('/goal/stateUpdate',jwt({secret:secretKey}) ,goal.updateGaolState);
 router.delete('/goal/:pk_goal', jwt({secret:secretKey}), goal.remove);
 //SAVING_LIST
 router.get('/saving', jwt({secret:secretKey}), saving.read);

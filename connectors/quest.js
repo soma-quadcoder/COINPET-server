@@ -144,16 +144,32 @@ exports.updateQuestState = function(req, res){
             return;
         }
         //UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET state = ?
-        conn.query("UPDATE parents_quest SET state = ? WHERE pk_parents_quest = ?",[req.body.state, req.body.fk_parents_quest ], function(err, result){
-            if(err){
-                console.log('err is ' + err);
+        if(req.user.fk_kids){
+            console.log('req.user.fk_kids' + req.user.fk_kids);
+            conn.query("UPDATE parents_quest SET state = ? WHERE pk_parents_quest = ?",[req.body.state, req.body.fk_parents_quest ], function(err, result){
+                if(err){
+                    console.log('err is ' + err);
+                    connection.release();
+                    res.status(500).send();
+                    return;
+                }
+                res.status(200).send();
                 connection.release();
-                res.status(500).send();
-                return;
-            }
-            res.status(200).send();
-            connection.release();
-        });
+            });
+        }
+        else{
+            console.log('req.user.fk_parents' + req.user.fk_parents);
+            conn.query("UPDATE parents_quest SET state = ?, comment = ? WHERE pk_parents_quest = ?",[req.body.state,req.body.comment, req.body.fk_parents_quest ], function(err, result){
+                if(err){
+                    console.log('err is ' + err);
+                    connection.release();
+                    res.status(500).send();
+                    return;
+                }
+                res.status(200).send();
+                connection.release();
+            });
+        }
     });
 };
 

@@ -259,7 +259,6 @@ exports.pushCurrentQuest = function(req, res){
         });
     });
 };
-
 //regist push id
 exports.regist = function(req, res){
     console.log('POST /regist is called');
