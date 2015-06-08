@@ -77,7 +77,7 @@ exports.update = function(req, res){
 				return;
 			}
 
-			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?) ; INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [ req.body.state ,req.body.now_cost, req.body.now_cost, nowDate,req.user.fk_kids], function(err, result){
+			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?) ; INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [req.body.state ,req.body.now_cost, req.body.now_cost, nowDate,req.user.fk_kids], function(err, result){
 				if(err){
 					console.log('err is ' + err);
 					connection.release();
@@ -103,17 +103,35 @@ exports.update = function(req, res){
 			}
 			var data = rows[0];
 			var nowCost = data["now_cost"];
-			var goaoCost = data["goal_cost"];
-			console.log(data["now_cost"]);
-			console.log(data["goal_cost"]);
-			if(data["now_cost"] < (data["goal_cost"]))
+			var goalCost = data["goal_cost"];
+			var insertCost = req.body.now_cost;
+			var calculateCost = nowCost + insertCost;
+			/*
+			console.log('insertCost' + insertCost);
+			console.log('calculateCost' + calculateCost);
+
+			console.log('now_cost' +data["now_cost"]);
+			console.log('goal_cost' +data["goal_cost"]);
+			if(calculateCost > goalCost)
+				console.log(('ㅑㅑㅑㅑ'+insertCost + goalCost));
+			*/
+			if((nowCost < goalCost)) {
 				console.log("data[now_cost] < (data[goal_cost])");
-			console.log(data[2]);
-
-			res.status(200).json(data);
-			connection.release();
+				conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?); INSERT INTO saving_list (now_cost, date, fk_kids) VALUES(?,?,?)",[req.body.now_cost, req.body.now_cost , nowDate,req.user.fk_kids], function(err, result){
+					if(err){
+						console.log('err is ' + err);
+						connection.release();
+						res.status(500).send();
+						return;
+					}
+					console.log(req.body.now_cost);
+				});
+				res.status(200).send();
+				connection.release();
+			}
+			else
+				res.status(200).send('nowCost > goalCost');
 		});
-
 	});
 };
 
