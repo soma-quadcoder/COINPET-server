@@ -10,7 +10,7 @@ var router = express.Router();
 var jwt = require('express-jwt');
 var secretKey = require('../jwtKey');
 //including js file
-var admin = require('../admin/');
+var admin = require('./admin/');
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
