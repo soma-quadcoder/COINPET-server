@@ -1,8 +1,8 @@
 var express =require('express'),
 	http = require('http'),
 	path = require('path'),
-	app = express();
-//	multer = require('multer');
+	app = express(),
+	multer = require('multer');
 expressJwt = require('express-jwt');
 unless = require('express-unless');
 server = http.createServer(app);
