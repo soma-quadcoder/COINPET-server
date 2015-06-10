@@ -21,9 +21,9 @@ var pnG = require('../connectors/pnGenerator.js');
 var user = require('./user');
 var user = require('./user/index');
 
-
+//PN
 router.post('/pnGenerator', pnG.createNewPn);
-
+router.get('/getPn', pnG.getPn);
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
 router.post('/quiz/admin', quiz.createStdQuiz);
