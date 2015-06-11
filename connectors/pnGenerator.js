@@ -2,7 +2,6 @@ var conn = require('./db.js');
 var async = require('async');
 count=0;
 date = 0;
-
 exports.createNewPn = function(req, res){
     console.log('POST /pnGenerator is called by admin');
     conn.getConnection(function (err, connection) {
@@ -15,57 +14,39 @@ exports.createNewPn = function(req, res){
         }
 
         var req_count = req.body.count;
+        var compareCount = req.body.count;
         var results = {};
-        var validCount;
+
         async.waterfall([
                 function(callback) {
                     //현재 DB에 유효한 시리얼 번호 check!
                     var date = new Date();
-                    conn.query("SELECT COUNT(*) FROM product_num WHERE admin_write = 0 ; SELECT COUNT(*) FROM product_num WHERE date(createTime) = date(now()) ", function (err, rows) {
+                    conn.query("SELECT COUNT(*) FROM product_num WHERE date(createTime) = date(now()) ", function (err, rows) {
                         if (err) {
                             console.log('POST /pnGenerator err ' + err);
                             res.status(500).send();
                             connection.release();
                             return;
                         }
-                        validCount = rows[0][0]["COUNT(*)"]; // 사용가능한 PN
-                        count = rows[1][0]["COUNT(*)"]; // 오늘 생성한 PN count
+                        count = rows[0]["COUNT(*)"]; // 오늘 생성한 PN count
                         callback(null);
                     });
                 },
                 function(callback){
-                    var condition = req_count;
-                    conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ORDER BY RAND() LIMIT "+req_count, function(err, rows){
-                        if (err) {
-                            console.log('POST /pnGenerator err ' + err);
-                            res.status(500).send();
-                            connection.release();
-                        }
+                    while(req_count > 0) {
+                        var pnInfo = makePN(results);
+                        conn.query("INSERT INTO product_num SET ? ", pnInfo, function (err, result) {
+                            if (err) {
+                                console.log(err);
+                                connection.release();
+                            }
+                            compareCount -= 1;
+                            if(compareCount == req_count) {
+                                callback(null);
+                            }
 
-                        for(var i in rows) {
-                            var data = rows[i];
-                            if (results["product_num"] == null)
-                                results["product_num"] = [];
-
-                            results["product_num"].push(data["product_num"]);
-                        }
-                        if(req_count <= validCount) {
-                            callback(null);
-                        }
-                    });
-
-                    if(req_count > validCount){
-                        req_count -= validCount;
-                        while(req_count > 0) {
-                            var pnInfo = makePN(results);
-                            conn.query("INSERT INTO product_num SET ? ", pnInfo, function (err, result) {
-                                if (err) {
-                                    console.log(err);
-                                    connection.release();
-                                }
-                            });
-                            req_count = req_count - 1;
-                        }
+                        });
+                        req_count = req_count - 1;
                     }
                 }],
             function(err, result){
@@ -120,13 +101,33 @@ exports.getAllPn = function(req, res){
         }
         var results = {};
 
-        conn.query("SELECT product_num FROM product_num", function(err, rows){
+        conn.query("SELECT * FROM product_num ORDER BY createTime", function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
                 res.status(500).send();
                 return;
             }
+
+            if(true) // test for admin web
+            {
+                for(var index in rows)
+                {
+                    var index_time = rows[index].createTime;
+
+                    if(results[index_time] == null)
+                        results[index_time] = [];
+
+                    // delete duplicated data
+                    delete rows[index].createTime;
+
+                    results[index_time].push(rows[index]);
+                }
+                res.status(200).json(results);
+                connection.release();
+                return;
+            }
+
             for(var i in rows) {
                 var data = rows[i];
                 if (results["product_num"] == null)
@@ -141,6 +142,7 @@ exports.getAllPn = function(req, res){
 };
 
 //registration product_num
+//사용 여부
 exports.updatePnAdmin = function(req, res){
     console.log("PUT /pnUpdate is called");
     conn.getConnection(function(err,connection){
@@ -152,7 +154,7 @@ exports.updatePnAdmin = function(req, res){
             return;
         }
         var date = new Date();
-        conn.query("UPDATE product_num SET write WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
+        conn.query("UPDATE product_num SET write = 1 WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -177,7 +179,7 @@ exports.updatePn = function(req, res){
             return;
         }
         var date = new Date();
-        conn.query("UPDATE product_num SET used = 0, usedTime = ? WHERE fk_kids = ?",[date, req.user.fk_kids], function(err, result){
+        conn.query("UPDATE product_num SET used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();

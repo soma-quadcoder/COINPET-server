@@ -11,18 +11,20 @@ exports.create = function(req, res){
 			return;
 		}
 		var nowDate = new Date();
-		var date = new Date(req.body.goal_date);
+		var goalDate = new Date(req.body.goal_date);
 		var goalInfo = {
 			'content' : req.body.content,
 			'goal_cost' : req.body.goal_cost,
-			'goal_date' : date,
+			'goal_date' : goalDate,
 			'date' : nowDate,
 			'now_cost' : req.body.now_cost,
             'state' : req.body.state,
 			'fk_kids' : req.user.fk_kids
 		};
-		if(nowDate < date)
+
+		if(nowDate > goalDate)
 			res.status(200).send('error date');
+
 		else {
 			conn.query("INSERT INTO goal SET ? ", goalInfo, function (err, result) {
 				if (err) {
