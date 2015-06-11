@@ -8,11 +8,16 @@ var conn = require('../db-jeon');
 
 console.log("./router/user/child.js is loaded");
 
-function post (req, res) {
+function post (req, res, next) {
     console.log("POST /user/parents/child is called");
-
+    if(req.body['_method'] == 'DELETE')
+    {
+	console.log("_method is DELETE, redirect to remove function");
+	return next();
+    }
+	
     var pn = req.body.pn;
-    var condition = "product_num = "+pn+" AND used=1";
+    var condition = "product_num = '"+pn+"' AND used=1";
 
     conn.query("SELECT fk_kids FROM product_num WHERE "+condition, function(err,result) {
         if(err){
@@ -142,18 +147,19 @@ function remove (req, res) {
             console.log(err);
             console.log(this.sql);
             res.status(500).json({"error": "Fail_query"});
+	    return;
         } else if (result.affectedRows == 0) {
             console.log("Error : No_kids");
             res.status(500).json({"error": "No_kids"});
-
-        } else {
-            res.status(200).json();
+	    return;
         }
+        res.status(200).send();;
     });
+    return;
 }
 
 
-router.post('/', post);
+router.post('/', post, remove);
 router.get('/:fk_kids', getParams);
 router.get('/', get);
 router.delete('/', remove);
