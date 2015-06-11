@@ -10,7 +10,7 @@ var router = express.Router();
 var jwt = require('express-jwt');
 var secretKey = require('../jwtKey');
 //including js file
-var admin = require('./admin/');
+var admin = require('./admin.js');
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
@@ -25,10 +25,31 @@ var user = require('./user');
 
 
 //PN
-router.post('/pnGenerator', pnG.createNewPn);
-router.get('/getPn', jwt({secret:secretKey}), pnG.getPn);
-router.get('/getAllPn', pnG.getAllPn);
-router.put('/pn', jwt({secret:secretKey}), pnG.updatePn);
+router.post('/pnGenerator',jwt({secret:secretKey}), function(req, res){
+	if(req.user.fk_admin){
+		pnG.createNewPn(req, res);
+		return;
+	}
+});
+router.get('/getPn', jwt({secret:secretKey}), function(req, res){
+	if(req.user.fk_admin){
+		pnG.getPn(req, res);
+		return;
+	}
+});
+router.get('/getAllPn',jwt({secret:secretKey}),function(req, res){
+	if(req.user.fk_admin){
+		pnG.getAllPn(req, res);
+		return;
+	}
+});
+router.get('/pnUpdate',jwt({secret:secretKey}),function(req, res){//call by web admin
+	if(req.user.fk_admin){
+		pnG.updatePnAdmin(req, res);
+		return;
+	}
+});
+router.put('/pn', jwt({secret:secretKey}), pnG.updatePn); //call by app
 
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
@@ -133,7 +154,7 @@ router.get('/account/:fk_kids', jwt({ secret : secretKey }), function(req, res){
 */
 
 //jeon's router
-router.use('/admin', admin);
+//router.use('/admin', admin);
 router.use('/user', user);
 
 module.exports = router;
