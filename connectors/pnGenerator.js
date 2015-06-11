@@ -87,7 +87,7 @@ exports.getPn = function(req, res){
             return;
         }
         var results = {};
-//		conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ", function(err, rows){
+		conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ", function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
