@@ -154,7 +154,7 @@ exports.updatePnAdmin = function(req, res){
             return;
         }
         var date = new Date();
-        conn.query("UPDATE product_num SET write = 1 WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
+        conn.query("UPDATE product_num SET admin_write = 1 WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
