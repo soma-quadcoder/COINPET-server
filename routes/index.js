@@ -7,7 +7,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var jwt = require('express-jwt');
+var jwt = require('express-j);
 var secretKey = require('../jwtKey');
 //including js file
 var admin = require('./admin.js');

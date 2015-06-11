@@ -87,14 +87,23 @@ exports.getPn = function(req, res){
             return;
         }
         var results = {};
-
-        conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ", function(err, rows){
+        var results = {};
+		conn.query("SELECT * FROM product_num WHERE admin_write = 0 ", function(err, rows){ 
+//		conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ", function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
                 res.status(500).send();
                 return;
             }
+
+			if(true)  // for admin web develop
+			{
+				res.status(200).json(rows);
+				connection.release();
+				return;
+			}
+
             for(var i in rows) {
                 var data = rows[i];
                 if (results["product_num"] == null)
