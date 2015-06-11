@@ -39,6 +39,7 @@ exports.createNewPn = function(req, res){
                             console.log('POST /pnGenerator err ' + err);
                             res.status(500).send();
                             connection.release();
+			    return;
                         }
 
                         for(var i in rows) {
@@ -46,98 +47,26 @@ exports.createNewPn = function(req, res){
                             if (results["product_num"] == null)
                                 results["product_num"] = [];
 
-                            results["product_num"].push(data["product_num"]);
+// I don't need previous pn
+//                            results["product_num"].push(data["product_num"]);
                         }
                         if(req_count <= validCount) {
                             callback(null);
                         }
                     });
 
-                    if(req_count > validCount){
-                        req_count -= validCount;
+                    if(/*req_count > validCount*/true){
+                        //req_count -= validCount;
                         var subCount = req_count;
+			console.log('request count is %d', req_count);
                         while(req_count > 0) {
-                            var day = new Date().getDate();
-                            var month = new Date().getMonth() + 1;
-                            var year = new Date().getFullYear();
-                            var sum = 0;
-                            //day
-                            day = parseInt(day);
-                            if (day <= 9)
-                                day = '0' + day;
-
-                            //month
-                            month = parseInt(month);
-
-                            if (month <= 9)
-                                month = '0' + month;
-
-                            //add yyyy/mm/dd
-                            year = parseInt(year);
-                            //SerialNum can delete
-                            var serialNum = "";
-                            serialNum += year;
-                            serialNum += month;
-                            serialNum += day;
-
-
-                            //마지막 자리에 카운팅 더하기기
-                            var counting = count;
-                            if (count <= 9)
-                                count = '000' + count;
-                            else if (count <= 99)
-                                count = '00' + count;
-                            else if (count <= 999)
-                                count = '0' + count;
-                            else if (count == 999)
-                                count = 0;
-
-                            serialNum += count;
-                            count = counting + 1; // increase count
-
-                            // yyyy/mm/dd (y+y+y+y+m+m+d+d)
-                            for (var i in serialNum) {
-                                sum = parseInt(sum) + parseInt(serialNum[i]);
-                            }
-
-                            if (sum <= 9)
-                                sum = '000' + sum;
-                            else if (sum <= 99)
-                                sum = '00' + sum;
-                            else if (sum <= 999)
-                                sum = '0' + sum;
-
-                            serialNum += sum;
-
-                            var weight = [2, 47, 19, 23, 17, 43, 3, 29, 31, 5, 41, 11, 19, 7, 13, 37];//base
-                            var encryptSerial = '';
-                            var Result = '';
-                            for (var i in serialNum) {
-                                Result = Math.pow(weight[i], parseInt(serialNum[i]));
-                                Result %= 31;
-                                if (Result > '10') {
-                                    Result = Result + 54;
-                                    Result = String.fromCharCode(Result);
-                                }
-                                encryptSerial = encryptSerial + Result;
-                            }
-
-                            //웹에 보낼 PN  번호 저장.
-                            if (results["product_num"] == null)
-                                results["product_num"] = [];
-
-                            results["product_num"].push(encryptSerial);
-
-                            //console.log('encryptSerial = ' + encryptSerial + 'serialNum = ' + serialNum);
-
-                            var pnInfo = {
-                                'product_num': encryptSerial,
-                                'serialNum': serialNum
-                            };
-                            conn.query("INSERT INTO product_num SET ? ", pnInfo, function (err, result) {
+			   var pnInfo = makePN(results);
+                           conn.query("INSERT INTO product_num SET ? ", pnInfo, function (err, result) {
                                 if (err) {
-                                    console.log(err);
+                                    console.log('POT /pnGenerator err ' + err);
+				    res.status(500).send();
                                     connection.release();
+				    return;
                                 }
                             });
                             req_count = req_count - 1;
@@ -145,11 +74,95 @@ exports.createNewPn = function(req, res){
                     }
                 }],
             function(err, result){
+		console.log(results);
                 res.status(200).json(results);
-                //connection.release();
+                connection.release();
             });
     });
 };
+
+function makePN(results)
+{
+	var day = new Date().getDate();
+	var month = new Date().getMonth() + 1;
+	var year = new Date().getFullYear();
+	var sum = 0;
+	//day
+	day = parseInt(day);
+	if (day <= 9)
+		day = '0' + day;
+
+	//month
+	month = parseInt(month);
+
+	if (month <= 9)
+		month = '0' + month;
+
+	//add yyyy/mm/dd
+	year = parseInt(year);
+	//SerialNum can delete
+	var serialNum = "";
+	serialNum += year;
+	serialNum += month;
+	serialNum += day;
+
+
+	//마지막 자리에 카운팅 더하기기
+	var counting = count;
+	if (count <= 9)
+		count = '000' + count;
+	else if (count <= 99)
+		count = '00' + count;
+	else if (count <= 999)
+		count = '0' + count;
+	else if (count == 999)
+		count = 0;
+
+	serialNum += count;
+	count = counting + 1; // increase count
+
+	// yyyy/mm/dd (y+y+y+y+m+m+d+d)
+	for (var i in serialNum) {
+		sum = parseInt(sum) + parseInt(serialNum[i]);
+	}
+
+	if (sum <= 9)
+		sum = '000' + sum;
+	else if (sum <= 99)
+		sum = '00' + sum;
+	else if (sum <= 999)
+		sum = '0' + sum;
+
+	serialNum += sum;
+
+	var weight = [2, 47, 19, 23, 17, 43, 3, 29, 31, 5, 41, 11, 19, 7, 13, 37];//base
+	var encryptSerial = '';
+	var Result = '';
+	for (var i in serialNum) {
+		Result = Math.pow(weight[i], parseInt(serialNum[i]));
+		Result %= 31;
+		if (Result > '10') {
+			Result = Result + 54;
+			Result = String.fromCharCode(Result);
+		}
+		encryptSerial = encryptSerial + Result;
+	}
+
+	//웹에 보낼 PN  번호 저장.
+	if (results["product_num"] == null)
+		results["product_num"] = [];
+
+	results["product_num"].push(encryptSerial);
+
+	//console.log('encryptSerial = ' + encryptSerial + 'serialNum = ' + serialNum);
+
+	var pnInfo = {
+		'product_num': encryptSerial,
+		'serialNum': serialNum
+	};
+	
+	return pnInfo;
+}
 
 exports.getPn = function(req, res){
     console.log('GET /getPn is called by admin');
