@@ -114,14 +114,19 @@ exports.getAllPn = function(req, res){
                 for(var index in rows)
                 {
                     var index_time = rows[index].createTime;
+                    var index_date = new Date(index_time);
+                    var time = index_date.hhmmss();
+                    index_date = index_date.yyyymmdd();
+					
+                    if(results[index_date] == null)
+                        results[index_date] = {};
 
-                    if(results[index_time] == null)
-                        results[index_time] = [];
+                    if(results[index_date][time] == null)
+                    	results[index_date][time] = [];
 
                     // delete duplicated data
                     delete rows[index].createTime;
-
-                    results[index_time].push(rows[index]);
+                    results[index_date][time].push(rows[index]);
                 }
                 res.status(200).json(results);
                 connection.release();
@@ -192,6 +197,22 @@ exports.updatePn = function(req, res){
     });
 };
 
+Date.prototype.yyyymmdd = function() {
+	var yyyy = this.getFullYear().toString();
+	var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+	var dd  = this.getDate().toString();
+	return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
+};
+Date.prototype.hhmmss = function()
+{
+	var hh = this.getHours().toString();
+	var mm = this.getMinutes().toString();
+	var ss = this.getSeconds().toString();
+
+	return (hh[1] ? hh : '0'+hh[0]) + ':' +
+		(mm[1] ? mm : '0'+mm[0]) + ':' +
+		(ss[1] ? ss : '0'+ss[0]);
+};
 
 function makePN(results) {
     var day = new Date().getDate();
