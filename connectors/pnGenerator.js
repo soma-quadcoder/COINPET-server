@@ -101,7 +101,6 @@ exports.getAllPn = function(req, res){
             return;
         }
         var results = {};
-
         conn.query("SELECT * FROM product_num ORDER BY createTime", function(err, rows){
             if(err){
                 console.log('err is ' + err);
