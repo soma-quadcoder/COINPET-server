@@ -21,9 +21,10 @@ exports.createNewPn = function(req, res){
                 function(callback) {
                     //현재 DB에 유효한 시리얼 번호 check!
                     var date = new Date();
-                    conn.query("SELECT COUNT(*) FROM product_num WHERE admin_write = 0 ; SELECT COUNT(*) FROM product_num WHERE date(createTime) = date(now()) ", function (err, rows) {
+                    conn.query('SELECT COUNT(*) FROM product_num WHERE "write" = 0 ; SELECT COUNT(*) FROM product_num WHERE date(createTime) = date(now()) ', function (err, rows) {
                         if (err) {
                             console.log('POST /pnGenerator err ' + err);
+                            console.log(this.sql);
                             res.status(500).send();
                             connection.release();
                             return;
@@ -35,9 +36,10 @@ exports.createNewPn = function(req, res){
                 },
                 function(callback){
                     var condition = req_count;
-                    conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ORDER BY RAND() LIMIT "+req_count, function(err, rows){
+                    conn.query('SELECT product_num FROM product_num WHERE "write" = 0 ORDER BY RAND() LIMIT '+req_count, function(err, rows){
                         if (err) {
                             console.log('POST /pnGenerator err ' + err);
+                            console.log(this.sql);
                             res.status(500).send();
                             connection.release();
                         }
@@ -87,7 +89,7 @@ exports.getPn = function(req, res){
             return;
         }
         var results = {};
-		conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ", function(err, rows){
+		conn.query('SELECT product_num FROM product_num WHERE "write" = 0 ', function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -121,7 +123,7 @@ exports.getAllPn = function(req, res){
         var results = {};
 
 //		conn.query("SELECT product_num FROM product_num", function(err, rows){ 
-        conn.query("SELECT * FROM product_num", function(err, rows){
+        conn.query("SELECT * FROM product_num ORDER BY createTime", function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -131,7 +133,19 @@ exports.getAllPn = function(req, res){
 
 			if(true) // test for admin web
 			{
-				res.status(200).json(rows);
+				for(var index in rows)
+				{
+					var index_time = rows[index].createTime;
+
+					if(results[index_time] == null)
+						results[index_time] = [];
+					
+					// delete duplicated data
+					delete rows[index].createTime;
+
+					results[index_time].push(rows[index]);
+				}
+				res.status(200).json(results);
 				connection.release();
 				return;
 			}
