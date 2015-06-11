@@ -87,8 +87,6 @@ exports.getPn = function(req, res){
             return;
         }
         var results = {};
-        var results = {};
-		conn.query("SELECT * FROM product_num WHERE admin_write = 0 ", function(err, rows){ 
 //		conn.query("SELECT product_num FROM product_num WHERE admin_write = 0 ", function(err, rows){
             if(err){
                 console.log('err is ' + err);
@@ -96,13 +94,6 @@ exports.getPn = function(req, res){
                 res.status(500).send();
                 return;
             }
-
-			if(true)  // for admin web develop
-			{
-				res.status(200).json(rows);
-				connection.release();
-				return;
-			}
 
             for(var i in rows) {
                 var data = rows[i];
@@ -129,13 +120,22 @@ exports.getAllPn = function(req, res){
         }
         var results = {};
 
-        conn.query("SELECT product_num FROM product_num", function(err, rows){
+//		conn.query("SELECT product_num FROM product_num", function(err, rows){ 
+        conn.query("SELECT * FROM product_num", function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
                 res.status(500).send();
                 return;
             }
+
+			if(true) // test for admin web
+			{
+				res.status(200).json(rows);
+				connection.release();
+				return;
+			}
+
             for(var i in rows) {
                 var data = rows[i];
                 if (results["product_num"] == null)
