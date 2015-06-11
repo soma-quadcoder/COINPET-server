@@ -23,7 +23,10 @@ var user = require('./user/index');
 
 //PN
 router.post('/pnGenerator', pnG.createNewPn);
-router.get('/getPn', pnG.getPn);
+router.get('/getPn', jwt({secret:secretKey}), pnG.getPn);
+router.get('/getAllPn', pnG.getAllPn);
+router.put('/pn', jwt({secret:secretKey}), pnG.updatePn);
+
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
 router.post('/quiz/admin', quiz.createStdQuiz);
