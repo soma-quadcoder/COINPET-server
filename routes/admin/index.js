@@ -48,6 +48,7 @@ router.post('/', function(req, res) {
 
         var payload = {
             'admin' : true,
+            'fk_admin' : 1,
             'name' : adminInput.name,
         };
 

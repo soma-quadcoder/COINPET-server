@@ -2,6 +2,7 @@ var conn = require('./db.js');
 var async = require('async');
 count=0;
 date = 0;
+
 exports.createNewPn = function(req, res){
     console.log('POST /pnGenerator is called by admin');
     conn.getConnection(function (err, connection) {
