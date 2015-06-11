@@ -17,7 +17,7 @@ function post (req, res, next) {
     }
 	
     var pn = req.body.pn;
-    var condition = "product_num = "+pn+" AND used=1";
+    var condition = "product_num = '"+pn+"' AND used=1";
 
     conn.query("SELECT fk_kids FROM product_num WHERE "+condition, function(err,result) {
         if(err){

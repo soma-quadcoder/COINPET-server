@@ -28,7 +28,7 @@ router.get('/', ejwt({secret: secretKey}), function() {
 });
 
 // login
-router.post('/', function() {
+router.post('/', function(req, res) {
     console.log("POST /admin is called");
 
     var adminInput = {
@@ -56,7 +56,7 @@ router.post('/', function() {
     }
     else
     {
-        console.log('admin login');
+        console.log('login fail');
         res.status(500).send();
     }
     return;

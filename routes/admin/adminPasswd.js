@@ -2,7 +2,7 @@
  * Created by jeon on 2015. 6. 11..
  */
 var passwd = {
-    user : 'quadcoder',
+    name : 'quadcoder',
     passwd : 'dbaudghks'
 };
 
