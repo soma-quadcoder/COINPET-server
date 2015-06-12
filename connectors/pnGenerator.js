@@ -114,14 +114,19 @@ exports.getAllPn = function(req, res){
                 for(var index in rows)
                 {
                     var index_time = rows[index].createTime;
+                    var index_date = new Date(index_time);
+                    var time = index_date.hhmmss();
+                    index_date = index_date.yyyymmdd();
+					
+                    if(results[index_date] == null)
+                        results[index_date] = {};
 
-                    if(results[index_time] == null)
-                        results[index_time] = [];
+                    if(results[index_date][time] == null)
+                    	results[index_date][time] = [];
 
                     // delete duplicated data
                     delete rows[index].createTime;
-
-                    results[index_time].push(rows[index]);
+                    results[index_date][time].push(rows[index]);
                 }
                 res.status(200).json(results);
                 connection.release();
@@ -154,7 +159,7 @@ exports.updatePnAdmin = function(req, res){
             return;
         }
         var date = new Date();
-        conn.query("UPDATE product_num SET write = 1 WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
+        conn.query("UPDATE product_num SET admin_write = 1 WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -165,6 +170,48 @@ exports.updatePnAdmin = function(req, res){
             connection.release();
         });
     });
+};
+
+//registration product_num
+exports.updatePn = function(req, res){
+    console.log("PUT /pn is called");
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+            console.log(err);
+            res.status(500).send();
+            connection.release();
+            return;
+        }
+        var date = new Date();
+        conn.query("UPDATE product_num SET used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+                res.status(500).send();
+                return;
+            }
+            res.status(200).send();
+            connection.release();
+        });
+    });
+};
+
+Date.prototype.yyyymmdd = function() {
+	var yyyy = this.getFullYear().toString();
+	var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+	var dd  = this.getDate().toString();
+	return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
+};
+Date.prototype.hhmmss = function()
+{
+	var hh = this.getHours().toString();
+	var mm = this.getMinutes().toString();
+	var ss = this.getSeconds().toString();
+
+	return (hh[1] ? hh : '0'+hh[0]) + ':' +
+		(mm[1] ? mm : '0'+mm[0]) + ':' +
+		(ss[1] ? ss : '0'+ss[0]);
 };
 
 function makePN(results) {

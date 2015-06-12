@@ -43,7 +43,7 @@ router.get('/getAllPn',jwt({secret:secretKey}),function(req, res){
 		return;
 	}
 });
-router.get('/pnUpdate',jwt({secret:secretKey}),function(req, res){//call by web admin
+router.put('/pnUpdate',jwt({secret:secretKey}),function(req, res){//call by web admin
 	if(req.user.fk_admin){
 		pnG.updatePnAdmin(req, res);
 		return;
