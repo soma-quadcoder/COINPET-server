@@ -18,12 +18,12 @@ exports.create = function(req, res){
 			'goal_date' : goalDate,
 			'date' : nowDate,
 			'now_cost' : req.body.now_cost,
-            'state' : req.body.state,
+			'state' : req.body.state,
 			'fk_kids' : req.user.fk_kids
 		};
 
 		if(nowDate > goalDate)
-			res.status(200).send('error date');
+			res.status(500).send({msg : 'nowDate > goalDate' });
 
 		else {
 			conn.query("INSERT INTO goal SET ? ", goalInfo, function (err, result) {
@@ -61,39 +61,6 @@ exports.update = function(req, res){
 		}
 		//update the current cost of saving_list table
 		var nowDate = new Date();
-		//update the current cost of goal table
-		// kids table and goal table의 current_goal and pk_goal, fk_kids and pk_kids를 비교해서 지금 같은 값을 가진 레코드의 goal 테이블에 now_cost를 업데이트 시킨다.
-		// 그리고 saving_list에 값을 추가한다.
-		//IT will be change nowDate --> device time 	//req.user.fk_kids
-		//SELECT g.now_cost FROM goal g, kids k WHERE k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND g.fk_kids = ?
-	//		conn.query("SELECT g.* FROM goal g ,kids k WHERE k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND g.fk_kids = ? ",req.user.fk_kids, function(err, rows) {
-/*
-		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
-			"g.fk_kids = " + req.user.fk_kids;
-		conn.query("SELECT g.* FROM goal g, kids k WHERE "+condition, function(err, rows){
-			console.log('rows '+rows);
-			if (err) {
-				connection.release();
-				res.status(500).send();
-				console.log("err is " + err);
-				return;
-			}
-
-			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?) ; INSERT INTO saving_list (now_cost, date, fk_kids) values(?,?,?)", [req.body.state ,req.body.now_cost, req.body.now_cost, nowDate,req.user.fk_kids], function(err, result){
-				if(err){
-					console.log('err is ' + err);
-					connection.release();
-					res.status(500).send();
-					return;
-				}
-				console.log(result);
-				console.log(req.body.now_cost);
-			});
-
-			res.status(200).send();
-			connection.release();
-		});
-		*/
 		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
 			"g.fk_kids = " + req.user.fk_kids;
 		conn.query("SELECT g.now_cost, g.goal_cost FROM goal g, kids k WHERE "+condition, function(err, rows){
@@ -107,32 +74,47 @@ exports.update = function(req, res){
 			var nowCost = data["now_cost"];
 			var goalCost = data["goal_cost"];
 			var insertCost = req.body.now_cost;
-			var calculateCost = nowCost + insertCost;
-			/*
-			console.log('insertCost' + insertCost);
-			console.log('calculateCost' + calculateCost);
+			var calculateCost = parseInt(nowCost) + parseInt(insertCost);
+			var lastCost;
 
-			console.log('now_cost' +data["now_cost"]);
-			console.log('goal_cost' +data["goal_cost"]);
-			if(calculateCost > goalCost)
-				console.log(('ㅑㅑㅑㅑ'+insertCost + goalCost));
-			*/
-			if((nowCost < goalCost)) {
-				console.log("data[now_cost] < (data[goal_cost])");
-				conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=(now_cost+?); INSERT INTO saving_list (now_cost, date, fk_kids) VALUES(?,?,?)",[req.body.now_cost, req.body.now_cost , nowDate,req.user.fk_kids], function(err, result){
-					if(err){
-						console.log('err is ' + err);
-						connection.release();
-						res.status(500).send();
-						return;
-					}
-					console.log(req.body.now_cost);
-				});
+			//현재 저금한 총 금액 + 방금 저금한 금액 < 목표금액
+			console.log(calculateCost + 'goal' + goalCost);
+			if(calculateCost < goalCost) {
+				lastCost = parseInt(calculateCost);
+				console.log(lastCost);
+			}else if(calculateCost == goalCost) {
+				lastCost = parseInt(calculateCost);
+				console.log(lastCost);
+			}else if (calculateCost > goalCost) {
+				lastCost = parseInt(goalCost);
+				console.log(lastCost);
+			}
+			//(now_cost, date, fk_kids) VALUES(?,?,?)   req.body.now_cost , nowDate, req.user.fk_kids
+			var savingInfo = {
+				'now_cost' : req.body.now_cost ,
+				'date' : nowDate,
+				'fk_kids' : req.user.fk_kids
+			};
+			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=? ;INSERT INTO saving_list SET ? ",[lastCost,savingInfo], function(err, result){
+				if(err){
+					console.log('err is ' + err);
+					connection.release();
+					res.status(500).send();
+					return;
+				}
+				console.log('now_cost' + req.body.now_cost);
+			});
+
+			if(calculateCost < goalCost) {
 				res.status(200).send();
 				connection.release();
+			}else if(calculateCost == goalCost) {
+				res.status(500).send({msg : 'achieve goal_cost'});
+				connection.release();
+			}else if (calculateCost > goalCost) {
+				res.status(500).send({msg : 'achieve goal_cost'});
+				connection.release();
 			}
-			else
-				res.status(200).send('nowCost > goalCost');
 		});
 	});
 };
@@ -199,8 +181,8 @@ exports.allGoalParents = function(req, res){
 			return;
 		}
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
-						"p.fk_kids = " + req.params.fk_kids + " AND " +
-						"g.fk_kids = " + req.params.fk_kids;
+			"p.fk_kids = " + req.params.fk_kids + " AND " +
+			"g.fk_kids = " + req.params.fk_kids;
 		conn.query("SELECT g.* FROM goal g, parents_has_kids p WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
@@ -225,7 +207,7 @@ exports.currentGoal = function(req, res){
 			return;
 		}
 		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
-						"g.fk_kids = " + req.user.fk_kids;
+			"g.fk_kids = " + req.user.fk_kids;
 		conn.query("SELECT g.* FROM goal g, kids k WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
@@ -233,9 +215,9 @@ exports.currentGoal = function(req, res){
 				res.status(500).send();
 				return;
 			}
-                console.log(rows);
-				res.status(200).json(rows);
-				connection.release();
+			console.log(rows);
+			res.status(200).json(rows);
+			connection.release();
 		});
 	});
 };
@@ -251,8 +233,8 @@ exports.currentGoalParents = function(req, res){
 			return;
 		}
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
-						"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal "+ " AND " +
-						"g.fk_kids = " + req.params.fk_kids;
+			"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal "+ " AND " +
+			"g.fk_kids = " + req.params.fk_kids;
 		conn.query("SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
@@ -260,9 +242,9 @@ exports.currentGoalParents = function(req, res){
 				res.status(500).send();
 				return;
 			}
-				console.log(rows);
-				res.status(200).json(rows[0]);
-				connection.release();
+			console.log(rows);
+			res.status(200).json(rows[0]);
+			connection.release();
 		});
 	});
 };
@@ -271,24 +253,24 @@ exports.currentGoalParents = function(req, res){
 exports.remove = function(req, res){
 	console.log("DELETE /goal is called");
 	conn.getConnection(function(err,connection){
-	if(err){
-		console.error('MySQl connection err');
-		console.log(err);
-		connection.release();
-		res.status(500).send();
-		return;
-	}
-	console.log(req.param('pk_goal'));
-	conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
 		if(err){
-			connection.release();
+			console.error('MySQl connection err');
 			console.log(err);
+			connection.release();
 			res.status(500).send();
 			return;
 		}
-		console.log(rows);
-		res.status(200);
-		connection.release();
+		console.log(req.param('pk_goal'));
+		conn.query('delete from goal where pk_goal = ?',[req.user.pk_goal], function(err,rows){
+			if(err){
+				connection.release();
+				console.log(err);
+				res.status(500).send();
+				return;
+			}
+			console.log(rows);
+			res.status(200);
+			connection.release();
 		});
 	});
 };

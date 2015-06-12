@@ -167,32 +167,6 @@ exports.updatePnAdmin = function(req, res){
     });
 };
 
-//registration product_num
-exports.updatePn = function(req, res){
-    console.log("PUT /pn is called");
-    conn.getConnection(function(err,connection){
-        if(err){
-            console.error('MySQl connection err');
-            console.log(err);
-            res.status(500).send();
-            connection.release();
-            return;
-        }
-        var date = new Date();
-        conn.query("UPDATE product_num SET used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
-            if(err){
-                console.log('err is ' + err);
-                connection.release();
-                res.status(500).send();
-                return;
-            }
-            res.status(200).send();
-            connection.release();
-        });
-    });
-};
-
-
 function makePN(results) {
     var day = new Date().getDate();
     var month = new Date().getMonth() + 1;

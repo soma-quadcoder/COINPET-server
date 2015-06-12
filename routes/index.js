@@ -10,7 +10,7 @@ var router = express.Router();
 var jwt = require('express-jwt');
 var secretKey = require('../jwtKey');
 //including js file
-var admin = require('./admin');
+//var admin = require('./admin.js');
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
@@ -20,8 +20,8 @@ var quiz = require('../connectors/quiz.js');
 var pnG = require('../connectors/pnGenerator.js');
 //여기 왜 user 똑같아 ?
 // './user'를 부르면 './user/index.js'부르는거랑 같다고
-var user = require('./user');
-//var user = require('./user/index');
+//var user = require('./user');
+var user = require('./user/index');
 
 
 //PN
@@ -49,7 +49,6 @@ router.get('/pnUpdate',jwt({secret:secretKey}),function(req, res){//call by web 
 		return;
 	}
 });
-router.put('/pn', jwt({secret:secretKey}), pnG.updatePn); //call by app
 
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
@@ -154,7 +153,7 @@ router.get('/account/:fk_kids', jwt({ secret : secretKey }), function(req, res){
 */
 
 //jeon's router
-router.use('/admin', admin);
+//router.use('/admin', admin);
 router.use('/user', user);
 
 module.exports = router;
