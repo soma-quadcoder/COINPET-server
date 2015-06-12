@@ -48,6 +48,7 @@ exports.create = function(req, res){
 		}
 	});
 };
+
 //UPDATE PUT
 exports.update = function(req, res){
 	console.log("PUT /goal is called");
