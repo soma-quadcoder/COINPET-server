@@ -17,7 +17,7 @@ console.log("./router/admin/index.js is loaded");
 
 conn.getConnection(function(err){
     if(err){
-        console.error('kids MySQL connection err');
+        console.error('admin MySQL connection err');
         console.log(err);
     }
 });

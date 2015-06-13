@@ -10,7 +10,7 @@ var router = express.Router();
 var jwt = require('express-jwt');
 var secretKey = require('../jwtKey');
 //including js file
-//var admin = require('./admin.js');
+var admin = require('./admin');
 var goal = require('../connectors/goal.js');
 var saving = require('../connectors/saving.js');
 var account = require('../connectors/account.js');
@@ -153,7 +153,7 @@ router.get('/account/:fk_kids', jwt({ secret : secretKey }), function(req, res){
 */
 
 //jeon's router
-//router.use('/admin', admin);
+router.use('/admin', admin);
 router.use('/user', user);
 
 module.exports = router;
