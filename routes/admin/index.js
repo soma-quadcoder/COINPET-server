@@ -13,11 +13,14 @@ var conn = require('../db-jeon');
 var secretKey = require('../user/jwtKey');
 var adminPasswd = require('./adminPasswd');
 
+var user = require('./user');
+router.use('/user', user);
+
 console.log("./router/admin/index.js is loaded");
 
 conn.getConnection(function(err){
     if(err){
-        console.error('kids MySQL connection err');
+        console.error('admin MySQL connection err');
         console.log(err);
     }
 });
