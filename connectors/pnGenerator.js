@@ -280,6 +280,10 @@ function makePN(results) {
         encryptSerial = encryptSerial + Result;
     }
 
+
+    results["createTime"] = new Date();
+
+
     //웹에 보낼 PN  번호 저장.
     if (results["product_num"] == null)
         results["product_num"] = [];
