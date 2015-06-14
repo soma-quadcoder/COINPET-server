@@ -25,6 +25,15 @@ var user = require('./user/index');
 
 
 //PN
+router.post('/pn', jwt({secret:secretKey}), function(req, res, next) {
+	console.log('POST /pn is called');
+	if(req.body._method){
+	    console.log('redirection to PUT /pn');
+	    next();
+	    return;
+	}
+}, pnG.writeAll, pnG.deleteAll);
+
 router.post('/pnGenerator',jwt({secret:secretKey}), function(req, res){
 	if(req.user.fk_admin){
 		pnG.createNewPn(req, res);

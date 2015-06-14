@@ -198,6 +198,88 @@ exports.updatePn = function(req, res){
     });
 };
 
+exports.writeAll = function(req, res, next) {
+	if(req.body._method == "DELETE")
+	{
+	    console.log('redirection to DELETE /pn');
+	    next();
+   	    return;
+	}
+
+	console.log('PUT /pn is called');
+        conn.getConnection(function(err,connection){
+            if(err){
+                console.error('MySQl connection err');
+                console.log(err);
+                res.status(500).send();
+                connection.release();
+                return;
+            }
+	    var condition = "";
+	    for(var index_date in req.body.target)
+            {
+		for(var index in req.body.target[index_date])
+		{	
+			var index_time = req.body.target[index_date][index];
+			if(condition!="")
+			    condition += 'OR ';
+			condition+='createTime="'+index_date+' '+index_time+'"';
+		}
+	    }
+            conn.query("UPDATE product_num SET admin_write = 1 WHERE "+condition, function(err, result){
+		if(err) {
+		    console.log('err : '+err);
+		    console.log(this.sql);
+		    res.status(500).send();
+		    connection.release();
+		    return;
+		}
+
+		console.log(this.sql);
+		res.status(200).send();
+		connection.release();
+	    }); 
+	});
+}
+
+exports.deleteAll = function(req, res) {
+
+	console.log('DELETE /pn is called');
+        conn.getConnection(function(err,connection){
+            if(err){
+                console.error('MySQl connection err');
+                console.log(err);
+                res.status(500).send();
+                connection.release();
+                return;
+            }
+	    var condition = "";
+	    for(var index_date in req.body.target)
+            {
+		for(var index in req.body.target[index_date])
+		{	
+			var index_time = req.body.target[index_date][index];
+			if(condition!="")
+			    condition += 'OR ';
+			condition+='createTime="'+index_date+' '+index_time+'"';
+		}
+	    }
+            conn.query("DELETE from product_num WHERE "+condition, function(err, result){
+		if(err) {
+		    console.log('err : '+err);
+		    console.log(this.sql);
+		    res.status(500).send();
+		    connection.release();
+		    return;
+		}
+
+		console.log(this.sql);
+		res.status(200).send();
+		connection.release();
+	    }); 
+	});
+}
+
 Date.prototype.yyyymmdd = function() {
 	var yyyy = this.getFullYear().toString();
 	var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
