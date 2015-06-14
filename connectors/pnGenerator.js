@@ -41,6 +41,7 @@ exports.createNewPn = function(req, res){
                                 console.log(err);
                                 connection.release();
                             }
+			    console.log(result);
                             compareCount -= 1;
                             if(compareCount == req_count) {
                                 callback(null);
