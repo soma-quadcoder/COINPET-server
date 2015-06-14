@@ -32,7 +32,7 @@ router.post('/pn', jwt({secret:secretKey}), function(req, res, next) {
 	    next();
 	    return;
 	}
-}, pnG.writeAll, pnG.deleteAll);
+}, pnG.pnWrite, pnG.pnDelete);
 
 router.post('/pnGenerator',jwt({secret:secretKey}), function(req, res){
 	if(req.user.fk_admin){

@@ -198,7 +198,7 @@ exports.updatePn = function(req, res){
     });
 };
 
-exports.writeAll = function(req, res, next) {
+exports.pnWrite = function(req, res, next) {
 	if(req.body._method == "DELETE")
 	{
 	    console.log('redirection to DELETE /pn');
@@ -215,6 +215,25 @@ exports.writeAll = function(req, res, next) {
                 connection.release();
                 return;
             }
+
+	    if(req.body.product_num)
+	    {
+		//individual target
+		conn.query("UPDATE product_num SET admin_write = 1 WHERE product_num=?",[req.body.product_num], function(err, result) {
+		    if(err){
+		        console.log('err : '+err);
+		        console.log(this.sql);
+		        res.status(500).send();
+		        connection.release();
+			return;
+		    }
+		    res.status(200).send();
+		    connection.release();
+	        }); 
+	        return;
+	    }
+
+
 	    var condition = "";
 	    for(var index_date in req.body.target)
             {
@@ -242,7 +261,7 @@ exports.writeAll = function(req, res, next) {
 	});
 }
 
-exports.deleteAll = function(req, res) {
+exports.pnDelete = function(req, res) {
 
 	console.log('DELETE /pn is called');
         conn.getConnection(function(err,connection){
@@ -253,6 +272,24 @@ exports.deleteAll = function(req, res) {
                 connection.release();
                 return;
             }
+
+	    if(req.body.product_num)
+	    {
+		//individual target
+		conn.query("DELETE FROM product_num WHERE product_num=?",[req.body.product_num], function(err, result) {
+		    if(err){
+		        console.log('err : '+err);
+		        console.log(this.sql);
+		        res.status(500).send();
+		        connection.release();
+			return;
+		    }
+		    res.status(200).send();
+		    connection.release();
+	        }); 
+	        return;
+	    }
+
 	    var condition = "";
 	    for(var index_date in req.body.target)
             {
