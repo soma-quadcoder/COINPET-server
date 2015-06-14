@@ -185,7 +185,7 @@ exports.updatePn = function(req, res){
             return;
         }
         var date = new Date();
-        conn.query("UPDATE product_num SET used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
+        conn.query("UPDATE product_num SET admin_write = 1 , used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -243,12 +243,14 @@ function makePN(results) {
     //마지막 자리에 카운팅 더하기기
     var counting = count;
     if (count <= 9)
-        count = '000' + count;
+        count = '00000' + count;
     else if (count <= 99)
-        count = '00' + count;
+        count = '0000' + count;
     else if (count <= 999)
-        count = '0' + count;
-    else if (count == 999)
+        count = '000' + count;
+    else if (count <= 9999)
+        count = '00' + count;
+    else if (count == 100000)
         count = 0;
 
     serialNum += count;
@@ -260,11 +262,12 @@ function makePN(results) {
     }
 
     if (sum <= 9)
-        sum = '000' + sum;
+        sum = '0' + sum;
+    /*
     else if (sum <= 99)
         sum = '00' + sum;
     else if (sum <= 999)
-        sum = '0' + sum;
+        sum = '0' + sum;*/
 
     serialNum += sum;
 
@@ -281,7 +284,6 @@ function makePN(results) {
         encryptSerial = encryptSerial + Result;
     }
 
-
     results["createTime"] = new Date();
 
 
@@ -295,7 +297,8 @@ function makePN(results) {
 
     var pnInfo = {
         'product_num': encryptSerial,
-        'serialNum': serialNum
+        'serialNum': serialNum,
+        'createTime' : new Date()
     };
 
     return pnInfo;
