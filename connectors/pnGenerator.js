@@ -265,7 +265,7 @@ exports.pnWrite = function(req, res, next) {
             connection.release();
         });
     });
-}
+};
 
 exports.pnDelete = function(req, res) {
 
@@ -321,7 +321,7 @@ exports.pnDelete = function(req, res) {
             connection.release();
         });
     });
-}
+};
 
 Date.prototype.yyyymmdd = function() {
     var yyyy = this.getFullYear().toString();
