@@ -184,6 +184,7 @@ exports.updatePn = function(req, res){
             connection.release();
             return;
         }
+        		console.log(results);
         var date = new Date();
         conn.query("UPDATE product_num SET admin_write = 1 , used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
             if(err){
@@ -233,7 +234,6 @@ exports.pnWrite = function(req, res, next) {
 	        return;
 	    }
 
-
 	    var condition = "";
 	    for(var index_date in req.body.target)
             {
@@ -245,7 +245,7 @@ exports.pnWrite = function(req, res, next) {
 			condition+='createTime="'+index_date+' '+index_time+'"';
 		}
 	    }
-            conn.query("UPDATE product_num SET admin_write = 1 WHERE "+condition, function(err, result){
+            conn.query("UPDATE product_num SET admin_write = 1 WHERE ("+condition+")", function(err, result){
 		if(err) {
 		    console.log('err : '+err);
 		    console.log(this.sql);
@@ -301,7 +301,7 @@ exports.pnDelete = function(req, res) {
 			condition+='createTime="'+index_date+' '+index_time+'"';
 		}
 	    }
-            conn.query("DELETE from product_num WHERE "+condition, function(err, result){
+            conn.query("DELETE from product_num WHERE admin_write=0 AND ("+condition+")", function(err, result){
 		if(err) {
 		    console.log('err : '+err);
 		    console.log(this.sql);
