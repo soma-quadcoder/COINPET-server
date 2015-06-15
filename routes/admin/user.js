@@ -24,6 +24,39 @@ router.get('/', ejwt({secret: secretKey}), function(req, res) {
 	return;
     }
 
+    if(true) // new type function
+    {
+    var result = {};
+    conn.query('SELECT CONCAT( YEAR(now()), "/", WEEK(now())) as week_name;SELECT CONCAT( YEAR( createTime ) ,  "/", WEEK( createTime ) ) AS week_name, COUNT(*) FROM kids GROUP BY week_name ORDER BY week_name DESC;SELECT CONCAT( YEAR( createTime ) ,  "/", WEEK( createTime ) ) AS week_name, COUNT(*) FROM parents GROUP BY week_name ORDER BY week_name DESC;', function(err, rows) {
+	    console.log(rows);
+	    console.log('done.');
+	    if(err)
+	    {
+		console.log('Error : Cannot execute query');
+		console.log(err);
+		console.log(this.sql);
+		res.status(500).send();
+		return;
+	    }	  
+
+	    result.cur_week = rows[0][0].week_name;
+
+	    for(var week in rows[1]){
+		if( !result[rows[1][week].week_name] )
+		    result[rows[1][week].week_name] = {};
+		result[rows[1][week].week_name].kids = rows[1][week]['COUNT(*)'];
+	    }
+
+	    for(var week in rows[2]) {
+		if( !result[rows[2][week].week_name] )
+		    result[rows[2][week].week_name] = {};
+		result[rows[2][week].week_name].parents = rows[2][week]['COUNT(*)'];
+	    }
+		res.status(200).send(result);
+	    });
+    return;
+    }
+
     conn.query("SELECT COUNT(*) FROM kids;SELECT COUNT(*) FROM parents;"
 		+"SELECT COUNT(*) FROM kids WHERE createTime BETWEEN CURDATE()-14 AND CURDATE()-7;"
 		+"SELECT COUNT(*) FROM parents WHERE createTime BETWEEN CURDATE()-14 AND CURDATE()-7;"
