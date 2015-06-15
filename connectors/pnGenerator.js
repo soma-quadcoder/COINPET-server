@@ -20,13 +20,6 @@ exports.createNewPn = function(req, res){
 
         async.waterfall([
                 function(callback) {
-                    //현재 DB에 유효한 시리얼 번호 check!
-                    /*var date = new Date();
-                     var date = new Date().yyyymmdd();
-                     var time = new Date().hhmmss();
-                     console.log(date + time);
-                     var full = date+'T'+time;
-                     console.log(full);*/
                     conn.query("SELECT COUNT(*) FROM product_num WHERE date(createTime) = date(now()) ", function (err, rows) {
                         if (err) {
                             console.log('POST /pnGenerator err ' + err);

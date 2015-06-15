@@ -1,7 +1,6 @@
 var conn = require('./db.js');
 
 
-
 //CREATE CREATE post /goal
 exports.create = function(req, res){
 	console.log("POST /goal is called");
@@ -15,17 +14,17 @@ exports.create = function(req, res){
 		}
 		//var nowDate = new Date();
 		var goalDate = new Date(req.body.goal_date).yyyymmdd();
-        console.log(goalDate);
         var date = new Date().yyyymmdd();
         var time = new Date().hhmmss();
         var nowDate = date+'T'+time;
+        //nowPoint and level!!!!!!!!!!!!!!!!!!!!!!!!!!!! insert
 		var goalInfo = {
 			'content' : req.body.content,
 			'goal_cost' : req.body.goal_cost,
 			'goal_date' : goalDate,
 			'date' : nowDate,
 			'now_cost' : req.body.now_cost,
-			'state' : req.body.state,
+			'state' : 1,
 			'fk_kids' : req.user.fk_kids
 		};
 
@@ -84,17 +83,21 @@ exports.update = function(req, res){
 			var insertCost = req.body.now_cost;
 			var calculateCost = parseInt(nowCost) + parseInt(insertCost);
 			var lastCost;
+            var state = 1;
 
 			//현재 저금한 총 금액 + 방금 저금한 금액 < 목표금액
 			console.log(calculateCost + 'goal' + goalCost);
+            //저금 중!!!
 			if(calculateCost < goalCost) {
 				lastCost = parseInt(calculateCost);
 				console.log(lastCost);
 			}else if(calculateCost == goalCost) {
 				lastCost = parseInt(calculateCost);
+                state = 2; // goal성공
 				console.log(lastCost);
 			}else if (calculateCost > goalCost) {
 				lastCost = parseInt(goalCost);
+                state = 2; // goal성공
 				console.log(lastCost);
 			}
 			//(now_cost, date, fk_kids) VALUES(?,?,?)   req.body.now_cost , nowDate, req.user.fk_kids
@@ -103,7 +106,7 @@ exports.update = function(req, res){
 				'date' : nowDate,
 				'fk_kids' : req.user.fk_kids
 			};
-			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=? ;INSERT INTO saving_list SET ? ",[lastCost,savingInfo], function(err, result){
+			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=?, state = ? ;INSERT INTO saving_list SET ? ",[lastCost,state,savingInfo], function(err, result){
 				if(err){
 					console.log('err is ' + err);
 					connection.release();
@@ -120,7 +123,7 @@ exports.update = function(req, res){
 				res.status(500).send({msg : 'achieve goal_cost'});
 				connection.release();
 			}else if (calculateCost > goalCost) {
-				res.status(500).send({msg : 'achieve goal_cost'});
+                res.status(500).send({msg : 'achieve goal_cost'});
 				connection.release();
 			}
 		});
@@ -145,8 +148,6 @@ exports.updateGaolState = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			console.log(result);
-			console.log(req.body.now_cost);
 			res.status(200).send();
 			connection.release();
 		});
@@ -223,7 +224,6 @@ exports.currentGoal = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			console.log(rows);
 			res.status(200).json(rows);
 			connection.release();
 		});
@@ -250,7 +250,6 @@ exports.currentGoalParents = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			console.log(rows);
 			res.status(200).json(rows[0]);
 			connection.release();
 		});
@@ -276,7 +275,6 @@ exports.remove = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			console.log(rows);
 			res.status(200);
 			connection.release();
 		});

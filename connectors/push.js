@@ -74,7 +74,10 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                 function(arg2, callback) {
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
-                    var nowDate = new Date();
+                    //var nowDate = new Date();
+                    var date = new Date().yyyymmdd();
+                    var time = new Date().hhmmss();
+                    var nowDate = date+'T'+time;
                     console.log(nowDate);
                     //AND TIMESTAMPDIFF(SECOND, modifyTime, getTime)
                     conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ?",fk_kids,function(err, rows){
@@ -280,4 +283,20 @@ exports.regist = function(req, res){
             connection.release();
         });
     });
+};
+Date.prototype.yyyymmdd = function() {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+    return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
+};
+Date.prototype.hhmmss = function()
+{
+    var hh = this.getHours().toString();
+    var mm = this.getMinutes().toString();
+    var ss = this.getSeconds().toString();
+
+    return (hh[1] ? hh : '0'+hh[0]) + ':' +
+        (mm[1] ? mm : '0'+mm[0]) + ':' +
+        (ss[1] ? ss : '0'+ss[0]);
 };

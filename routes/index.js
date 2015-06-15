@@ -59,6 +59,7 @@ router.put('/pnUpdate',jwt({secret:secretKey}),function(req, res){//call by web 
 	}
 });
 
+
 //QUIZ
 router.post('/quiz', jwt({secret:secretKey}), quiz.createNowQuiz);
 router.post('/quiz/admin', quiz.createStdQuiz);
