@@ -49,7 +49,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         }
                         callback(null, results);
                     });
-
                 },
                 function(arg1, callback) {
                     //System quest check and update
@@ -76,6 +75,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                     //Parents quest check and update
                     //if (pk_parents_quest > questPVer) {
                     var nowDate = new Date();
+                    console.log(nowDate);
                     //AND TIMESTAMPDIFF(SECOND, modifyTime, getTime)
                     conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ?",fk_kids,function(err, rows){
                         if(err){
@@ -84,7 +84,6 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             res.status(500).send();
                             return;
                         }
-
                         for(var i in rows) {
                             var data = rows[i];
                             data["state"] = data["state+0"];
@@ -116,7 +115,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
     });
 };
 exports.pushQuestState = function(req, res){
-    console.log('GET /getQuestInfo/:fk_kids is called by parents');
+    console.log('GET /getQuestInfo/:pk_std_que is called by parents');
     conn.getConnection(function(err, connection){
         if(err) {
             console.error('MySAL connection err');
@@ -144,7 +143,6 @@ exports.pushQuestState = function(req, res){
                         pk_std_que = JSON.stringify(rows[0]);
                         pk_std_que = pk_std_que.split(":")[1];
                         pk_std_que = pk_std_que.split("}")[0];
-                        console.log(pk_std_que);
 
                         callback(null, results);
 
@@ -160,9 +158,7 @@ exports.pushQuestState = function(req, res){
                             return;
                         }
                         for(var i in rows) {
-                            console.log(i);
                             var data = rows[i];
-                            console.log(data);
                             fk_kids = data.fk_kids;
 
                             if(results[fk_kids] == null)
@@ -180,27 +176,25 @@ exports.pushQuestState = function(req, res){
                 function(arg1 ,callback) {
                     //system Quiz check and update
                     conn.query("SELECT q.*, q.state+0 FROM quest q, parents_has_kids p WHERE q.fk_kids = p.fk_kids AND p.fk_parents = ? ", fk_parents, function (err, rows) {
-                            if (err) {
-                                console.log('err is ' + err);
-                                connection.release();
-                                res.status(500).send();
-                                return;
-                            }
-                            for(var i in rows) {
-                                console.log(i);
-                                var data = rows[i];
-                                console.log(data);
-                                fk_kids = data.fk_kids;
+                        if (err) {
+                            console.log('err is ' + err);
+                            connection.release();
+                            res.status(500).send();
+                            return;
+                        }
+                        for(var i in rows) {
+                            var data = rows[i];
+                            fk_kids = data.fk_kids;
 
-                                if(results[fk_kids] == null)
-                                    results[fk_kids] = [];
-                                data["state"] = data["q.state+0"];
+                            if(results[fk_kids] == null)
+                                results[fk_kids] = [];
+                            data["state"] = data["q.state+0"];
 
-                                delete data["q.state+0"];
-                                delete data.fk_kids;
-                                results[fk_kids].push(data);
-                            }
-                            callback(null, results);
+                            delete data["q.state+0"];
+                            delete data.fk_kids;
+                            results[fk_kids].push(data);
+                        }
+                        callback(null, results);
                     });
                 },
                 function(arg2, callback) {
@@ -219,8 +213,6 @@ exports.pushQuestState = function(req, res){
                 }
             ],
             function(err, results) {
-
-                console.log(results);
                 res.status(200).json(results);
                 connection.release();
             });
@@ -284,7 +276,6 @@ exports.regist = function(req, res){
                 res.status(500).send();
                 return;
             }
-            console.log(result);
             res.status(200).json();
             connection.release();
         });

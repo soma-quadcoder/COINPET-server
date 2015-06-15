@@ -1,4 +1,7 @@
 var conn = require('./db.js');
+
+
+
 //CREATE CREATE post /goal
 exports.create = function(req, res){
 	console.log("POST /goal is called");
@@ -10,8 +13,12 @@ exports.create = function(req, res){
 			res.status(500).send();
 			return;
 		}
-		var nowDate = new Date();
-		var goalDate = new Date(req.body.goal_date);
+		//var nowDate = new Date();
+		var goalDate = new Date(req.body.goal_date).yyyymmdd();
+        console.log(goalDate);
+        var date = new Date().yyyymmdd();
+        var time = new Date().hhmmss();
+        var nowDate = date+'T'+time;
 		var goalInfo = {
 			'content' : req.body.content,
 			'goal_cost' : req.body.goal_cost,
@@ -274,4 +281,22 @@ exports.remove = function(req, res){
 			connection.release();
 		});
 	});
+};
+
+
+Date.prototype.yyyymmdd = function() {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+    return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
+};
+Date.prototype.hhmmss = function()
+{
+    var hh = this.getHours().toString();
+    var mm = this.getMinutes().toString();
+    var ss = this.getSeconds().toString();
+
+    return (hh[1] ? hh : '0'+hh[0]) + ':' +
+        (mm[1] ? mm : '0'+mm[0]) + ':' +
+        (ss[1] ? ss : '0'+ss[0]);
 };

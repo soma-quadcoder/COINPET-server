@@ -21,7 +21,12 @@ exports.createNewPn = function(req, res){
         async.waterfall([
                 function(callback) {
                     //현재 DB에 유효한 시리얼 번호 check!
-                    var date = new Date();
+                    /*var date = new Date();
+                     var date = new Date().yyyymmdd();
+                     var time = new Date().hhmmss();
+                     console.log(date + time);
+                     var full = date+'T'+time;
+                     console.log(full);*/
                     conn.query("SELECT COUNT(*) FROM product_num WHERE date(createTime) = date(now()) ", function (err, rows) {
                         if (err) {
                             console.log('POST /pnGenerator err ' + err);
@@ -41,7 +46,7 @@ exports.createNewPn = function(req, res){
                                 console.log(err);
                                 connection.release();
                             }
-			    console.log(result);
+                            console.log(result);
                             compareCount -= 1;
                             if(compareCount == req_count) {
                                 callback(null);
@@ -109,7 +114,6 @@ exports.getAllPn = function(req, res){
                 res.status(500).send();
                 return;
             }
-
             if(true) // test for admin web
             {
                 for(var index in rows)
@@ -118,12 +122,12 @@ exports.getAllPn = function(req, res){
                     var index_date = new Date(index_time);
                     var time = index_date.hhmmss();
                     index_date = index_date.yyyymmdd();
-					
+
                     if(results[index_date] == null)
                         results[index_date] = {};
 
                     if(results[index_date][time] == null)
-                    	results[index_date][time] = [];
+                        results[index_date][time] = [];
 
                     // delete duplicated data
                     delete rows[index].createTime;
@@ -159,7 +163,6 @@ exports.updatePnAdmin = function(req, res){
             connection.release();
             return;
         }
-        var date = new Date();
         conn.query("UPDATE product_num SET admin_write = 1 WHERE pk_pn = ?",[req.body.fk_pn], function(err, result){
             if(err){
                 console.log('err is ' + err);
@@ -184,9 +187,12 @@ exports.updatePn = function(req, res){
             connection.release();
             return;
         }
-        		console.log(results);
-        var date = new Date();
-        conn.query("UPDATE product_num SET admin_write = 1 , used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[date, req.user.fk_kids, req.body.product_num], function(err, result){
+        console.log(results);
+
+        var date = new Date().yyyymmdd();
+        var time = new Date().hhmmss();
+        var full = date+'T'+time;
+        conn.query("UPDATE product_num SET admin_write = 1 , used = 1, usedTime = ?, fk_kids = ? WHERE product_num = ?",[full, req.user.fk_kids, req.body.product_num], function(err, result){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
@@ -200,144 +206,149 @@ exports.updatePn = function(req, res){
 };
 
 exports.pnWrite = function(req, res, next) {
-	if(req.body._method == "DELETE")
-	{
-	    console.log('redirection to DELETE /pn');
-	    next();
-   	    return;
-	}
+    if(req.body._method == "DELETE")
+    {
+        console.log('redirection to DELETE /pn');
+        next();
+        return;
+    }
 
-	console.log('PUT /pn is called');
-        conn.getConnection(function(err,connection){
-            if(err){
-                console.error('MySQl connection err');
-                console.log(err);
+    console.log('PUT /pn is called');
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+            console.log(err);
+            res.status(500).send();
+            connection.release();
+            return;
+        }
+
+        if(req.body.product_num)
+        {
+            //individual target
+            conn.query("UPDATE product_num SET admin_write = 1 WHERE product_num=?",[req.body.product_num], function(err, result) {
+                if(err){
+                    console.log('err : '+err);
+                    console.log(this.sql);
+                    res.status(500).send();
+                    connection.release();
+                    return;
+                }
+                res.status(200).send();
+                connection.release();
+            });
+            return;
+        }
+
+        var condition = "";
+        for(var index_date in req.body.target)
+        {
+            for(var index in req.body.target[index_date])
+            {
+                var index_time = req.body.target[index_date][index];
+                if(condition!="")
+                    condition += 'OR ';
+                condition+='createTime="'+index_date+' '+index_time+'"';
+            }
+        }
+        conn.query("UPDATE product_num SET admin_write = 1 WHERE ("+condition+")", function(err, result){
+            if(err) {
+                console.log('err : '+err);
+                console.log(this.sql);
                 res.status(500).send();
                 connection.release();
                 return;
             }
 
-	    if(req.body.product_num)
-	    {
-		//individual target
-		conn.query("UPDATE product_num SET admin_write = 1 WHERE product_num=?",[req.body.product_num], function(err, result) {
-		    if(err){
-		        console.log('err : '+err);
-		        console.log(this.sql);
-		        res.status(500).send();
-		        connection.release();
-			return;
-		    }
-		    res.status(200).send();
-		    connection.release();
-	        }); 
-	        return;
-	    }
-
-	    var condition = "";
-	    for(var index_date in req.body.target)
-            {
-		for(var index in req.body.target[index_date])
-		{	
-			var index_time = req.body.target[index_date][index];
-			if(condition!="")
-			    condition += 'OR ';
-			condition+='createTime="'+index_date+' '+index_time+'"';
-		}
-	    }
-            conn.query("UPDATE product_num SET admin_write = 1 WHERE ("+condition+")", function(err, result){
-		if(err) {
-		    console.log('err : '+err);
-		    console.log(this.sql);
-		    res.status(500).send();
-		    connection.release();
-		    return;
-		}
-
-		console.log(this.sql);
-		res.status(200).send();
-		connection.release();
-	    }); 
-	});
+            console.log(this.sql);
+            res.status(200).send();
+            connection.release();
+        });
+    });
 }
 
 exports.pnDelete = function(req, res) {
 
-	console.log('DELETE /pn is called');
-        conn.getConnection(function(err,connection){
-            if(err){
-                console.error('MySQl connection err');
-                console.log(err);
+    console.log('DELETE /pn is called');
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+            console.log(err);
+            res.status(500).send();
+            connection.release();
+            return;
+        }
+
+        if(req.body.product_num)
+        {
+            //individual target
+            conn.query("DELETE FROM product_num WHERE product_num=?",[req.body.product_num], function(err, result) {
+                if(err){
+                    console.log('err : '+err);
+                    console.log(this.sql);
+                    res.status(500).send();
+                    connection.release();
+                    return;
+                }
+                res.status(200).send();
+                connection.release();
+            });
+            return;
+        }
+
+        var condition = "";
+        for(var index_date in req.body.target)
+        {
+            for(var index in req.body.target[index_date])
+            {
+                var index_time = req.body.target[index_date][index];
+                if(condition!="")
+                    condition += 'OR ';
+                condition+='createTime="'+index_date+' '+index_time+'"';
+            }
+        }
+        conn.query("DELETE from product_num WHERE admin_write=0 AND ("+condition+")", function(err, result){
+            if(err) {
+                console.log('err : '+err);
+                console.log(this.sql);
                 res.status(500).send();
                 connection.release();
                 return;
             }
 
-	    if(req.body.product_num)
-	    {
-		//individual target
-		conn.query("DELETE FROM product_num WHERE product_num=?",[req.body.product_num], function(err, result) {
-		    if(err){
-		        console.log('err : '+err);
-		        console.log(this.sql);
-		        res.status(500).send();
-		        connection.release();
-			return;
-		    }
-		    res.status(200).send();
-		    connection.release();
-	        }); 
-	        return;
-	    }
-
-	    var condition = "";
-	    for(var index_date in req.body.target)
-            {
-		for(var index in req.body.target[index_date])
-		{	
-			var index_time = req.body.target[index_date][index];
-			if(condition!="")
-			    condition += 'OR ';
-			condition+='createTime="'+index_date+' '+index_time+'"';
-		}
-	    }
-            conn.query("DELETE from product_num WHERE admin_write=0 AND ("+condition+")", function(err, result){
-		if(err) {
-		    console.log('err : '+err);
-		    console.log(this.sql);
-		    res.status(500).send();
-		    connection.release();
-		    return;
-		}
-
-		console.log(this.sql);
-		res.status(200).send();
-		connection.release();
-	    }); 
-	});
+            console.log(this.sql);
+            res.status(200).send();
+            connection.release();
+        });
+    });
 }
 
 Date.prototype.yyyymmdd = function() {
-	var yyyy = this.getFullYear().toString();
-	var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
-	var dd  = this.getDate().toString();
-	return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+    var dd  = this.getDate().toString();
+    return yyyy +'-'+ (mm[1]?mm:"0"+mm[0]) +'-'+ (dd[1]?dd:"0"+dd[0]); // padding
 };
 Date.prototype.hhmmss = function()
 {
-	var hh = this.getHours().toString();
-	var mm = this.getMinutes().toString();
-	var ss = this.getSeconds().toString();
+    var hh = this.getHours().toString();
+    var mm = this.getMinutes().toString();
+    var ss = this.getSeconds().toString();
 
-	return (hh[1] ? hh : '0'+hh[0]) + ':' +
-		(mm[1] ? mm : '0'+mm[0]) + ':' +
-		(ss[1] ? ss : '0'+ss[0]);
+    return (hh[1] ? hh : '0'+hh[0]) + ':' +
+        (mm[1] ? mm : '0'+mm[0]) + ':' +
+        (ss[1] ? ss : '0'+ss[0]);
 };
 
 function makePN(results) {
-    var day = new Date().getDate();
-    var month = new Date().getMonth() + 1;
+
     var year = new Date().getFullYear();
+    var month = new Date().getMonth() + 1;
+    var day = new Date().getDate();
+    var date = new Date().yyyymmdd();
+    var time = new Date().hhmmss();
+    var full = date+'T'+time;
+
     var sum = 0;
     //day
     day = parseInt(day);
@@ -383,10 +394,10 @@ function makePN(results) {
     if (sum <= 9)
         sum = '0' + sum;
     /*
-    else if (sum <= 99)
-        sum = '00' + sum;
-    else if (sum <= 999)
-        sum = '0' + sum;*/
+     else if (sum <= 99)
+     sum = '00' + sum;
+     else if (sum <= 999)
+     sum = '0' + sum;*/
 
     serialNum += sum;
 
@@ -417,7 +428,7 @@ function makePN(results) {
     var pnInfo = {
         'product_num': encryptSerial,
         'serialNum': serialNum,
-        'createTime' : new Date()
+        'createTime' : full
     };
 
     return pnInfo;

@@ -32,43 +32,10 @@ exports.createNowQuest = function(req, res){
     });
 };
 
-/*
-* 퀘스트 상태를 업데이틑 하는 부분
-*  req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
- */
-exports.updateQuestKids = function(req, res){
-    console.log("PUT /quest is called by kids");
-    conn.getConnection(function(err,connection){
-        if(err){
-            console.error('MySQl connection err');
-            console.log(err);
-            connection.release();
-            res.status(500).send();
-            return;
-        }
-        var fk_kids = req.user.fk_kids;
-
-        var condition = "state = " + req.body.state +
-                        "fk_std_que = " + req.body.fk_std_que +
-                         " WHERE fk_kids = " + fk_kids;
-
-        conn.query("UPDATE quest SET "+condition, function(err, result){
-            if(err){
-                console.log('err is ' + err);
-                connection.release();
-                res.status(500).send();
-                return;
-            }
-            res.status(200).send();
-            connection.release();
-        });
-    });
-};
-
 //CREATE CREATE post /quest
 exports.createParents = function(req, res){
-	console.log("POST /quest/parents is called by parents");
-	conn.getConnection(function(err,connection) {
+    console.log("POST /quest/parents is called by parents");
+    conn.getConnection(function(err,connection) {
         if (err) {
             console.error('MySQl connection err');
             console.log(err);
@@ -80,7 +47,7 @@ exports.createParents = function(req, res){
         var nowDate = new Date();
         var startDate = new Date(req.body.startTime);
         var getTime = new Date("2015-06-01");
-       // var update = 1;
+        // var update = 1;
         var questInfo = {
             'content': req.body.content,
             'point': req.body.point,
@@ -105,6 +72,39 @@ exports.createParents = function(req, res){
         });
     });
 };
+/*
+* 퀘스트 상태를 업데이틑 하는 부분
+*  req.body.state == 3 && req.body.tyep == 2 인 경우 퀘스트 검사받기 버튼을 누른경우
+ */
+exports.updateQuestKids = function(req, res){
+    console.log("PUT /quest is called by kids");
+    conn.getConnection(function(err,connection){
+        if(err){
+            console.error('MySQl connection err');
+            console.log(err);
+            connection.release();
+            res.status(500).send();
+            return;
+        }
+        var fk_kids = req.user.fk_kids;
+
+        var condition = "state = " + req.body.state +
+                        " WHERE fk_kids = " + fk_kids +
+                        " AND fk_std_que = " + req.body.fk_std_que;
+
+        conn.query("UPDATE quest SET "+condition, function(err, result){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+                res.status(500).send();
+                return;
+            }
+            res.status(200).send();
+            connection.release();
+        });
+    });
+};
+
 //UPDATE parents quest
 exports.updateParentsQuest = function(req, res){
     console.log("PUT /quest/parentsUpdate is called by parents");
@@ -132,7 +132,7 @@ exports.updateParentsQuest = function(req, res){
     });
 };
 
-//UPDATE quest state retry and done
+//UPDATE quest state retry and done ONLY STATE
 exports.updateQuestState = function(req, res){
     console.log("PUT /quest/stateUpdate is called by parents and kids");
     conn.getConnection(function(err,connection){
