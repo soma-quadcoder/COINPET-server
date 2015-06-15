@@ -127,7 +127,7 @@ function patch (req, res){
 	console.log("PATCH /user/kids is called");
 
 	var pn = req.body.pn;
-	var condition = "product_num ="+pn;
+	var condition = "product_num ='"+pn+"'";
 
 	conn.query("SELECT * FROM product_num WHERE "+condition, function (err, result) {
 
@@ -179,7 +179,7 @@ function clearPN(fk_kids, success, fail) {
 function setPN(fk_kids, pn, success, fail) {
 	var condition = "fk_kids = " + fk_kids;
 
-	condition =	"`product_num` = "+ pn +" AND "
+	condition =	"`product_num` = '"+ pn +"' AND "
 	+"`used` = 0";
 
 	var value = {
@@ -206,8 +206,8 @@ function login (req, res) {
 	console.log("POST /user/kids/login is called");
 	
 	var pn = req.body.pn;
-	var condition = "product_num="+pn+
-					" AND used=1";
+	var condition = "product_num='"+pn+
+					"' AND used=1";
 	
 	conn.query("SELECT fk_kids FROM product_num WHERE "+condition, function(err, result) {
 		if (err) {
