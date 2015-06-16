@@ -228,6 +228,57 @@ exports.pushQuestState = function(req, res){
             });
     });
 };
+//GET getInfo/:pk_std_que/:pk_parents_quest/:pk_std_quiz
+exports.pushParentsQInfoToAppTest = function(req, res){
+    console.log('GET /getParentsQuest is called by app');
+    conn.getConnection(function(err, connection){
+        if(err) {
+            console.error('MySAL connection err');
+            connection.release();
+            res.status(500).send();
+            return;
+        }
+        var fk_kids = req.user.fk_kids;
+        var results = {};
+
+        var date = new Date().yyyymmdd();
+        var time = new Date().hhmmss();
+        var nowDate = date+'T'+time;
+        //AND TIMESTAMPDIFF(SECOND, modifyTime, getTime)
+        conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ?",fk_kids,function(err, rows){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+                res.status(500).send();
+                return;
+            }
+            for(var i in rows) {
+                var data = rows[i];
+                data["state"] = data["state+0"];
+                data["startTime"] = data["startTime"].yyyymmdd();
+
+                if(results["parentsQuest"] == null)
+                    results["parentsQuest"] = [];
+
+                delete data["state+0"];
+                delete data.modifyTime;
+                delete data.getTime;
+
+                results["parentsQuest"].push(data);
+            }
+            conn.query("UPDATE parents_quest SET getTime = ? , modifyTime = ? WHERE fk_kids = ?",[nowDate,nowDate, fk_kids], function(err, rows){
+                if(err){
+                    console.log('err is ' + err);
+                    connection.release();
+                    res.status(500).send();
+                    return;
+                }
+            });
+            res.status(200).json(results);
+            connection.release();
+        });
+    });
+};
 exports.pushCurrentQuest = function(req, res){
     console.log('GET /getCurrentQuest/:fk_kids is called by parents');
     conn.getConnection(function(err, connection){
@@ -291,6 +342,7 @@ exports.regist = function(req, res){
         });
     });
 };
+
 Date.prototype.yyyymmdd = function() {
     var yyyy = this.getFullYear().toString();
     var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
