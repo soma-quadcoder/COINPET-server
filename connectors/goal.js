@@ -90,15 +90,12 @@ exports.update = function(req, res){
             //저금 중!!!
 			if(calculateCost < goalCost) {
 				lastCost = parseInt(calculateCost);
-				console.log(lastCost);
 			}else if(calculateCost == goalCost) {
 				lastCost = parseInt(calculateCost);
                 state = 2; // goal성공
-				console.log(lastCost);
 			}else if (calculateCost > goalCost) {
 				lastCost = parseInt(goalCost);
                 state = 2; // goal성공
-				console.log(lastCost);
 			}
 			//(now_cost, date, fk_kids) VALUES(?,?,?)   req.body.now_cost , nowDate, req.user.fk_kids
 			var savingInfo = {

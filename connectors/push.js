@@ -247,7 +247,7 @@ exports.pushParentsQInfoToAppTest = function(req, res){
         var nowDate = date+'T'+time;
         //AND TIMESTAMPDIFF(SECOND, modifyTime, getTime)
 
-        conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ?",fk_kids,function(err, rows){
+        conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ? AND state BETWEEN 1 AND 4",fk_kids,function(err, rows){
             if(err){
                 console.log('err is ' + err);
                 connection.release();
