@@ -41,6 +41,7 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                             var data = rows[i];
                             data.level = parseInt(data.level);
 
+
                             if(results["systemQuiz"] == null)
                                 results["systemQuiz"] = [];
 
@@ -90,8 +91,11 @@ exports.pushQeustAndQuizInfoToApp = function(req, res){
                         for(var i in rows) {
                             var data = rows[i];
                             data["state"] = data["state+0"];
+                            data["startTime"] = data["startTime"].yyyymmdd();
+
                             if(results["parentsQuest"] == null)
                                 results["parentsQuest"] = [];
+
                             delete data["state+0"];
                             delete data.modifyTime;
                             delete data.getTime;
@@ -167,6 +171,8 @@ exports.pushQuestState = function(req, res){
                             if(results[fk_kids] == null)
                                 results[fk_kids] = [];
                             data["state"] = data["q.state+0"];
+                            data["startTime"] = data["startTime"].yyyymmdd();
+
                             delete data.fk_kids;
                             delete data.modifyTime;
                             delete data.getTime;
@@ -192,6 +198,7 @@ exports.pushQuestState = function(req, res){
                             if(results[fk_kids] == null)
                                 results[fk_kids] = [];
                             data["state"] = data["q.state+0"];
+                            data["startTime"] = data["startTime"].yyyymmdd();
 
                             delete data["q.state+0"];
                             delete data.fk_kids;

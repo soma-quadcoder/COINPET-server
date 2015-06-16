@@ -165,7 +165,7 @@ exports.allGoal = function(req, res){
 			res.status(500).send();
 			return;
 		}
-
+        var results = new Array();
 		var condition = "fk_kids = " + req.user.fk_kids;
 		conn.query("SELECT * FROM goal WHERE "+condition, function(err, rows){
 			if(err){
@@ -174,7 +174,17 @@ exports.allGoal = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			res.status(200).json(rows);
+            for(var i in rows){
+                var data = rows[i];
+
+                data["goal_date"] = data["goal_date"].yyyymmdd();
+                var date = data["date"].yyyymmdd();
+                var time = data["date"].hhmmss();
+                data["date"] = date +"T"+time;
+
+                results.push(data);
+            }
+            res.status(200).json(results);
 			connection.release();
 		});
 	});
@@ -189,6 +199,7 @@ exports.allGoalParents = function(req, res){
 			res.status(500).send();
 			return;
 		}
+        var results = new Array();
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 			"p.fk_kids = " + req.params.fk_kids + " AND " +
 			"g.fk_kids = " + req.params.fk_kids;
@@ -199,7 +210,17 @@ exports.allGoalParents = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			res.status(200).json(rows);
+            for(var i in rows){
+                var data = rows[i];
+
+                data["goal_date"] = data["goal_date"].yyyymmdd();
+                var date = data["date"].yyyymmdd();
+                var time = data["date"].hhmmss();
+                data["date"] = date +"T"+time;
+
+                results.push(data);
+            }
+			res.status(200).json(results);
 			connection.release();
 		});
 	});
@@ -215,6 +236,7 @@ exports.currentGoal = function(req, res){
 			res.status(500).send();
 			return;
 		}
+        var results = {};
 		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
 			"g.fk_kids = " + req.user.fk_kids;
 		conn.query("SELECT g.* FROM goal g, kids k WHERE "+condition, function(err, rows){
@@ -224,7 +246,16 @@ exports.currentGoal = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			res.status(200).json(rows);
+            var data = rows[0];
+
+            data["goal_date"] = data["goal_date"].yyyymmdd();
+            var date = data["date"].yyyymmdd();
+            var time = data["date"].hhmmss();
+            data["date"] = date +"T"+time;
+
+            results = data;
+
+            res.status(200).json(results);
 			connection.release();
 		});
 	});
@@ -243,6 +274,7 @@ exports.currentGoalParents = function(req, res){
 		var condition = "p.fk_parents = " + req.user.fk_parents + " AND " +
 			"k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal "+ " AND " +
 			"g.fk_kids = " + req.params.fk_kids;
+        var results = {};
 		conn.query("SELECT g.* FROM goal g, parents_has_kids p, kids k WHERE "+condition, function(err, rows){
 			if(err){
 				console.log('err is ' + err);
@@ -250,7 +282,16 @@ exports.currentGoalParents = function(req, res){
 				res.status(500).send();
 				return;
 			}
-			res.status(200).json(rows[0]);
+            var data = rows[0];
+
+            data["goal_date"] = data["goal_date"].yyyymmdd();
+            var date = data["date"].yyyymmdd();
+            var time = data["date"].hhmmss();
+            data["date"] = date +"T"+time;
+
+            results = data;
+
+			res.status(200).json(results);
 			connection.release();
 		});
 	});

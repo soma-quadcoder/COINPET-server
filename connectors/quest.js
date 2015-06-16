@@ -22,7 +22,7 @@ exports.createNowQuest = function(req, res){
             'fk_kids' : req.user.fk_kids
         };
 
-        conn.query('INSERT INTO quest SET ?', questInfo, function (err, result) {
+        conn.query("INSERT INTO quest SET ?", questInfo, function (err, result) {
             if (err) {
                 connection.release();
                 console.log("err is " + err);
