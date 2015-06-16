@@ -215,7 +215,6 @@ exports.allGoalParents = function(req, res){
             for(var i in rows){
                 var data = rows[i];
 
-                data["goal_date"] = data["goal_date"].yyyymmdd();
                 var date = data["goal_date"].yyyymmdd();
                 var time = data["goal_date"].hhmmss();
                 data["goal_date"] = date +"T"+time;
@@ -254,7 +253,6 @@ exports.currentGoal = function(req, res){
 
             var data = rows[0];
 
-            data["goal_date"] = data["goal_date"].yyyymmdd();
             var date = data["goal_date"].yyyymmdd();
             var time = data["goal_date"].hhmmss();
             data["goal_date"] = date +"T"+time;
@@ -293,7 +291,6 @@ exports.currentGoalParents = function(req, res){
 			}
             var data = rows[0];
 
-            data["goal_date"] = data["goal_date"].yyyymmdd();
             var date = data["goal_date"].yyyymmdd();
             var time = data["goal_date"].hhmmss();
             data["goal_date"] = date +"T"+time;
