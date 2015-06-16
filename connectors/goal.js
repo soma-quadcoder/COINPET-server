@@ -176,14 +176,16 @@ exports.allGoal = function(req, res){
 			}
             for(var i in rows){
                 var data = rows[i];
-
-                data["goal_date"] = data["goal_date"].yyyymmdd();
-                var date = data["date"].yyyymmdd();
-                var time = data["date"].hhmmss();
+                var date = data["goal_date"].yyyymmdd();
+                var time = data["goal_date"].hhmmss();
+                data["goal_date"] = date +"T"+time;
+                date = data["date"].yyyymmdd();
+                time = data["date"].hhmmss();
                 data["date"] = date +"T"+time;
 
                 results.push(data);
             }
+
             res.status(200).json(results);
 			connection.release();
 		});
@@ -214,8 +216,11 @@ exports.allGoalParents = function(req, res){
                 var data = rows[i];
 
                 data["goal_date"] = data["goal_date"].yyyymmdd();
-                var date = data["date"].yyyymmdd();
-                var time = data["date"].hhmmss();
+                var date = data["goal_date"].yyyymmdd();
+                var time = data["goal_date"].hhmmss();
+                data["goal_date"] = date +"T"+time;
+                date = data["date"].yyyymmdd();
+                time = data["date"].hhmmss();
                 data["date"] = date +"T"+time;
 
                 results.push(data);
@@ -246,11 +251,15 @@ exports.currentGoal = function(req, res){
 				res.status(500).send();
 				return;
 			}
+
             var data = rows[0];
 
             data["goal_date"] = data["goal_date"].yyyymmdd();
-            var date = data["date"].yyyymmdd();
-            var time = data["date"].hhmmss();
+            var date = data["goal_date"].yyyymmdd();
+            var time = data["goal_date"].hhmmss();
+            data["goal_date"] = date +"T"+time;
+            date = data["date"].yyyymmdd();
+            time = data["date"].hhmmss();
             data["date"] = date +"T"+time;
 
             results = data;
@@ -285,8 +294,11 @@ exports.currentGoalParents = function(req, res){
             var data = rows[0];
 
             data["goal_date"] = data["goal_date"].yyyymmdd();
-            var date = data["date"].yyyymmdd();
-            var time = data["date"].hhmmss();
+            var date = data["goal_date"].yyyymmdd();
+            var time = data["goal_date"].hhmmss();
+            data["goal_date"] = date +"T"+time;
+            date = data["date"].yyyymmdd();
+            time = data["date"].hhmmss();
             data["date"] = date +"T"+time;
 
             results = data;

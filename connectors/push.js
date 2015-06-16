@@ -240,11 +240,13 @@ exports.pushParentsQInfoToAppTest = function(req, res){
         }
         var fk_kids = req.user.fk_kids;
         var results = {};
+        results["parentsQuest"] = [];
 
         var date = new Date().yyyymmdd();
         var time = new Date().hhmmss();
         var nowDate = date+'T'+time;
         //AND TIMESTAMPDIFF(SECOND, modifyTime, getTime)
+
         conn.query("SELECT * , state+0 FROM parents_quest WHERE fk_kids = ?",fk_kids,function(err, rows){
             if(err){
                 console.log('err is ' + err);
@@ -256,9 +258,6 @@ exports.pushParentsQInfoToAppTest = function(req, res){
                 var data = rows[i];
                 data["state"] = data["state+0"];
                 data["startTime"] = data["startTime"].yyyymmdd();
-
-                if(results["parentsQuest"] == null)
-                    results["parentsQuest"] = [];
 
                 delete data["state+0"];
                 delete data.modifyTime;
