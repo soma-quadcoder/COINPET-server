@@ -78,7 +78,7 @@ exports.update = function(req, res){
 				return;
 			}
 			var data = rows[0];
-			var nowCost = data["now_cost"];
+			var nowCost = req.body.now_cost;
 			console.log(nowCost);
 			var goalCost = data["goal_cost"];
 			var insertCost = data["now_cost"];
