@@ -80,7 +80,7 @@ exports.update = function(req, res){
 			var data = rows[0];
 			var nowCost = data["now_cost"];
 			var goalCost = data["goal_cost"];
-			var insertCost = req.body.now_cost;
+			var insertCost = data["now_cost"];
 			var calculateCost = parseInt(nowCost) + parseInt(insertCost);
 			var lastCost;
 			var state = 1;
@@ -105,6 +105,7 @@ exports.update = function(req, res){
 				'date' : nowDate,
 				'fk_kids' : req.user.fk_kids
 			};
+			console.log(savingInfo);
 			conn.query("UPDATE goal g INNER JOIN kids k ON g.pk_goal = k.current_goal AND g.fk_kids = k.pk_kids SET now_cost=?, state = ? ;INSERT INTO saving_list SET ? ",[lastCost,state,savingInfo], function(err, result){
 				if(err){
 					console.log('err is ' + err);
