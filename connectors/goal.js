@@ -83,7 +83,9 @@ exports.update = function(req, res){
 			var insertCost = req.body.now_cost;
 			var calculateCost = parseInt(nowCost) + parseInt(insertCost);
 			var lastCost;
-            var state = 1;
+			var state = 1;
+			if(req.body.state)
+            	state = req.body.state;
 
 			//현재 저금한 총 금액 + 방금 저금한 금액 < 목표금액
 			console.log(calculateCost + 'goal' + goalCost);
@@ -110,7 +112,6 @@ exports.update = function(req, res){
 					res.status(500).send();
 					return;
 				}
-				console.log('now_cost' + req.body.now_cost);
 			});
 
 			if(calculateCost < goalCost) {
