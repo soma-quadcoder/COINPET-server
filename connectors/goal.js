@@ -101,7 +101,7 @@ exports.update = function(req, res){
 			}
 			//(now_cost, date, fk_kids) VALUES(?,?,?)   req.body.now_cost , nowDate, req.user.fk_kids
 			var savingInfo = {
-				'now_cost' : nowCost ,
+				'now_cost' : nowCost,
 				'date' : nowDate,
 				'fk_kids' : req.user.fk_kids
 			};
