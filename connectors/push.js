@@ -311,6 +311,33 @@ exports.pushCurrentQuest = function(req, res){
         });
     });
 };
+exports.quizInfoParents = function(req, res){
+    console.log('GET /quix/:fk_kids is called by parents');
+    conn.getConnection(function(err, connection){
+        if(err) {
+            console.error('MySAL connection err');
+            connection.release();
+            res.status(500).send();
+            return;
+        }
+
+        var fk_kids = req.params.fk_kids;
+        var condition = "p.fk_parents =" + req.user.fk_parents + " AND " +
+                        "p.fk_kids = " + req.params.fk_kids + " AND " +
+                        "q.fk_kids = " + req.params.fk_kids;
+        conn.query("SELECT q.* FROM quiz q, parents_has_kids p WHERE "+condition, function(err, rows){
+            if(err){
+                console.log('err is ' + err);
+                connection.release();
+                res.status(500).send();
+                return;
+            }
+
+            res.status(200).json(rows);
+            connection.release();
+        });
+    });
+};
 //regist push id
 exports.regist = function(req, res){
     console.log('POST /regist is called');

@@ -78,7 +78,6 @@ router.put('/quest/admin/:pk_std_que', quest.updateStdQuest); //admin
 router.put('/quest', jwt({secret:secretKey}), quest.updateQuestKids); //kids
 //부모퀘스트의 state만 따로 업데이트 하는 경우
 router.put('/quest/stateUpdate',jwt({secret:secretKey}), quest.updateQuestState);//update state call by parents
-
 router.delete('/quest/parents/:pk_parents_quest', jwt({secret : secretKey}), quest.removeParentsQuest); //parents
 router.delete('/quest/admin/:pk_std_que',quest.removeStdQuest);
 
@@ -88,6 +87,8 @@ router.get('/getInfo/:pk_std_que/:pk_std_quiz', jwt({secret:secretKey}), push.pu
 router.get('/getQuestInfo/:pk_std_que', jwt({secret:secretKey}), push.pushQuestState);//웹에서 검사받기 버튼 상태를 확인하기 위해서.
 router.get('/getCurrentQuest/:fk_kids', jwt({secret:secretKey}), push.pushCurrentQuest);
 router.get('/getParentsQuest', jwt({secret:secretKey}), push.pushParentsQInfoToAppTest);
+router.get('/quiz/:fk_kids', jwt({secret:secretKey}), push.quizInfoParents);
+
 // GOAL
 router.post('/goal', jwt({secret:secretKey}), goal.create);
 router.get('/goal', jwt({secret : secretKey }), function(req, res){
