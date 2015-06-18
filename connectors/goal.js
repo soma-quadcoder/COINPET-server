@@ -67,7 +67,12 @@ exports.update = function(req, res){
 			return;
 		}
 		//update the current cost of saving_list table
+
+		//저금통에서 시간을 주는경우와 안주는 경우
 		var nowDate = new Date();
+		if(req.body.date)
+			nowDate = req.body.date;
+
 		var condition = "k.pk_kids = g.fk_kids AND k.current_goal = g.pk_goal AND " +
 			"g.fk_kids = " + req.user.fk_kids;
 		conn.query("SELECT g.now_cost, g.goal_cost FROM goal g, kids k WHERE "+condition, function(err, rows){
@@ -79,7 +84,6 @@ exports.update = function(req, res){
 			}
 			var data = rows[0];
 			var nowCost = req.body.now_cost;
-			console.log(nowCost);
 			var goalCost = data["goal_cost"];
 			var insertCost = data["now_cost"];
 			var calculateCost = parseInt(nowCost) + parseInt(insertCost);
